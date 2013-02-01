@@ -1,6 +1,6 @@
 import numpy as np
 import scipy as sp
-from scipy import optimize
+import scipy.optimize
 import matplotlib.pyplot as pp
 import math
 import sys
