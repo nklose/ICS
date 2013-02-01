@@ -163,6 +163,6 @@ def ics_similar(fname_old, fname_new):
     b = np.loadtxt(fname_new)
     return np.all(np.abs(a-b) < 0.05)
 
-def main(): pass  
+def main(): ics_run('')  
 if __name__ == "__main__": main()
 
