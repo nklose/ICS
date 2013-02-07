@@ -11,4 +11,3 @@ The following style is currently used in the backend code:
 - numpy is imported as np
 - the full name is used for scipy packages
 - every file does 'from __future__ import division'
-  
