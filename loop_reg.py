@@ -3,7 +3,7 @@
 This file contains the loop needed in the core_1 function in
 the triple.py file. This is a straightforward implementation,
 focusing on simplicity and correctness. It is probably fast
-enough for interactive use.
+enough for interactive use on small images.
 """
 
 from __future__ import division
