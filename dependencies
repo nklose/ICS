@@ -1,0 +1,12 @@
+ ----
+ this file shows the dependencies between the
+ internal files, and excludes external libraries;
+ 'X -> Y, Z' denotes 'X dependes on Y and Z';
+ 'nothing' denotes no dependencies
+ ----
+ example -> dual, triple
+ dual -> nothing
+ triple -> loop_reg
+ loop_reg -> nothing
+ check -> nothing
+ 
