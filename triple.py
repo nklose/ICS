@@ -10,8 +10,7 @@ from core_0 up until the core_2 function. The gauss_1d function is
 meant only for internal use by the curve fitting routine.
 
 The majority of the time taken by these functions is spent in a loop in the 
-core_1 function. This loop is in a separate file called loop_reg.py, which
-is a regular (ie. straightforward) implementation.
+core_1 function. This loop is in a separate file.
 """
 
 from __future__ import division
