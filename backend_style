@@ -12,4 +12,4 @@ The following style is currently used in the backend code:
 - the full name is used for scipy packages
 - every file does 'from __future__ import division'
 - function and variable names are in lowercase
-  and are separated by underscores
+- function and variable names are separated by underscores
