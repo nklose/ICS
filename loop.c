@@ -18,6 +18,9 @@
 
 typedef complex double c128;
 
+/* See the core function of loop_reg.py for a description
+ * of this function and its arguments and return values.
+ */
 void core(r1,sr,sg,tb,side,lim)
 	void *r1,*sr,*sg,*tb;
 	int lim,side;
