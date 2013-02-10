@@ -16,7 +16,7 @@ is spent in a loop in the core_1 function. This loop is in a separate file.
 from __future__ import division
 import numpy as np
 import scipy.optimize
-import loop_opt as loop
+import loop_reg as loop
 
 def core_0(r,g,b):
     """Computes the first part of the triple correlation
