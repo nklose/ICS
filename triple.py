@@ -9,14 +9,14 @@ interact with the user. The functions should be called in order, starting
 from core_0 up until the core_2 function. The gauss_1d function is 
 meant only for internal use by the curve fitting routine.
 
-The majority of the time taken by these functions is spent in a loop in the 
-core_1 function. This loop is in a separate file.
+In the unoptimized case, the majority of the time taken by these functions 
+is spent in a loop in the core_1 function. This loop is in a separate file.
 """
 
 from __future__ import division
 import numpy as np
 import scipy.optimize
-import loop_reg as loop
+import loop_opt as loop
 
 def core_0(r,g,b):
     """Computes the first part of the triple correlation
