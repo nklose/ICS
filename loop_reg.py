@@ -24,7 +24,7 @@ def core(r1,sr,sg,tb,side,lim):
         r1: [lim lim lim lim c128] the array in which
             to store the results of the computation
             
-    This function has no return values.
+    There are no return values.
     """
     na = int(side/2)
     nb = int(lim/2)
