@@ -117,7 +117,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
-	'biomembrane',
+    'biomembrane',
 )
 
 # A sample logging configuration. The only tangible logging
