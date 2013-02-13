@@ -9,7 +9,7 @@ class Job(models.Model):
 	)
 
 	state = models.CharField(max_length=1, choices=JOB_STATES)
-	outputDir = models.CharField()
+	outputDir = models.CharField(max_length=255)
 	user = models.ForeignKey(User)
 
 	def __unicode__(self):
@@ -23,7 +23,7 @@ class Image(models.Model):
 		(u'rgb', u'Red/Green/Blue')
 	)
 
-	path = models.CharField()
+	path = models.CharField(max_length=255)
 	imageType = models.CharField(max_length=3, choices=IMAGE_TYPES)
 	job = models.ForeignKey(Job)
 
