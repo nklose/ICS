@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Batch(models.Model):
+   user = models.ForeignKey(User) 
+
+   def __unicode__(self):
+       return u'<placeholder>'
+
 class Job(models.Model):
     JOB_STATES = (
         (u'u', u'Uploading'),
@@ -10,7 +16,7 @@ class Job(models.Model):
 
     state = models.CharField(max_length=1, choices=JOB_STATES)
     outputDir = models.CharField(max_length=255)
-    user = models.ForeignKey(User)
+    batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
         return u'<placeholder>'
