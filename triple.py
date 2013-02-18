@@ -9,8 +9,8 @@ interact with the user. The functions should be called in order, starting
 from core_0 up until the core_2 function. The gauss_1d function is 
 meant only for internal use by the curve fitting routine.
 
-The majority of the time taken by these functions is spent in a loop in the 
-core_1 function. This loop is in a separate file.
+In the unoptimized case, the majority of the time taken by these functions 
+is spent in a loop in the core_1 function. This loop is in a separate file.
 """
 
 from __future__ import division
@@ -27,9 +27,9 @@ def core_0(r,g,b):
         b: [2^n 2^n f64] the blue channel of the image
         
     Return values:
-        sr: [2^n 2^n c128] the processed red channel
-        sg: [2^n 2^n c128] the processed green channel
-        sb: [2^n 2^n c128] the processed blue channel
+        sr: [2^n 2^n c128] the preprocessed red channel
+        sg: [2^n 2^n c128] the preprocessed green channel
+        sb: [2^n 2^n c128] the preprocessed blue channel
         avg_rgb: [f64] the product of the averages of the
             red, green, blue channels of the original image
     """
@@ -45,11 +45,11 @@ def core_1(sr,sg,sb,avg_rgb,lowlim):
     """Computes the second part of the triple correlation
     
     Arguments:
-        sr: [2^n 2^n c128] the processed red channel
-        sg: [2^n 2^n c128] the processed green channel
-        sb: [2^n 2^n c128] the processed blue channel
-        avg_rgb: [f64] the product of the averages of
-            the red, green and blue channels
+        sr: [2^n 2^n c128] the preprocessed red channel
+        sg: [2^n 2^n c128] the preprocessed green channel
+        sb: [2^n 2^n c128] the preprocessed blue channel
+        avg_rgb: [f64] the product of the averages of the
+            red, green, blue channels of the original image
         lowlim: [int] the lower limit of part that requires
             further computation (this will be mirrored across
             the center of the image to obtain the upper limit)

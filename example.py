@@ -28,6 +28,8 @@ warnings.simplefilter('ignore',np.ComplexWarning)
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
 
 def run(pdata,image_name,colors):
+    if not os.path.exists(pdata):
+        os.makedirs(pdata)
     image = scipy.misc.imread(image_name)
     r = image[:,:,0].astype('d')
     g = image[:,:,1].astype('d')
