@@ -22,13 +22,40 @@ import scipy.misc
 import dual
 import triple
 import warnings
+import graph
+import image_reader
+from color import COLOR
 warnings.simplefilter('ignore', np.ComplexWarning)
 
 logger = logging.getLogger("main")
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb', ':')
+ALL_INPUT_COLORS = [[COLOR.RED], [COLOR.GREEN], [COLOR.BLUE],
+                    [COLOR.RED, COLOR.GREEN], [COLOR.RED, COLOR.BLUE],
+                    [COLOR.GREEN, COLOR.BLUE],
+                    [COLOR.RED, COLOR.GREEN, COLOR.BLUE]]
+
+
+def color_to_string(color):
+    """ Converts a color enum list to the string representation.
+
+    Arguments:
+        color: The colors to convert.
+        color type: list
+
+    Return Value:
+        The colors as a string.
+    """
+    return "".join(color)
 
 
 def closeOptions(options):
+    """ Checks the options object for any file objects it has open, and
+        closes them.
+
+    Arguments:
+        options: The object returned by argparse.
+        options type: Type
+    """
     if options.infile_rgb:
         options.infile_rgb.close()
         options.infile_rgb = None
@@ -43,45 +70,168 @@ def closeOptions(options):
         options.infile_b = None
 
 
-def run(pdata, image_name, colors):
-    if not os.path.exists(pdata):
-        os.makedirs(pdata)
-    image = scipy.misc.imread(image_name)
-    r = image[:, :, 0].astype('d')
-    g = image[:, :, 1].astype('d')
-    b = image[:, :, 2].astype('d')
-    n = None
-    p = [(r, n, n), (g, n, n), (b, n, n), (r, g, n), (r, b, n), (g, b, n),
-         (r, g, b)]
-    res = np.empty((7, 3))
-    np.ndarray.fill(res, np.nan)
+def run(output_dir, red_image, green_image, blue_image, image_name, colors,
+        generate_graphs, auto_only=False, cross_only=False, triple_only=False):
+    """ Run the correlations.
+
+    Arguments:
+        output_dir: The directory to output values to.
+        output_dir type: string
+
+        red_image: the red channel of the image.
+        red_image type: nparray
+
+        green_image: the green channel of the image.
+        green_image type: nparray
+
+        blue_image: the blue channel of the image.
+        blue_image type: nparray
+
+        image_name: the name of the image to use.
+        image_name type: string
+
+        colors: Correlations to call based on their colors.
+        colors type: list
+
+        generate_graphs: Whether to generate graphs or not
+        generate_graphs type: bool
+
+        auto_only: Whether to generate auto-correlation images only. Defaults to
+                   False.
+        auto_only type: bool
+
+        cross_only: Whether to generate cross-correlation images only. Defaults
+                    to False.
+        cross_only type: bool
+
+        triple_only: Whether to generate triple-correlation images only.
+                     Defaults to False.
+        triple_only type: bool
+    """
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    all_image_combinations = [(red_image, None, None),
+                              (green_image, None, None),
+                              (blue_image, None, None),
+                              (red_image, green_image, None),
+                              (red_image, blue_image, None),
+                              (green_image, blue_image, None),
+                              (red_image, green_image, blue_image)]
+    if auto_only:
+        image_combinations = all_image_combinations[0:3]
+    elif cross_only:
+        image_combinations = all_image_combinations[3:6]
+    elif triple_only:
+        image_combinations = all_image_combinations[-1:]
+    else:
+        image_combinations = all_image_combinations
+    result = np.empty((7, 3))
+    np.ndarray.fill(result, np.nan)
     for color in colors:
-        i = list.index(ALL_COLORS, color)
-        res[i] = run_any(pdata, p[i][0], p[i][1], p[i][2], color)
-    np.savetxt(path(pdata, image_name[:-4], 'txt'), res, fmt='%9.5f')
+        i = list.index(ALL_INPUT_COLORS, color)
+        result[i] = choose_correlation(output_dir, image_combinations[i][0],
+                                       image_combinations[i][1],
+                                       image_combinations[i][2],
+                                       color, generate_graphs)
+    np.savetxt(path(output_dir, image_name[:-4], 'txt'), result, fmt='%9.5f')
 
 
-def run_any(pdata, a, b, c, color):
-    if len(color) <= 2: return run_dual(pdata, a, b, c, color)
-    if len(color) == 3: return run_trip(pdata, a, b, c, color)
+def choose_correlation(output_dir, first_image, second_image, third_image,
+                       color, generate_graphs):
+    """ Deterimine which correlation to run and then run it.
+
+    Arguments:
+        output_dir: The directory to output values to.
+        output_dir type: string
+
+        first_image: ???
+        first_image type: ???
+
+        second_image: ???
+        second_image type: ???
+
+        third_image: ???
+        third_image type: ???
+
+        color: Representation of the used colors
+        color type: list
+
+        generate_graphs: Whether to generate graphs or not
+        generate_graphs type: bool
+
+    Return Value:
+        ???
+    """
+    if len(color) <= 2: return run_dual(output_dir, first_image, second_image,
+                                        color, generate_graphs)
+    if len(color) == 3: return run_trip(output_dir, first_image, second_image,
+                                        third_image, color, generate_graphs)
 
 
-def run_dual(pdata, a, b, c, color):
+def run_dual(output_dir, first_image, second_image, color, generate_graphs):
+    """ Run a correlation between two images.
+
+    Arguments:
+        output_dir: The directory to output values to.
+        output_dir type: string
+
+        first_image: ???
+        first_image type: ???
+
+        second_image: ???
+        second_image type: ???
+
+        color: Representation of the used colors
+        color type: list
+
+        generate_graphs: Whether to generate graphs or not
+        generate_graphs type: bool
+
+    Return Value:
+        ???
+    """
     range_val = 20
     initial_val = np.array([1, 10, 0], dtype=np.float64)
-    gnew, gs, _ = dual.core(a, b, range_val, initial_val)
+    gnew, gs, _ = dual.core(first_image, second_image, range_val, initial_val)
     gfit = gauss_2d(range_val, gs)
-    if len(color) == 1: code = 'AC'
-    if len(color) == 2: code = 'XC'
-    fname1 = code + color
-    fname2 = code + color + 'Fit'
-    np.savetxt(path(pdata, fname1, 'txt'), gnew, fmt='%9.5f')
-    np.savetxt(path(pdata, fname2, 'txt'), gfit, fmt='%9.5f')
+    if len(color) == 1: fprefix = 'AC'
+    if len(color) == 2: fprefix = 'XC'
+    fname1 = fprefix + color_to_string(color)
+    fname2 = fprefix + color_to_string(color) + 'Fit'
+    np.savetxt(path(output_dir, fname1, 'txt'), gnew, fmt='%9.5f')
+    np.savetxt(path(output_dir, fname2, 'txt'), gfit, fmt='%9.5f')
+    if generate_graphs:
+        graph.plot(gnew, gfit, color, directory=output_dir)
     return gs
 
 
-def run_trip(pdata, r, g, b, color):
-    sr, sg, sb, avg_rgb = triple.core_0(r, g, b)
+def run_trip(output_dir, red_image, green_image, blue_image, color,
+             generate_graphs):
+    """ Run the Triple correlation
+
+    Arguments:
+        output_dir: The directory to output values to.
+        output_dir type: string
+
+        red_image: ???
+        red_image type: ???
+
+        green_image: ???
+        green_image type: ???
+
+        blue_image: ???
+        blue_image type: ???
+
+        color: Representation of the used colors
+        color type: list
+
+        generate_graphs: Whether to generate graphs or not
+        generate_graphs type: bool
+
+    Return Value:
+        ???
+    """
+    sr, sg, sb, avg_rgb = triple.core_0(red_image, green_image, blue_image)
     lowlim = 48
     _, tcmat, lim, side = triple.core_1(sr, sg, sb, avg_rgb, lowlim)
     range_val = 15
@@ -91,12 +241,28 @@ def run_trip(pdata, r, g, b, color):
     gs[1] = int(gs[1] * (side / lim) * 10) / 10
     fname1 = 'TripleCrgb'
     fname2 = 'TripleCrgbFit'
-    np.savetxt(path(pdata, fname1, 'txt'), gnew, fmt='%9.5f', delimiter='\n')
-    np.savetxt(path(pdata, fname2, 'txt'), gfit, fmt='%9.5f', delimiter='\n')
+    np.savetxt(path(output_dir, fname1, 'txt'), gnew, fmt='%9.5f',
+               delimiter='\n')
+    np.savetxt(path(output_dir, fname2, 'txt'), gfit, fmt='%9.5f',
+               delimiter='\n')
+    if generate_graphs:
+        graph.plot(gnew, gfit, color, directory=output_dir)
     return gs
 
 
 def gauss_2d(range_val, gs):
+    """ TODO: Figuring out.
+
+    Arguments:
+        range_val: ???
+        range_val type: ???
+
+        gs: ???
+        gs type: ???
+
+    Return Value:
+        ???
+    """
     g1_sq = gs[1] ** 2
     gmn = np.empty((range_val, range_val))
     for a in xrange(range_val):
@@ -109,40 +275,79 @@ def gauss_2d(range_val, gs):
 
 
 def gauss_1d(range_val, gs):
+    """ TODO: Figuring out.
+
+    Arguments:
+        range_val: ???
+        range_val type: ???
+
+        gs: ???
+        gs type: ???
+
+    Return Value:
+        ???
+    """
     g1_sq = gs[1] ** 2
     delta_sq = np.arange(range_val) ** 2
     return gs[0] * np.exp(-delta_sq / g1_sq) + gs[2]
 
 
-def path(directory, fname, ext):
-    return str.format('{}{}{}.{}', directory, os.sep, fname, ext)
+def path(directory, filename, extension):
+    """ Generate the given file path
+
+    Arguments:
+        directory: The directory the file should be in.
+        directory type: string
+
+        filename: The name of the file. eg. "test"
+        filename type: string
+
+        extension: The extension of the file. Eg. "txt"
+        extension type: string
+
+    Return Value:
+        Filepath string formated appropiately for the operating system.
+    """
+    return os.path.join(directory, "%s.%s" % (filename, extension))
 
 
 def main(options):
-    logger.info("Recieved Args: %s", str(options))
+    """ Main function, handles options and calls correct functions.
+
+    Arguments:
+        options: Object holding options from the argparse library parser.
+        options type: type
+    """
+    logger.debug("Recieved Args: %s", str(options))
     if options.infile_rgb:
         fname = options.infile_rgb.name
         logger.info("Using rgb path: %s", fname)
         closeOptions(options)
+        redChannel, greenChannel, blueChannel = image_reader.\
+            get_channels_single(fname)
     elif options.infile_r and options.infile_g and options.infile_b:
-        fnames = {}
-        fnames['r'] = options.infile_r.name
-        fnames['g'] = options.infile_g.name
-        fnames['b'] = options.infile_b.name
-        logger.info("Using red: %s", fnames['r'])
-        logger.info("Using green: %s", fnames['g'])
-        logger.info("Using blue: %s", fnames['b'])
+        fnames = (options.infile_r.name, options.infile_g.name,
+                  options.infile_b.name)
+        logger.info("Using red: %s", fnames[0])
+        logger.info("Using green: %s", fnames[1])
+        logger.info("Using blue: %s", fnames[2])
         closeOptions(options)
+        redChannel, greenChannel, blueChannel = image_reader.\
+            get_channels_separate(*fnames)
     else:
         closeOptions(options)
-        logger.error("Invalid arguements. Please supply infile_rgb or  all of \
+        logger.error("Invalid arguments. Please supply infile_rgb or all of \
 infile_r, infile_g, and infile_b.")
         return
-    run(options.output_dir, fname, ALL_COLORS)
+    color_list = ALL_INPUT_COLORS
+    return run(options.output_dir, redChannel, greenChannel, blueChannel, fname,
+               color_list, options.generate_graphs, auto_only=options.auto_only,
+               cross_only=options.cross_only, triple_only=options.triple_only)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Loads a single image or three\
  monocolored images.')
+    parser.add_argument('-p', '--generate_graphs', action="store_true")
     parser.add_argument('-f', '--infile_rgb', type=argparse.FileType('r'))
     parser.add_argument('-r', '--infile_r', type=argparse.FileType('r'),
                         help="required infile_g and inflie_b, not yet supported")
@@ -151,5 +356,11 @@ if __name__ == "__main__":
     parser.add_argument('-b', '--infile_b', type=argparse.FileType('r'),
                         help="required infile_r and inflie_g, not yet supported")
     parser.add_argument('output_dir', help="name of output directory")
+    parser.add_argument('-u', "--auto-only", action="store_true",
+                        help="Create auto correlations only")
+    parser.add_argument('-c', "--cross-only", action="store_true",
+                        help="Create cross correlations only")
+    parser.add_argument('-t', "--triple-only", action="store_true",
+                        help="Create triple correlations only")
     args = parser.parse_args()
     main(args)

@@ -3,14 +3,16 @@ backend work to be done in one file format.
 
 The standard way to open files now would be:
 
->>> import image_converter
->>> scipyImage = image_converter.open_image(image)
-
-I think the image is equivalent to opening a bitmap.
+>>> import image_reader
+>>> redImage, greenImage, blueImage = image_reader.get_channels_single(image)
 """
 import PIL
 import scipy
 import imghdr
+import logging
+
+
+LOGGER = logging.getLogger("imgrdr")
 
 
 class ImageFormatException(Exception):
@@ -55,6 +57,7 @@ def validate_image(filepath):
     if header_type not in ['bmp', 'gif', 'png', 'tiff']:
         raise ImageFormatException(filepath, header_type)
 
+
 def get_channels_single(filepath):
     """ Returns the RGB channels for a single image.
 
@@ -66,10 +69,11 @@ def get_channels_single(filepath):
         Tuple of RGB channels.
     """
     image = open_image(filepath)
-    r = image[::0].astype('d')
-    g = image[::1].astype('d')
-    b = image[::2].astype('d')
+    r = image[:, :, 0].astype('d')
+    g = image[:, :, 1].astype('d')
+    b = image[:, :, 2].astype('d')
     return (r, g, b)
+
 
 def get_channels_separate(red_path, green_path, blue_path):
     """ Returns the RGB channels for channel separated images.
@@ -85,7 +89,7 @@ def get_channels_separate(red_path, green_path, blue_path):
     Return Value:
         Tuple of RGB channels.
     """
-    r = open_image(red_path)[::0].astype('d')
-    g = open_image(green_path)[::1].astype('d')
-    b = open_image(blue_path)[::2].astype('d')
+    r = open_image(red_path)[:, :, 0].astype('d')
+    g = open_image(green_path)[:, :, 1].astype('d')
+    b = open_image(blue_path)[:, :, 2].astype('d')
     return (r, g, b)

@@ -19,12 +19,21 @@ def plot(gnew, gfit, color, directory=OUTPUT_DIR, name=NAME_TEMPLATE):
 
     Arguments:
         gnew: ???
+        gnew type: ???
+
         gfit: ???
-        color: The colors present in the graph in a list, eg ['r', 'g', 'b'].
+        gfit type: ???
+
+        color: The colors present in the graph.
+        color type: list containing COLOR enumerated values.
+
         directory: The directory to output the file to. By default the relative
             directory "output".
+        directory type: string
+
         name: The name template of the file to output to. Must contain one "%s".
             By default, "newFG%s.png"
+        name type: string
     """
     __check_dir_exists(directory)
     title = __gen_title(color, 'Y')
@@ -41,6 +50,8 @@ def plot(gnew, gfit, color, directory=OUTPUT_DIR, name=NAME_TEMPLATE):
 
 
 def __gen_title(color, axis):
+    """ Internal function for generating the graph title.
+    """
     s = ''
     if len(color) == 1: s += 'Autocorrelation '
     if len(color) == 2: s += 'Crosscorrelation '
@@ -52,6 +63,8 @@ def __gen_title(color, axis):
 
 
 def __gen_style(style, color):
+    """ Internal function for generating the graph style.
+    """
     s = style
     if len(color) == 1: return s + color[0]
     if COLOR.RED and COLOR.GREEN and COLOR.BLUE in color: return s + ""
@@ -61,5 +74,7 @@ def __gen_style(style, color):
 
 
 def __check_dir_exists(directory):
+    """ Internal function that creates the output directory if required.
+    """
     if not os.path.exists(directory):
         os.mkdir(directory)
