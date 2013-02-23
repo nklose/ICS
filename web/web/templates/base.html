@@ -10,11 +10,12 @@
 
     <!-- Specify another stylesheet -->
     <link rel="stylesheet" type="text/css" href="{{section.style}}">
+    {% block stylesheet %}{% endblock %}
 
     <title>{% block title %}{{ section.title }}{% endblock %}</title>
 </head>
 <body>
-    <div id="header-main">
+    <div id="header-main" class="header">
         {% block header-main %}
         {% endblock %}
     </div>
@@ -24,15 +25,15 @@
             {% endblock %}
         </nav>
     </section>
-    <div id="content">
+    <div id="content" class="content">
         {% block content %}
         {% endblock %}
     </div>
-    <div id="sidebar">
+    <div id="sidebar" class="sidebar">
         {% block sidebar %}
         {% endblock %}
     </div>
-    <div id="footer">
+    <div id="footer" class="footer">
         {% block footer %}
         {% endblock %}
     </div>
