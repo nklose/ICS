@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{section.style}}">
+         <title>{% block title %}{{ section.title }}{% endblock %}</title>
+    </head>
+    <body>
+        <section id="nav-container">
+            <nav id="nav-main" class="container">
+                {% block nav-main %}
+                {% endblock %}
+            </nav>
+        </section>
+        <div id="content">
+             {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>
