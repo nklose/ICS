@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- viewport meta to reset iPhone inital scale -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--[if lt IE 9]>
+	<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+    <![endif]-->
+
+    <!-- Specify another stylesheet -->
+    <link rel="stylesheet" type="text/css" href="{{section.style}}">
+
+    <title>{% block title %}{{ section.title }}{% endblock %}</title>
+</head>
+<body>
+    <div id="header-main">
+        {% block header-main %}
+        {% endblock %}
+    </div>
+    <section id="nav-container">
+        <nav id="nav-main" class="container">
+            {% block nav-main %}
+            {% endblock %}
+        </nav>
+    </section>
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <div id="sidebar">
+        {% block sidebar %}
+        {% endblock %}
+    </div>
+    <div id="footer">
+        {% block footer %}
+        {% endblock %}
+    </div>
+</body>
+</html>
