@@ -1,13 +1,12 @@
 import numpy as np
 import scipy as sp
-import scipy.misc
-import scipy.optimize
 import matplotlib.pyplot as pp
 import os
 import math
 import sys
 import warnings
 import logging
+import image_reader
 warnings.simplefilter("ignore", np.ComplexWarning)
 
 # this file is _experimental_ and
@@ -18,10 +17,7 @@ OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output")
 
 
 def ics_run(tt):
-    image = sp.misc.imread('RGBtemp.bmp')
-    r = image[:, :, 0].astype('d')
-    g = image[:, :, 1].astype('d')
-    b = image[:, :, 2].astype('d')
+    (r, g, b) = image_reader.get_channels_single('RGBtemp.bmp')
     rval = 20
     init = np.array([1, 10, 0], dtype=np.float64)
     res = np.empty((7, 3))
