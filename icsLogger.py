@@ -8,19 +8,21 @@ FORMAT = '[%(asctime)s] %(levelname)s [%(name)s] ' + \
     '<%(threadName)s>: %(message)s'
 DATE_FMT = '%I:%M:%S %p'
 
-logging.basicConfig(level=logging.DEBUG,
-                    format=FORMAT,
-                    datefmt=DATE_FMT)
-# create console handler and set level to debug
-#ch = logging.StreamHandler()
-#ch.setLevel(logging.DEBUG)
+logger = logging.getLogger('')
+logger.setLevel(logging.DEBUG)
+
+consoleHandler = logging.StreamHandler()
+consoleHandler.setLevel(logging.INFO)
+
 # 2 MB rotating files, up to three.
-rfh = RotatingFileHandler("ics.log", maxBytes=2097152, backupCount=3)
-rfh.setLevel(logging.DEBUG)
+rotatingFileHandler = RotatingFileHandler("ics.log", maxBytes=2097152,
+                                          backupCount=3)
+rotatingFileHandler.setLevel(logging.DEBUG)
 # create formatter
 formatter = logging.Formatter(FORMAT, datefmt=DATE_FMT)
-#ch.setFormatter(formatter)
-rfh.setFormatter(formatter)
-#logging.getLogger('').addHandler(ch)
-logging.getLogger('').addHandler(rfh)
-logging.info("=== Started Logger ===")
+rotatingFileHandler.setFormatter(formatter)
+consoleHandler.setFormatter(formatter)
+
+logger.addHandler(rotatingFileHandler)
+logger.addHandler(consoleHandler)
+logging.debug("=== Started Logger ===")
