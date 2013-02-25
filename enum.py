@@ -1,7 +1,5 @@
 """ Function to generate Enum types.
 
-From http://stackoverflow.com/questions/36932/whats-the-best-way-to-implement-an-enum-in-python
-
 >>> Numbers = enum('ZERO', 'ONE', 'TWO', THREE='three')
 >>> Numbers.ZERO
 0
@@ -9,6 +7,13 @@ From http://stackoverflow.com/questions/36932/whats-the-best-way-to-implement-an
 1
 >>> Numbers.reverse_mapping['three']
 THREE
+
+Copyright (c) 2009 - 2013 Alec Thomas
+From http://stackoverflow.com/questions/36932/whats-the-best-way-to-implement-an-enum-in-python
+
+As the code is from stack overflow, it is attributed under Creative Commons
+Attribution-ShareAlike 2.5 Generic. The full text of this license is availabe
+at: http://creativecommons.org/licenses/by-sa/2.5/legalcode.
 """
 
 

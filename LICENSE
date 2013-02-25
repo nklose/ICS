@@ -1,0 +1,47 @@
+This Agreement, effective the 1st day of April 2013, is entered into by and
+between Dr. Nils Petersen (hereinafter “client”) and the students of the
+Biomembrane team (hereinafter “the development team”), in order to establish
+terms and conditions concerning the completion of the Image Correlation
+Spectroscopy application (hereinafter “The Application”) which is limited to the
+application domain of application-domain (hereinafter “the domain of use for the
+application”).  It is agreed by the client and the development team that all
+domain specific knowledge and compiled research is the intellectual property of
+the client, regarded as a copyrighted collection. The framework and code base
+created by the development team is their own intellectual property, and may only
+be used for the purposes outlined in the documentation of the application, which
+has been provided to the client. The development team agrees not to use their
+framework for, or take part in the development of, anything that falls within
+the domain of use for the application, for a period of 6 (six) months after the
+signing of this agreement.
+
+
+In addition, many dependecies are licensed under the BSD License:
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+
+    * Neither the name of the author or of the author's organization
+      may be used to endorse or promote products derived from this
+      software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
