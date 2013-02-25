@@ -18,11 +18,11 @@ file and sorted by total time taken.
 
 from __future__ import division
 import numpy as np
-import scipy.misc
 import os
 import dual
 import triple
 import warnings
+import image_reader
 warnings.simplefilter('ignore',np.ComplexWarning)
 
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
@@ -30,10 +30,7 @@ ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
 def run(pdata,image_name,colors):
     if not os.path.exists(pdata):
         os.makedirs(pdata)
-    image = scipy.misc.imread(image_name)
-    r = image[:,:,0].astype('d')
-    g = image[:,:,1].astype('d')
-    b = image[:,:,2].astype('d')
+    (r, g, b) = image_reader.get_channels_single(image_name)
     n = None
     p = [(r,n,n),(g,n,n),(b,n,n),(r,g,n),(r,b,n),(g,b,n),(r,g,b)]
     res = np.empty((7,3))
