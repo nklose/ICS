@@ -119,10 +119,9 @@ def run():
     isg = shifted[1,:,:].ctypes.data_as(c_void_p)
     isb = shifted[2,:,:].ctypes.data_as(c_void_p)
     idata = data_rgb.ctypes.data_as(c_void_p);
-    idualdata = dual_tmp.ctypes.data_as(c_void_p);
     
     # initialize the c library
-    lib.init(ilim,idata,iside,idualdata)
+    lib.init(ilim,idata)
     
     for fnum in range(num_files):
         
