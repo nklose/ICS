@@ -27,8 +27,8 @@ void core(data,sr,sg,sb,side,lim)
     c128 (*restrict isr)[side] = sr;
     c128 (*restrict isg)[side] = sg;
     c128 (*restrict isb)[side] = sb;
-    int factor = lim*lim*16;
     if (lim <= side/2){
+        int factor = lim*lim*16;
         for (int i=0; i<nb; i++)
             memset(&idata[i][0][0][0],0,(nb-i)*factor);
         for (int i=nb; i<lim; i++)

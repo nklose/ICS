@@ -20,6 +20,12 @@ def gauss_2d(x,g0,g1,g2):
     dim = int(np.sqrt(np.size(x)))
     return g0*np.exp((-((x//dim)**2+(x%dim)**2))/g1_sq)+g2
 
+def call_core(lib,idata,isr,isg,isb,iside,ilim):
+    lib.core(idata,isr,isg,isb,iside,ilim)
+    
+def call_execute(lib):
+    lib.execute()
+
 class DefaultConfig:
     side = 128
     input_directory = 'input/'
@@ -190,8 +196,8 @@ def run():
         shifted[2,:,:] = np.conj(shifted[2,:,:])/(side**2)
         
         # call c functions
-        lib.core(idata,isr,isg,isb,iside,ilim)
-        lib.execute()
+        call_core(lib,idata,isr,isg,isb,iside,ilim)
+        call_execute(lib)
         
         # the line below uses the built-in function rather than fftw
         # if using this, multiply part_rgb by lim**4 later
