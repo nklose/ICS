@@ -2,12 +2,12 @@
 Qadri, and James Wang under the 401 IP License.
 
 This Agreement, effective the 1st day of April 2013, is entered into by and
-between Dr. Nils Petersen (hereinafter “client”) and the students of the
-Biomembrane team (hereinafter “the development team”), in order to establish
+between Dr. Nils Petersen (hereinafter "client") and the students of the
+Biomembrane team (hereinafter "the development team"), in order to establish
 terms and conditions concerning the completion of the Image Correlation
-Spectroscopy application (hereinafter “The Application”) which is limited to the
-application domain of application-domain (hereinafter “the domain of use for the
-application”).  It is agreed by the client and the development team that all
+Spectroscopy application (hereinafter "The Application") which is limited to the
+application domain of application-domain (hereinafter "the domain of use for the
+application").  It is agreed by the client and the development team that all
 domain specific knowledge and compiled research is the intellectual property of
 the client, regarded as a copyrighted collection. The framework and code base
 created by the development team is their own intellectual property, and may only
