@@ -20,7 +20,7 @@ def gauss_2d(x,g0,g1,g2):
     dim = int(np.sqrt(np.size(x)))
     return g0*np.exp((-((x//dim)**2+(x%dim)**2))/g1_sq)+g2
 
-class Config:
+class DefaultConfig:
     side = 128
     input_directory = 'input/'
     output_directory = 'output/'
@@ -35,6 +35,21 @@ class Config:
     input_type = 'mixed'
     output_type = 'summary'
 
+class SplitConfig:
+    side = 512
+    input_directory = 'badData/'
+    output_directory = 'output/'
+    name_min = 1
+    name_max = 9
+    name_format = '{:s}_{:03d}.bmp'
+    dual_range = 20
+    triple_range = 15
+    dual_initial = np.array([1,10,0],dtype=np.float)
+    triple_initial = np.array([50,2,0],dtype=np.float)
+    triple_lim = 64
+    input_type = 'split'
+    output_type = 'summary'
+
 def run():
     
     # setup the c library
@@ -46,7 +61,7 @@ def run():
     lib.execute.argtypes = []
     lib.destroy.argtypes = []
     
-    config = Config()
+    config = DefaultConfig()
     if not os.path.exists(config.output_directory):
         os.makedirs(config.output_directory)
     
@@ -57,20 +72,20 @@ def run():
     image = np.empty((3,side,side))
     
     avg = np.empty(3)
-    fft = np.empty((3,side,side), dtype=complex)
-    conj_fft = np.empty((3,side,side), dtype=complex)
+    fft = np.empty((3,side,side), dtype=np.complex)
+    conj_fft = np.empty((3,side,side), dtype=np.complex)
     dual_combinations = [(0,0),(1,1),(2,2),(0,1),(0,2),(1,2)]
     
     lim = config.triple_lim
-    shifted = np.empty((3,side,side), dtype=complex)
+    shifted = np.empty((3,side,side), dtype=np.complex)
     part_rgb = np.empty((6,lim,lim))
     
     # align data_rgb to 16-byte boundary
     nbytes = lim**4*16
     raw_data_rgb = np.empty(nbytes+16,dtype=np.uint8)
-    sidx = -raw_data_rgb.ctypes.data % 16
-    data_rgb = raw_data_rgb[sidx:sidx+nbytes].view(dtype=np.complex)\
-                                             .reshape(lim,lim,lim,lim)
+    start_idx = -raw_data_rgb.ctypes.data % 16
+    data_rgb = raw_data_rgb[start_idx:start_idx+nbytes]\
+        .view(dtype=np.complex).reshape(lim,lim,lim,lim)
     
     grid = np.ogrid[:lim,:lim]
     flip = 1-2*((grid[0]+grid[1])%2==1)
@@ -78,10 +93,16 @@ def run():
     dual_xdata = np.arange(config.dual_range**2)
     triple_xdata = np.arange(config.triple_range)
     
+    # align dual_tmp to 16-byte boundary
+    nbytes = side**2*16
+    raw_dual_tmp = np.empty(nbytes+16,dtype=np.uint8)
+    start_idx = -raw_dual_tmp.ctypes.data % 16
+    dual_tmp = raw_dual_tmp[start_idx:start_idx+nbytes]\
+        .view(dtype=np.complex).reshape(side,side)
+    
     dual_out = np.empty((6,config.dual_range,config.dual_range))
     dual_cov = np.empty((6,3,3))
     dual_par = np.empty((6,3))
-    dual_tmp = np.empty((side,side), dtype=complex)
     
     triple_out = np.empty(config.triple_range)
     triple_cov = np.empty((3,3))
@@ -98,13 +119,14 @@ def run():
     isg = shifted[1,:,:].ctypes.data_as(c_void_p)
     isb = shifted[2,:,:].ctypes.data_as(c_void_p)
     idata = data_rgb.ctypes.data_as(c_void_p);
+    idualdata = dual_tmp.ctypes.data_as(c_void_p);
     
     # initialize the c library
-    lib.init(ilim,idata)
+    lib.init(ilim,idata,iside,idualdata)
     
     for fnum in range(num_files):
         
-        print str.format('Processing {:4d} of {:4d} ...', fnum+1, num_files)
+        print str.format('Processing {:3d} of {:3d} ...', fnum+1, num_files)
         
         # read mixed input
         if config.input_type == 'mixed':
@@ -160,10 +182,7 @@ def run():
         part_rgb[3,:,:] = np.float64(data_rgb[0,:,0,:])
         part_rgb[4,:,:] = np.float64(data_rgb[:,0,:,0])
         part_rgb[5,:,:] = np.float64(data_rgb[:,0,0,:])
-        part_rgb *= flip*lim**4/(side**4*np.prod(avg))
-        
-        # scale output (only needed for fftw)
-        part_rgb /= lim**4
+        part_rgb *= flip/(side**4*np.prod(avg))
         
         np.ndarray.fill(triple_out,0)
         for i in range(6):
@@ -191,20 +210,19 @@ def run():
     lib.destroy()
     
     # generate header
-    colors = 'r:g:b:rg:rb:gb:rgb'.split(':')
-    parameters = 'g(0):w:ginf'.split(':')
+    colors = '--r:--g:--b:-rg:-rb:-gb:rgb'.split(':')
+    parameters = 'g(0):---w:ginf'.split(':')
     temp_header = ['']*21
     for i, color in enumerate(colors):
         for j, param in enumerate(parameters):
-            temp_header[i*3+j] = str.format('|{:3s}-{:4s}',color,param)
-    header = ' '.join(temp_header)
-    header = ' '*10 + header
+            temp_header[i*3+j] = str.format('|{:3s}-{:4s}-',color,param)
+    header = ' '*9 + ''.join(temp_header)
     
     # output results for the whole batch
     fpath = config.output_directory + 'results.txt'
     with open(fpath,'w') as f:
         f.write(header+'\n')
-        np.savetxt(f, results, fmt='%9.5f',)
+        np.savetxt(f,results,fmt='%9.5f',delimiter='|')
     print 'Done'
 
 def main(): run()  

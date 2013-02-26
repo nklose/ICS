@@ -26,7 +26,11 @@ void core(data,sr,sg,sb,side,lim)
     c128 (*restrict isr)[side] = sr;
     c128 (*restrict isg)[side] = sg;
     c128 (*restrict isb)[side] = sb;
-    memset(data,0,16*lim*lim*lim*lim);
+    int factor = lim*lim*16;
+    for (int i=0; i<nb; i++)
+        memset(&idata[i][0][0][0],0,(nb-i)*factor);
+    for (int i=nb; i<lim; i++)
+        memset(&idata[i][lim-(i-1)][0][0],0,(i-1)*factor);
     for (int v1=low; v1<high; v1++){
         int mlow = low-MIN(v1-1,0);
         int mhigh = high-MAX(v1,0);
@@ -43,8 +47,9 @@ void core(data,sr,sg,sb,side,lim)
 void init(int lim, void *data)
 {
     int dim[] = {lim,lim,lim,lim};
-    plan = fftw_plan_dft(4,dim,(c128 *)data,(c128 *)data,
-                         FFTW_BACKWARD,FFTW_ESTIMATE);
+    plan = fftw_plan_dft(4,dim,
+        (c128 *)data,(c128 *)data,
+        FFTW_BACKWARD,FFTW_ESTIMATE);
 }
 
 void execute()
