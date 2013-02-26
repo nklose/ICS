@@ -62,7 +62,7 @@ def run():
     lib.destroy.argtypes = []
     
     # setup the configurations to use
-    config = SplitConfig()
+    config = DefaultConfig()
     if not os.path.exists(config.output_directory):
         os.makedirs(config.output_directory)
     
