@@ -26,7 +26,7 @@ class DefaultConfig:
     output_directory = 'output/'
     name_min = 1
     name_max = 1
-    name_format = '{:s}_temp_{:03d}.bmp'
+    name_format = '{:s}_{:03d}.bmp'
     dual_range = 20
     triple_range = 15
     dual_initial = np.array([1,10,0],dtype=np.float)
@@ -36,6 +36,21 @@ class DefaultConfig:
     output_type = 'summary'
 
 class SplitConfig:
+    side = 128
+    input_directory = 'input/'
+    output_directory = 'output/'
+    name_min = 1
+    name_max = 1
+    name_format = '{:s}_{:03d}.bmp'
+    dual_range = 20
+    triple_range = 15
+    dual_initial = np.array([1,10,0],dtype=np.float)
+    triple_initial = np.array([50,2,0],dtype=np.float)
+    triple_lim = 32
+    input_type = 'split'
+    output_type = 'summary'
+
+class BadConfig:
     side = 512
     input_directory = 'accTests/inputs/badData/'
     output_directory = 'output/'
