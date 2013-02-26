@@ -3,14 +3,14 @@ import numpy as np
 import scipy.misc
 import scipy.optimize
 
-import sys
 import os
+import sys
 import warnings
 warnings.simplefilter('ignore',np.ComplexWarning)
 
 import ctypes
-from ctypes import c_void_p
 from ctypes import c_int
+from ctypes import c_void_p
 
 def gauss_1d(x,g0,g1,g2):
     return g0*np.exp(-(x**2)/(g1**2))+g2
