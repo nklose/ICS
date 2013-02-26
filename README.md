@@ -17,6 +17,9 @@ A few packages are required for the program:
    under the BSD License.
 3. django. django is Copyright (c) 2005-2013, Django Software Foundation and
    is licensed under the BSD License.
+4. fftw3. FFTW is Copyright (c) 2003, 2007-11 Matteo Frigo, 
+   Copyright (c) 2003, 2007-11 Massachusetts Institute of Technology 
+   and is licensed under the GPL (version 2 or later) License.
 
 In addition, if you wish to run testcases, the following modules are required:
 
