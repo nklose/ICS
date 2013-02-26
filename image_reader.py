@@ -108,7 +108,7 @@ def get_channels_separate(red_path, green_path, blue_path):
     Return Value:
         Tuple of RGB channels.
     """
-    r = open_image(red_path)[:, :, 0].astype('d')
-    g = open_image(green_path)[:, :, 1].astype('d')
-    b = open_image(blue_path)[:, :, 2].astype('d')
+    r = open_image(red_path).astype('d')
+    g = open_image(green_path).astype('d')
+    b = open_image(blue_path).astype('d')
     return (r, g, b)
