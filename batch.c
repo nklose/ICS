@@ -1,6 +1,7 @@
 // python style indenting:
 // :tabSize=4:indentSize=4:noTabs=true:
 
+#include <stdlib.h>
 #include <string.h>
 #include <complex.h>
 #include <fftw3.h>
@@ -27,21 +28,37 @@ void core(data,sr,sg,sb,side,lim)
     c128 (*restrict isg)[side] = sg;
     c128 (*restrict isb)[side] = sb;
     int factor = lim*lim*16;
-    for (int i=0; i<nb; i++)
-        memset(&idata[i][0][0][0],0,(nb-i)*factor);
-    for (int i=nb; i<lim; i++)
-        memset(&idata[i][lim-(i-1)][0][0],0,(i-1)*factor);
+    if (lim <= side/2){
+        for (int i=0; i<nb; i++)
+            memset(&idata[i][0][0][0],0,(nb-i)*factor);
+        for (int i=nb; i<lim; i++)
+            memset(&idata[i][lim-(i-1)][0][0],0,(i-1)*factor);
+        for (int v1=low; v1<high; v1++){
+            int mlow = low-MIN(v1-1,0);
+            int mhigh = high-MAX(v1,0);
+            for (int u1=mlow; u1<mhigh; u1++){
+                for (int v2=low; v2<high; v2++){
+                    for (int u2=low; u2<high; u2++){
+                        idata[nb+v1][nb+u1][nb+v2][nb+u2] =
+                        isr[na+u1][na+u2] *
+                        isg[na+v1][na+v2] *
+                        isb[na+u1+v1][na+u2+v2];
+    }}}}}
+    return;
+    memset(data,0,lim*lim*lim*lim*16);
     for (int v1=low; v1<high; v1++){
         int mlow = low-MIN(v1-1,0);
         int mhigh = high-MAX(v1,0);
         for (int u1=mlow; u1<mhigh; u1++){
             for (int v2=low; v2<high; v2++){
                 for (int u2=low; u2<high; u2++){
-                    idata[nb+v1][nb+u1][nb+v2][nb+u2] =
-                    isr[na+u1][na+u2] *
-                    isg[na+v1][na+v2] *
-                    isb[na+u1+v1][na+u2+v2];
-    }}}}
+                    if (abs(u2+v2) < na){
+                        idata[nb+v1][nb+u1][nb+v2][nb+u2] =
+                        isr[na+u1][na+u2] *
+                        isg[na+v1][na+v2] *
+                        isb[na+u1+v1][na+u2+v2];
+    }}}}}
+    return;
 }
 
 void init(int lim, void *data)

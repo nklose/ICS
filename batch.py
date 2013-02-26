@@ -37,10 +37,10 @@ class DefaultConfig:
 
 class SplitConfig:
     side = 512
-    input_directory = 'badData/'
+    input_directory = 'accTests/inputs/badData/'
     output_directory = 'output/'
     name_min = 1
-    name_max = 9
+    name_max = 10
     name_format = '{:s}_{:03d}.bmp'
     dual_range = 20
     triple_range = 15
@@ -61,7 +61,8 @@ def run():
     lib.execute.argtypes = []
     lib.destroy.argtypes = []
     
-    config = DefaultConfig()
+    # setup the configurations to use
+    config = SplitConfig()
     if not os.path.exists(config.output_directory):
         os.makedirs(config.output_directory)
     
@@ -100,17 +101,21 @@ def run():
     dual_tmp = raw_dual_tmp[start_idx:start_idx+nbytes]\
         .view(dtype=np.complex).reshape(side,side)
     
+    # store output results for dual correlations
     dual_out = np.empty((6,config.dual_range,config.dual_range))
     dual_cov = np.empty((6,3,3))
     dual_par = np.empty((6,3))
     
+    # store output results for triple correlations
     triple_out = np.empty(config.triple_range)
     triple_cov = np.empty((3,3))
     triple_par = np.empty(3)
     
     name_min = config.name_min
     num_files = config.name_max-config.name_min+1
-    results = np.empty((num_files,22))
+    
+    # store summary results
+    results = np.empty((num_files,32))
     
     # prepare arguments to pass to c code
     ilim = c_int(lim)
@@ -172,7 +177,9 @@ def run():
         # call c functions
         lib.core(idata,isr,isg,isb,iside,ilim)
         lib.execute()
+        
         # the line below uses the built-in function rather than fftw
+        # if using this, multiply part_rgb by lim**4 later
         # data_rgb = np.fft.ifftn(data_rgb)
         
         part_rgb[0,:,:] = np.float64(data_rgb[:,:,0,0])
@@ -197,27 +204,34 @@ def run():
         
         # assign results for a single row
         results[fnum,0] = name_min+fnum
+        results[fnum,1:4] = avg[:]/255
         for i in range(6):
-            results[fnum,i*3+1:i*3+4] = dual_par[i,:]
-        results[fnum,19:22] = triple_par[:]
+            results[fnum,(i+1)*4:(i+2)*4-1] = dual_par[i,:]
+            # add variance of dual below
+            results[fnum,(i+2)*4-1] = np.float64(0)
+        results[fnum,28:31] = triple_par[:]
+        # add variance of triple below
+        results[fnum,31] = np.float64(0)
         
         # perform output for a single image
         if config.output_type == 'summary': continue
-        # add output type split and mixed
+        # add output type full
 
     # clean up the c library
     lib.destroy()
     
-    # generate header
+    # generate table header
     colors = '--r:--g:--b:-rg:-rb:-gb:rgb'.split(':')
-    parameters = 'g(0):---w:ginf'.split(':')
-    temp_header = ['']*21
+    parameters = 'g(0):---w:ginf:-var'.split(':')
+    temp_header_1 = ['']*28
     for i, color in enumerate(colors):
         for j, param in enumerate(parameters):
-            temp_header[i*3+j] = str.format('|{:3s}-{:4s}-',color,param)
-    header = ' '*9 + ''.join(temp_header)
+            temp_header_1[i*4+j] = str.format('|{}-{}-',color,param)
+    scolors = '--r:--g:--b'.split(':')
+    temp_header_2 = [str.format('|{}--avg-',color) for color in scolors]
+    header = ' '*9 + ''.join(temp_header_2) + ''.join(temp_header_1)
     
-    # output results for the whole batch
+    # output summary of results for the whole batch
     fpath = config.output_directory + 'results.txt'
     with open(fpath,'w') as f:
         f.write(header+'\n')
