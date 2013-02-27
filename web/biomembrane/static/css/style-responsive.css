@@ -1,0 +1,112 @@
+/*!
+    * Responsive CSS3 Style Sheet
+*/
+
+/*
+    Basic Structure
+*/
+
+.header {
+    height: 180px; /* made responsive using media queries below */
+}
+
+.header-main {
+    margin-left:10%;
+    margin-right:10%;
+}
+.content {
+    min width: 600px;
+    max width: 90%;
+}
+
+#content-body {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.sidebar {
+    width: 300px;
+    float: right;
+}
+
+.sidebar:empty {
+    display:none;
+}
+
+#footer {
+    clear: both;
+}
+
+#copyright {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+/*
+    Global Rules
+*/
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+@media \0screen {
+ img {
+    width: auto; /* for ie 8 */
+  }
+}
+
+/*
+    Media Queries
+*/
+
+/* for 980px or less */
+@media screen and (max-width: 980px) {
+
+    #pagewrap {
+        width: 94%;
+    }
+
+    #content {
+        width: 65%;
+    }
+
+    #sidebar {
+        width: 30%;
+    }
+}
+
+/* for 700px or less */
+@media screen and (max-width: 700px) {
+
+    #header {
+         height: auto;
+    }
+
+    #content {
+        width: auto;
+        float: none;
+    }
+
+    #sidebar {
+        width: auto;
+        float: none;
+    }
+}
+
+/* for 480px or less */
+@media screen and (max-width: 480px) {
+
+    #header {
+        height: auto;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    #sidebar {
+        display: none;
+    }
+}

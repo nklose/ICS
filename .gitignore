@@ -2,3 +2,4 @@
 *.log
 output/*
 *.so
+settings_local.py

@@ -1,22 +1,24 @@
 {% extends "generic.html" %}
-
-{% block title %}Image correlation spectroscopy{% endblock %}
-
-{% block content %}
-<div id="rgb-controls">
-    {% block rgb-controls %}
-    {% endblock %}
-</div>
-<div id="rgbimg-display">
-    {% block rgbimg-display %}
-    {% endblock %}
-</div>
-<div id="ics-settings">
-    {% block ics-settings %}
-    {% endblock %}
-</div>
-<div id="app-controls">
-    {% block app-controls %}
-    {% endblock %}
-</div>
+{% block stylesheet %}
+<style type="text/css">
+ .sortable {
+  font-size: 3em;
+  display: inline;
+ }
+</style>
+{% endblock %}
+{% block script %}
+<script>
+   $(function() {
+    $( "#sortable-img" ).sortable();
+    $( "#sortable-img" ).disableSelection();
+   });
+</script>
+{% endblock %}
+{% block header-main %}<h1>ICS Heading</h1>{% endblock %}
+{% block content-body %}<h2>ICS Content</h2>
+<div id="rgbimg-display">{% include "rgbimg_display.html" %}</div>
+<div id="rgb-settings">{% include "rgb_settings.html" %}</div>
+<div id="ics-controls">{% include "rgb_controls.html" %}</div>
+<div id="app-controls">{% include "app_controls.html" %}<div>
 {% endblock %}

@@ -3,39 +3,26 @@
 <head>
     <!-- viewport meta to reset iPhone inital scale -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!--[if lt IE 9]>
-	<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+    <meta charset="utf-8">
+    <!--[if lt IE 9]> <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
     <![endif]-->
-
-    <!-- Specify another stylesheet -->
-    <link rel="stylesheet" type="text/css" href="{{section.style}}">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-responsive.css"/>
+    {% comment %}Specify additional stylesheet{% endcomment %}
     {% block stylesheet %}{% endblock %}
 
-    <title>{% block title %}{{ section.title }}{% endblock %}</title>
+     <title>{% block title %}{{sec_title}}{% endblock %}</title>
 </head>
 <body>
-    <div id="header-main" class="header">
-        {% block header-main %}
-        {% endblock %}
-    </div>
+    <div id="header" class="header">{% block header %}{% endblock %}</div>
     <section id="nav-container">
-        <nav id="nav-main" class="container">
-            {% block nav-main %}
-            {% endblock %}
-        </nav>
+        <nav id="nav-main" class="container">{% block nav-main %}{% endblock %}</nav>
     </section>
-    <div id="content" class="content">
-        {% block content %}
-        {% endblock %}
-    </div>
-    <div id="sidebar" class="sidebar">
-        {% block sidebar %}
-        {% endblock %}
-    </div>
-    <div id="footer" class="footer">
-        {% block footer %}
-        {% endblock %}
-    </div>
+    <div id="content" class="content">{% block content %}{% endblock %}</div>
+    <div id="sidebar" class="sidebar">{% block sidebar %}{% endblock %}</div>
+    <div id="footer" class="footer">{% block footer %}{% endblock %}</div>
 </body>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.10.1.custom.min.js"></script>
+{% comment %}Specify additional scripts{% endcomment %}
+{% block script %}{% endblock %}
 </html>
