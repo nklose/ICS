@@ -19,3 +19,8 @@ framework for, or take part in the development of, anything that falls within
 the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
+from django.shortcuts import render_to_response
+
+def test(request):
+    
+    return render_to_response('icslayout.html', {'section.title': "This is a Test"})
