@@ -10,9 +10,18 @@
     height: 180px;
 }
 
+.header-main {
+    margin-left:10%;
+    margin-right:10%;
+}
 .content {
-    width: 600px;
-    float: left;
+    min width: 600px;
+    max width: 90%;
+}
+
+#content-body {
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 .sidebar {
@@ -20,8 +29,32 @@
     float: right;
 }
 
+.sidebar:empty {
+    display:none;
+}
+
 #footer {
     clear: both;
+}
+
+#copyright {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+/*
+    Global Rules
+*/
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+@media \0screen {
+ img {
+    width: auto; /* for ie 8 */
+  }
 }
 
 /*

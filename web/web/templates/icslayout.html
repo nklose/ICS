@@ -1,22 +1,42 @@
 {% extends "generic.html" %}
-
-{% block title %}Image correlation spectroscopy{% endblock %}
-
-{% block content %}
-<div id="rgb-controls">
-    {% block rgb-controls %}
-    {% endblock %}
-</div>
-<div id="rgbimg-display">
-    {% block rgbimg-display %}
-    {% endblock %}
-</div>
-<div id="ics-settings">
-    {% block ics-settings %}
-    {% endblock %}
-</div>
-<div id="app-controls">
-    {% block app-controls %}
-    {% endblock %}
-</div>
+{% block stylesheet %}
+<style type="text/css">
+ .sortable {
+  font-size: 3em;
+  display: inline;
+ }
+</style>
 {% endblock %}
+{% block script %}
+<script>
+   $(function() {
+    $( "#sortable-img" ).sortable();
+    $( "#sortable-img" ).disableSelection();
+   });
+</script>
+{% endblock %}
+{% block header-main %}<h1>ICS Heading</h1>{% endblock %}
+{% block title %}Image correlation spectroscopy{% endblock %}
+{% block content-body %}
+ <h2>ICS Content</h2>
+ <div id="rgbimg-display">
+ <p>Reorder the images by dragging and dropping them.</p>
+   {% block rgbimg-display %}
+    <ul id="sortable-img">
+    {% for img in rgbimgs %}
+     <li class=""><img src="{{ img.url }}" alt="{{ img.name }}" /></l1>
+    {% empty %}
+     <li class="sortable">[[Red]]</li>
+     <li class="sortable">[[Green]]</li>
+     <li class="sortable">[[Blue]]</li>
+    {% endfor %}
+    </ul>
+    {% endblock %}
+ </div>
+</div>
+<div id="rgb-settings">{% block rgb-settings %}{% endblock %}</div>
+<div id="ics-controls">{% block ics-controls %}{% endblock %}</div>
+<div id="app-controls">{% block app-controls %}{% endblock %}<div>
+{% endblock %}
+
+

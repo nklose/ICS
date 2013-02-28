@@ -2,21 +2,17 @@
 
 {% block stylesheet %}
 {# Add additional stylesheets here #}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-responsive.css"/>
 {% endblock %}
 
-{% block nav-main %}
-{% endblock %}
+{% block header %}<div id="header-main" class="header-main">{%block header-main %}{% endblock%}</div>{% endblock %}
+{% block nav-main %}{% endblock %}
+{% block content %}<div id="content-body">{% block content-body %}{% endblock%}</div>{% endblock %}
 
 {% block footer %}
-<h1>Testing CSS</h1>
 {# Generic footer includes uses University Of Aliberta Website Copyright parm=copyrightdate #}
-
-{% block copyright %}
- <div id="copyright">&copy {{ coyrightdate }}<a href="http://www.ualberta.ca/">University of Alberta</a> 116 St. and 85 Ave., Edmonton, AB, Canada T6G 2R3</div>
+<div id="copyright">{% block copyright %}
+&copy {{ coyrightdate }}<a href="http://www.ualberta.ca/">University of Alberta</a> 116 St. and 85 Ave., Edmonton, AB, Canada T6G 2R3
+</div>{% endblock %}
 {% endblock %}
-
-{% endblock %}
-
 
 
