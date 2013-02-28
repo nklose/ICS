@@ -1,0 +1,12 @@
+ {% block rgbimg-display  %}
+ <p>Reorder the images by dragging and dropping them.</p>
+    <ul id="sortable-img">
+    {% for img in rgbimgs %}
+     <li class=""><img src="{{ img.url }}" alt="{{ img.name }}" /></l1>
+    {% empty %}
+     <li class="sortable">[[Red]]</li>
+     <li class="sortable">[[Green]]</li>
+     <li class="sortable">[[Blue]]</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

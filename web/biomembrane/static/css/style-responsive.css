@@ -7,7 +7,7 @@
 */
 
 .header {
-    height: 180px;
+    height: 180px; /* made responsive using media queries below */
 }
 
 .header-main {
@@ -79,6 +79,10 @@ img {
 
 /* for 700px or less */
 @media screen and (max-width: 700px) {
+
+    #header {
+         height: auto;
+    }
 
     #content {
         width: auto;

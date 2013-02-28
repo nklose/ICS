@@ -9,14 +9,11 @@
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-responsive.css"/>
     {% comment %}Specify additional stylesheet{% endcomment %}
     {% block stylesheet %}{% endblock %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.10.1.custom.min.js"></script>
-    {% comment %}Specify additional scripts{% endcomment %}
-    {% block script %}{% endblock %}
-     <title>{% block title %}{{ section.title }}{% endblock %}</title>
+
+     <title>{% block title %}{{sec_title}}{% endblock %}</title>
 </head>
 <body>
-    <div class="header">{% block header %}{% endblock %}</div>
+    <div id="header" class="header">{% block header %}{% endblock %}</div>
     <section id="nav-container">
         <nav id="nav-main" class="container">{% block nav-main %}{% endblock %}</nav>
     </section>
@@ -24,6 +21,8 @@
     <div id="sidebar" class="sidebar">{% block sidebar %}{% endblock %}</div>
     <div id="footer" class="footer">{% block footer %}{% endblock %}</div>
 </body>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.10.1.custom.min.js"></script>
+{% comment %}Specify additional scripts{% endcomment %}
+{% block script %}{% endblock %}
 </html>
-
-
