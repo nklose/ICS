@@ -50,7 +50,7 @@ class MixedConfig:
     triple_lim = 32
     input_type = 'mixed'
     output_type = 'full'
-    output_numbered = False
+    output_numbering = ''
 
 class SplitConfig:
     side = 128
@@ -66,7 +66,7 @@ class SplitConfig:
     triple_lim = 32
     input_type = 'split'
     output_type = 'summary'
-    output_numbered = False
+    output_numbering = ''
 
 class BadConfig:
     side = 512
@@ -81,8 +81,8 @@ class BadConfig:
     triple_initial = np.array([50,2,0],dtype=np.float)
     triple_lim = 64
     input_type = 'split'
-    output_type = 'summary'
-    output_numbered = True
+    output_type = 'full'
+    output_numbering = '{:03d}'
 
 def run(config):
     
@@ -157,7 +157,7 @@ def run(config):
     
     for fnum in range(num_files):
         
-        print str.format('Processing {:3d} of {:3d} ...',fnum+1,num_files)
+        print str.format('Processing {:5d} of {:5d} ...',fnum+1,num_files)
         
         # generate file paths
         if config.input_type == 'mixed':
@@ -251,8 +251,9 @@ def run(config):
         if config.output_type == 'full':
             fprefix = ''
             fdir = config.output_directory
-            fidx = str.format('{:03d}',name_min+fnum)
-            if config.output_numbered: fprefix = fidx + '_'
+            if config.output_numbering != '':
+                fidx = str.format(config.output_numbering,name_min+fnum) 
+                fprefix = fidx + '_'
             for i in range(6):
                 if i <  3: fcode = 'AC' 
                 if i >= 3: fcode = 'XC'
@@ -287,5 +288,5 @@ def run(config):
         np.savetxt(f,results,fmt='%9.5f',delimiter='|')
     print 'Done'
 
-def main(): run(MixedConfig())  
+def main(): run(BadConfig())  
 if __name__ == "__main__": main()

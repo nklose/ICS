@@ -79,8 +79,14 @@ def run_trip(pdata,r,g,b,color):
     avg_b = np.average(b)
     avg_rgb = avg_r*avg_g*avg_b
     (sr,sg,sb) = triple.core_0(r,g,b)
+    # over here in the UI, you would display surfc(abs(sr))
+    # to allow the user to determine a suitable lim, rather
+    # than hard coding it
     lim = 32
     part_rgb = triple.core_1(sr,sg,sb,avg_rgb,lim)
+    # over here in the UI, you would display surfc(part_rgb[0,:,:])
+    # to allow the user to determine a suitable range_val and
+    # initial_val, rather than hard coding them
     range_val = 15
     initial_val = np.array([50,2,0],dtype=np.float64)
     (out,par) = triple.core_2(part_rgb,range_val,initial_val)
