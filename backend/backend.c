@@ -1,5 +1,16 @@
-// python style indenting:
+// python style indenting
 // :tabSize=4:indentSize=4:noTabs=true:
+
+/*
+ * Backend functions
+ *
+ * This file contains functions that are written in C and are called
+ * from the backend python code in order to ensure that computationally
+ * expensive sections are executed quickly and efficiently.
+ *
+ * Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson,
+ * Omar Qadri, and James Wang under the 401 IP License (see LICENSE file)
+ */
 
 #include <stdlib.h>
 #include <string.h>

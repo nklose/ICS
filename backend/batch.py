@@ -1,49 +1,60 @@
+"""Runs a batch job
+
+This file contains functions that run a batch job with a given
+configuration. Three sample configurations are given below.
+Run with 'python batch.py'.
+
+Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson,
+Omar Qadri, and James Wang under the 401 IP License (see LICENSE file)
+"""
+
 from __future__ import division
 import numpy as np
-import scipy.misc
 import scipy.optimize
 
 import os
 import sys
-import warnings
-warnings.simplefilter('ignore',np.ComplexWarning)
-
 import ctypes
 from ctypes import c_int
 from ctypes import c_void_p
+import backend_utils as butils
 
-def gauss_1d(x,g0,g1,g2):
-    return g0*np.exp(-(x**2)/(g1**2))+g2
+import warnings
+warnings.simplefilter('ignore',np.ComplexWarning)
 
-def gauss_2d(x,g0,g1,g2):
-    g1_sq = g1**2
-    dim = int(np.sqrt(np.size(x)))
-    return g0*np.exp((-((x//dim)**2+(x%dim)**2))/g1_sq)+g2
+raw_image = None
+ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
 
-def call_core(lib,idata,isr,isg,isb,iside,ilim):
-    lib.core(idata,isr,isg,isb,iside,ilim)
-    
-def call_execute(lib):
-    lib.execute()
+def load_image(image,fpaths):
+    if len(fpaths) == 1:
+        raw_image = scipy.misc.imread(fpaths[0])
+        for i in range(3):
+            image[i,:,:] = raw_image[:,:,i].astype(np.float)
+    elif len(fpaths) == 3:
+        for i in range(3):
+            raw_image = scipy.misc.imread(fpaths[i])
+            image[i,:,:] = raw_image.astype(np.float)
+    return 2**(8*raw_image.itemsize)
 
-class DefaultConfig:
+class MixedConfig:
     side = 128
-    input_directory = 'input/'
+    input_directory = '../accTests/inputs/RGBtemp/'
     output_directory = 'output/'
     name_min = 1
     name_max = 1
-    name_format = '{:s}_{:03d}.bmp'
+    name_format = 'rgb_{:03d}.bmp'
     dual_range = 20
     triple_range = 15
     dual_initial = np.array([1,10,0],dtype=np.float)
     triple_initial = np.array([50,2,0],dtype=np.float)
     triple_lim = 32
     input_type = 'mixed'
-    output_type = 'summary'
+    output_type = 'full'
+    output_numbered = False
 
 class SplitConfig:
     side = 128
-    input_directory = 'input/'
+    input_directory = '../accTests/inputs/RGBtemp/'
     output_directory = 'output/'
     name_min = 1
     name_max = 1
@@ -55,10 +66,11 @@ class SplitConfig:
     triple_lim = 32
     input_type = 'split'
     output_type = 'summary'
+    output_numbered = False
 
 class BadConfig:
     side = 512
-    input_directory = 'accTests/inputs/badData/'
+    input_directory = '../accTests/inputs/badData/'
     output_directory = 'output/'
     name_min = 1
     name_max = 10
@@ -70,30 +82,23 @@ class BadConfig:
     triple_lim = 64
     input_type = 'split'
     output_type = 'summary'
+    output_numbered = True
 
-def run():
+def run(config):
     
     # setup the c library
-    lib_dir = os.path.dirname(os.path.realpath(__file__))
-    lib_path = os.path.join(lib_dir,'libbatch.so')
-    lib = ctypes.cdll.LoadLibrary(lib_path)
-    lib.core.argtypes = [c_void_p,c_void_p,c_void_p,c_void_p,c_int,c_int]
-    lib.init.argtypes = [c_int,c_void_p]
-    lib.execute.argtypes = []
-    lib.destroy.argtypes = []
+    lib = butils.load_library()
     
-    # setup the configurations to use
-    config = DefaultConfig()
+    # create output directory if needed
     if not os.path.exists(config.output_directory):
         os.makedirs(config.output_directory)
     
     # declare python variables
     side = config.side
-    image_split = np.empty((side,side), dtype=np.uint8)
-    image_mixed = np.empty((side,side,3), dtype=np.uint8)
     image = np.empty((3,side,side))
     
     avg = np.empty(3)
+    max_possible_pixel = None
     fft = np.empty((3,side,side), dtype=np.complex)
     conj_fft = np.empty((3,side,side), dtype=np.complex)
     dual_combinations = [(0,0),(1,1),(2,2),(0,1),(0,2),(1,2)]
@@ -124,15 +129,16 @@ def run():
     
     # store output results for dual correlations
     dual_out = np.empty((6,config.dual_range,config.dual_range))
-    dual_cov = np.empty((6,3,3))
+    dual_fit = np.empty((6,config.dual_range,config.dual_range))
     dual_par = np.empty((6,3))
     
     # store output results for triple correlations
     triple_out = np.empty(config.triple_range)
-    triple_cov = np.empty((3,3))
+    triple_fit = np.empty(config.triple_range)
     triple_par = np.empty(3)
     
     name_min = config.name_min
+    name_fmt = config.name_format
     num_files = config.name_max-config.name_min+1
     
     # store summary results
@@ -151,22 +157,23 @@ def run():
     
     for fnum in range(num_files):
         
-        print str.format('Processing {:3d} of {:3d} ...', fnum+1, num_files)
+        print str.format('Processing {:3d} of {:3d} ...',fnum+1,num_files)
         
-        # read mixed input
+        # generate file paths
         if config.input_type == 'mixed':
-            fname = str.format(config.name_format,'rgb',name_min+fnum)
-            fpath = config.input_directory + fname
-            image_mixed = scipy.misc.imread(fpath)
-            for i in range(3):
-                image[i,:,:] = image_mixed[:,:,i].astype('d')
-        # read split input
+            fname = str.format(name_fmt,name_min+fnum)
+            fpaths = [config.input_directory + fname]
         elif config.input_type == 'split':
+            fpaths = ['','','']
             for i in range(3):
-                fname = str.format(config.name_format,'rgb'[i],name_min+fnum)
-                fpath = config.input_directory + fname
-                image_split = scipy.misc.imread(fpath)
-                image[i,:,:] = image_split.astype('d')
+                fname = str.format(name_fmt,'rgb'[i],name_min+fnum)
+                fpaths[i] = config.input_directory + fname
+        else:
+            print 'Invalid input type: ' + config.input_type
+            sys.exit(1)
+        
+        # read image
+        max_possible_pixel = load_image(image,fpaths)
         
         # perform some preprocessing
         for i in range(3):
@@ -182,11 +189,14 @@ def run():
             dual_out[i,:,:] = np.float64(dual_tmp[0:rval,0:rval])/denom - 1
             first_entry = dual_out[i,0,0]
             dual_out[i,0,0] = dual_out[i,0,1]
-            (dual_par[i,:] ,dual_cov[i,:,:]) = \
-                scipy.optimize.curve_fit(gauss_2d, dual_xdata,
-                np.reshape(dual_out[i,:,:],rval**2),
-                config.dual_initial)
+            
+            # dual curve fitting
+            (dual_par[i,:],_) = \
+                scipy.optimize.curve_fit(butils.gauss_2d,dual_xdata,
+                np.reshape(dual_out[i,:,:],rval**2),config.dual_initial)
             dual_par[i,1] = abs(dual_par[i,1])
+            dual_fit[i,:,:] = butils.gauss_2d(dual_xdata,*dual_par[i,:])\
+                .reshape(rval,rval)
             dual_out[i,0,0] = first_entry
         
         # perform triple correlation
@@ -196,8 +206,8 @@ def run():
         shifted[2,:,:] = np.conj(shifted[2,:,:])/(side**2)
         
         # call c functions
-        call_core(lib,idata,isr,isg,isb,iside,ilim)
-        call_execute(lib)
+        lib.core(idata,isr,isg,isb,iside,ilim)
+        lib.execute()
         
         # the line below uses the built-in function rather than fftw
         # if using this, multiply part_rgb by lim**4 later
@@ -217,33 +227,51 @@ def run():
             triple_out += part_rgb[i,0:config.triple_range,0]
         triple_out /= 12
         
-        (triple_par[:], triple_cov[:,:]) = \
-            scipy.optimize.curve_fit(gauss_1d,triple_xdata,
-            triple_out, config.triple_initial)
+        # triple curve fitting
+        (triple_par[:],_) = \
+            scipy.optimize.curve_fit(butils.gauss_1d,triple_xdata,
+            triple_out,config.triple_initial)
         triple_par[1] = abs(triple_par[1])
+        triple_fit = butils.gauss_1d(triple_xdata,*triple_par)
         triple_par[1] = int(triple_par[1]*(side/lim)*10)/10
         
-        # assign results for a single row
+        # assign dual results for a single row
         results[fnum,0] = name_min+fnum
-        results[fnum,1:4] = avg[:]/255
+        results[fnum,1:4] = avg[:]/max_possible_pixel
         for i in range(6):
             results[fnum,(i+1)*4:(i+2)*4-1] = dual_par[i,:]
-            # add variance of dual below
-            results[fnum,(i+2)*4-1] = np.float64(0)
-        results[fnum,28:31] = triple_par[:]
-        # add variance of triple below
-        results[fnum,31] = np.float64(0)
+            results[fnum,(i+2)*4-1] = \
+                np.sum((dual_out[i,:,:]-dual_fit[i,:,:])**2)
         
-        # perform output for a single image
-        if config.output_type == 'summary': continue
-        # add output type full
+        # assign triple results for a single row
+        results[fnum,28:31] = triple_par[:]
+        results[fnum,31] = np.sum((triple_out-triple_fit)**2)
+        
+        # write out and fit only for output_type full
+        if config.output_type == 'full':
+            fprefix = ''
+            fdir = config.output_directory
+            fidx = str.format('{:03d}',name_min+fnum)
+            if config.output_numbered: fprefix = fidx + '_'
+            for i in range(6):
+                if i <  3: fcode = 'AC' 
+                if i >= 3: fcode = 'XC'
+                fpath1 = fdir + fprefix + fcode + ALL_COLORS[i] + '.txt'
+                fpath2 = fdir + fprefix + fcode + ALL_COLORS[i] + 'Fit.txt'
+                np.savetxt(fpath1, dual_out[i,:,:], fmt='%9.5f')
+                np.savetxt(fpath2, dual_fit[i,:,:], fmt='%9.5f')
+            fpath1 = fdir + fprefix + 'TripleCrgb.txt'
+            fpath2 = fdir + fprefix + 'TripleCrgbFit.txt'
+            np.savetxt(fpath1, triple_out, fmt='%9.5f')
+            np.savetxt(fpath2, triple_fit, fmt='%9.5f')
+        # end write
 
     # clean up the c library
     lib.destroy()
     
     # generate table header
     colors = '--r:--g:--b:-rg:-rb:-gb:rgb'.split(':')
-    parameters = 'g(0):---w:ginf:-var'.split(':')
+    parameters = 'g(0):---w:ginf:norm'.split(':')
     temp_header_1 = ['']*28
     for i, color in enumerate(colors):
         for j, param in enumerate(parameters):
@@ -259,5 +287,5 @@ def run():
         np.savetxt(f,results,fmt='%9.5f',delimiter='|')
     print 'Done'
 
-def main(): run()  
+def main(): run(MixedConfig())  
 if __name__ == "__main__": main()
