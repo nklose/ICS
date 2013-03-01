@@ -288,5 +288,5 @@ def run(config):
         np.savetxt(f,results,fmt='%9.5f',delimiter='|')
     print 'Done'
 
-def main(): run(BadConfig())  
+def main(): run(MixedConfig())  
 if __name__ == "__main__": main()
