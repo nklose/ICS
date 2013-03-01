@@ -108,4 +108,3 @@ def core_2(part_rgb,range_val,initial_val):
     # since we later square w, we conventionally choose the positive value
     par[1] = abs(par[1])
     return (out,par)
-
