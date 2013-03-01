@@ -30,8 +30,5 @@ def run(mdata,pdata,epsilon):
     else:
         print str.format('Total {:d} incorrect files',num_wrong)
 
-def path(dir,fname,ext):
-    return str.format('{}{}{}.{}',dir,os.sep,fname,ext)
-
 def main(): run('../accTests/outputs/RGBtemp/','output/',0.0005)
 if __name__ == "__main__": main()
