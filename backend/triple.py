@@ -21,8 +21,6 @@ import ctypes
 from ctypes import c_int
 from ctypes import c_void_p
 
-lib = butils.load_library()
-
 def core_0(r,g,b):
     """Computes the first part of the triple correlation
 
@@ -71,6 +69,7 @@ def core_1(sr,sg,sb,avg_rgb,lim):
     iside = c_int(side)
     ilim = c_int(lim)
     
+    lib = butils.backend_lib
     lib.core(idata,isr,isg,isb,iside,ilim)
     data_rgb = np.fft.ifftn(np.fft.fftshift(data_rgb))
     part_rgb = np.empty((lim,lim,6))

@@ -86,8 +86,8 @@ class BadConfig:
 
 def run(config):
     
-    # setup the c library
-    lib = butils.load_library()
+    # get a handle to the library
+    lib = butils.backend_lib
     
     # create output directory if needed
     if not os.path.exists(config.output_directory):

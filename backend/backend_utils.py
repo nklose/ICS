@@ -65,3 +65,6 @@ def load_library():
     lib.execute.argtypes = []
     lib.destroy.argtypes = []
     return lib
+
+# a handle to the C library
+backend_lib = load_library()
