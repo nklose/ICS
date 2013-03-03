@@ -6,6 +6,10 @@
     Basic Structure
 */
 
+h1 {
+    color: red;
+}
+
 .header {
     height: 180px; /* made responsive using media queries below */
 }
