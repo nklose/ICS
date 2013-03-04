@@ -81,7 +81,7 @@ class BadConfig:
     triple_initial = np.array([50,2,0],dtype=np.float)
     triple_lim = 64
     input_type = 'split'
-    output_type = 'full'
+    output_type = 'summary'
     output_numbering = '{:03d}'
 
 def run(config):
@@ -210,7 +210,7 @@ def run(config):
         lib.execute()
         
         # the line below uses the built-in function rather than fftw
-        # if using this, multiply part_rgb by lim**4 later
+        # if using this, multiply part_rgb by lim**4 rather than flip
         # data_rgb = np.fft.ifftn(data_rgb)
         
         part_rgb[0,:,:] = np.float64(data_rgb[:,:,0,0])

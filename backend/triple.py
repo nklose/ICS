@@ -37,9 +37,9 @@ def core_0(r,g,b):
     avg_r = np.average(r)
     avg_g = np.average(g)
     avg_b = np.average(b)
-    return (np.fft.fftshift(np.fft.fftn(r-avg_r)),
-            np.fft.fftshift(np.fft.fftn(g-avg_g)),
-            np.fft.fftshift(np.fft.fftn(b-avg_b)))
+    return (np.fft.fftshift(np.fft.fft2(r-avg_r)),
+             np.fft.fftshift(np.fft.fft2(g-avg_g)),
+             np.fft.fftshift(np.fft.fft2(b-avg_b)))
 
 def core_1(sr,sg,sb,avg_rgb,lim):
     """Computes the second part of the triple correlation
@@ -55,7 +55,7 @@ def core_1(sr,sg,sb,avg_rgb,lim):
             the sides for all dimensions)
 
     Return values:
-        part_rgb: [lim lim 6 f64] values needed to display the
+        part_rgb: [6 lim lim f64] values needed to display the
             triple correlation and to compute the final results
     """
     side = np.shape(sr)[0]
@@ -72,13 +72,13 @@ def core_1(sr,sg,sb,avg_rgb,lim):
     lib = butils.backend_lib
     lib.core(idata,isr,isg,isb,iside,ilim)
     data_rgb = np.fft.ifftn(np.fft.fftshift(data_rgb))
-    part_rgb = np.empty((lim,lim,6))
-    part_rgb[:,:,0] = np.float64(data_rgb[:,:,0,0])
-    part_rgb[:,:,1] = np.float64(data_rgb[0,:,:,0])
-    part_rgb[:,:,2] = np.float64(data_rgb[0,0,:,:])
-    part_rgb[:,:,3] = np.float64(data_rgb[0,:,0,:])
-    part_rgb[:,:,4] = np.float64(data_rgb[:,0,:,0])
-    part_rgb[:,:,5] = np.float64(data_rgb[:,0,0,:])
+    part_rgb = np.empty((6,lim,lim))
+    part_rgb[0,:,:] = np.float64(data_rgb[:,:,0,0])
+    part_rgb[1,:,:] = np.float64(data_rgb[0,:,:,0])
+    part_rgb[2,:,:] = np.float64(data_rgb[0,0,:,:])
+    part_rgb[3,:,:] = np.float64(data_rgb[0,:,0,:])
+    part_rgb[4,:,:] = np.float64(data_rgb[:,0,:,0])
+    part_rgb[5,:,:] = np.float64(data_rgb[:,0,0,:])
     part_rgb *= lim**4/(side**4*avg_rgb)
     return part_rgb
 
@@ -86,7 +86,7 @@ def core_2(part_rgb,range_val,initial_val):
     """Computes the third (final) part of the triple correlation
 
     Arguments:
-        part_rgb: [lim lim 6 f64] values needed to display the triple
+        part_rgb: [6 lim lim f64] values needed to display the triple
             correlation function and to compute the final results
         range_val: [int] the range to use for the computation
         initial_val: [3 f64] the initial guesses for the three curve
@@ -99,8 +99,8 @@ def core_2(part_rgb,range_val,initial_val):
     lim = part_rgb.shape[1]
     out = np.zeros(range_val)
     for i in range(6):
-        out += part_rgb[0,0:range_val,i]
-        out += part_rgb[0:range_val,0,i]
+        out += part_rgb[i,0,0:range_val]
+        out += part_rgb[i,0:range_val,0]
     out /= 12
     xdata = np.arange(range_val)
     (par,_) = scipy.optimize.curve_fit(butils.gauss_1d,
