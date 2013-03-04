@@ -38,8 +38,8 @@ def core_0(r,g,b):
     avg_g = np.average(g)
     avg_b = np.average(b)
     return (np.fft.fftshift(np.fft.fft2(r-avg_r)),
-             np.fft.fftshift(np.fft.fft2(g-avg_g)),
-             np.fft.fftshift(np.fft.fft2(b-avg_b)))
+            np.fft.fftshift(np.fft.fft2(g-avg_g)),
+            np.fft.fftshift(np.fft.fft2(b-avg_b)))
 
 def core_1(sr,sg,sb,avg_rgb,lim):
     """Computes the second part of the triple correlation
