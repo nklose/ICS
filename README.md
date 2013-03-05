@@ -24,6 +24,10 @@ A few packages are required for the program:
 1999-2011 ImageMagick Studio LLC, a non-profit organization dedicated to making
 software imaging solutions freely available.
 
+6. PyQT. PyQT is Copyright (c) 2013, Riverbank Computing Limited. 
+   Riverbank Computing Limited is a company registered in England and Wales 
+   with company number 4314904.
+
 In addition, if you wish to run testcases, the following modules are required:
 
 1. mock (sudo pip install -U mock). mock is Copyright (c) 2003-2010, Michael
