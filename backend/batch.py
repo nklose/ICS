@@ -45,7 +45,9 @@ class MixedConfig:
     name_format = 'rgb_{:03d}.bmp'
     dual_range = 20
     triple_range = 15
-    dual_initial = np.array([1,10,0],dtype=np.float)
+    auto_consider_deltas = False
+    cross_consider_deltas = False
+    dual_initial = np.array([1,10,0,0,0],dtype=np.float)
     triple_initial = np.array([50,2,0],dtype=np.float)
     triple_lim = 32
     input_type = 'mixed'
@@ -61,7 +63,9 @@ class SplitConfig:
     name_format = '{:s}_{:03d}.bmp'
     dual_range = 20
     triple_range = 15
-    dual_initial = np.array([1,10,0],dtype=np.float)
+    auto_consider_deltas = False
+    cross_consider_deltas = False
+    dual_initial = np.array([1,10,0,0,0],dtype=np.float)
     triple_initial = np.array([50,2,0],dtype=np.float)
     triple_lim = 32
     input_type = 'split'
@@ -77,7 +81,9 @@ class BadConfig:
     name_format = '{:s}_{:03d}.bmp'
     dual_range = 20
     triple_range = 15
-    dual_initial = np.array([1,10,0],dtype=np.float)
+    auto_consider_deltas = False
+    cross_consider_deltas = False
+    dual_initial = np.array([1,10,0,0,0],dtype=np.float)
     triple_initial = np.array([50,2,0],dtype=np.float)
     triple_lim = 64
     input_type = 'split'
@@ -130,7 +136,8 @@ def run(config):
     # store output results for dual correlations
     dual_out = np.empty((6,config.dual_range,config.dual_range))
     dual_fit = np.empty((6,config.dual_range,config.dual_range))
-    dual_par = np.empty((6,3))
+    dual_par = np.empty((6,5))
+    dual_used = np.empty(6)
     
     # store output results for triple correlations
     triple_out = np.empty(config.triple_range)
@@ -142,7 +149,7 @@ def run(config):
     num_files = config.name_max-config.name_min+1
     
     # store summary results
-    results = np.empty((num_files,32))
+    results = np.empty((num_files,53))
     
     # prepare arguments to pass to c code
     ilim = c_int(lim)
@@ -191,12 +198,24 @@ def run(config):
             dual_out[i,0,0] = dual_out[i,0,1]
             
             # dual curve fitting
-            (dual_par[i,:],_) = \
-                scipy.optimize.curve_fit(butils.gauss_2d,dual_xdata,
-                np.reshape(dual_out[i,:,:],rval**2),config.dual_initial)
+            if i<3: using_deltas = config.auto_consider_deltas
+            if i>=3: using_deltas = config.cross_consider_deltas
+            if using_deltas:
+                (dual_par[i,:],_) = \
+                    scipy.optimize.curve_fit(butils.gauss_2d_deltas,dual_xdata,
+                    np.reshape(dual_out[i,:,:],rval**2),config.dual_initial)
+                if dual_par[i,3]>config.dual_initial[1] or dual_par[i,4]>config.dual_initial[1]: 
+                    using_deltas = False
+            if not using_deltas:
+                (dual_par[i,0:3],_) = \
+                    scipy.optimize.curve_fit(butils.gauss_2d,dual_xdata,
+                    np.reshape(dual_out[i,:,:],rval**2),config.dual_initial[0:3])
+                dual_par[i,3] = 0
+                dual_par[i,4] = 0
             dual_par[i,1] = abs(dual_par[i,1])
-            dual_fit[i,:,:] = butils.gauss_2d(dual_xdata,*dual_par[i,:])\
+            dual_fit[i,:,:] = butils.gauss_2d_deltas(dual_xdata,*dual_par[i,:])\
                 .reshape(rval,rval)
+            dual_used[i] = float(using_deltas)
             dual_out[i,0,0] = first_entry
         
         # perform triple correlation
@@ -235,17 +254,21 @@ def run(config):
         triple_fit = butils.gauss_1d(triple_xdata,*triple_par)
         triple_par[1] = int(triple_par[1]*(side/lim)*10)/10
         
-        # assign dual results for a single row
+        # assign results for a single row
         results[fnum,0] = name_min+fnum
         results[fnum,1:4] = avg[:]/max_possible_pixel
+        
+        # assign dual results for a single row
         for i in range(6):
-            results[fnum,(i+1)*4:(i+2)*4-1] = dual_par[i,:]
-            results[fnum,(i+2)*4-1] = \
+            results[fnum,4+(i*7):4+(i*7)+5] = dual_par[i,:]
+            results[fnum,4+(i*7)+5] = dual_used[i]
+            results[fnum,4+(i*7)+6] = \
                 np.sum((dual_out[i,:,:]-dual_fit[i,:,:])**2)
         
         # assign triple results for a single row
-        results[fnum,28:31] = triple_par[:]
-        results[fnum,31] = np.sum((triple_out-triple_fit)**2)
+        results[fnum,4+(6*7):4+(6*7)+3] = triple_par[:]
+        results[fnum,4+(6*7)+3:4+(6*7)+6] = 0
+        results[fnum,4+(6*7)+6] = np.sum((triple_out-triple_fit)**2)
         
         # write out and fit only for output_type full
         if config.output_type == 'full':
@@ -272,11 +295,11 @@ def run(config):
     
     # generate table header
     colors = '--r:--g:--b:-rg:-rb:-gb:rgb'.split(':')
-    parameters = 'g(0):---w:ginf:norm'.split(':')
-    temp_header_1 = ['']*28
+    parameters = 'g(0):---w:ginf:--dx:--dy:used:norm'.split(':')
+    temp_header_1 = ['']*49
     for i, color in enumerate(colors):
         for j, param in enumerate(parameters):
-            temp_header_1[i*4+j] = str.format('|{}-{}-',color,param)
+            temp_header_1[i*7+j] = str.format('|{}-{}-',color,param)
     scolors = '--r:--g:--b'.split(':')
     temp_header_2 = [str.format('|{}--avg-',color) for color in scolors]
     header = ' '*9 + ''.join(temp_header_2) + ''.join(temp_header_1)
