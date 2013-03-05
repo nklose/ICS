@@ -52,7 +52,7 @@ class MixedConfig:
     triple_lim = 32
     input_type = 'mixed'
     output_type = 'full'
-    output_numbering = ''
+    output_numbering = 'none'
 
 class SplitConfig:
     side = 128
@@ -70,7 +70,7 @@ class SplitConfig:
     triple_lim = 32
     input_type = 'split'
     output_type = 'summary'
-    output_numbering = ''
+    output_numbering = 'none'
 
 class BadConfig:
     side = 512
@@ -274,7 +274,7 @@ def run(config):
         if config.output_type == 'full':
             fprefix = ''
             fdir = config.output_directory
-            if config.output_numbering != '':
+            if config.output_numbering != 'none':
                 fidx = str.format(config.output_numbering,name_min+fnum) 
                 fprefix = fidx + '_'
             for i in range(6):
