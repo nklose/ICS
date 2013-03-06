@@ -2,6 +2,10 @@
 
 import os
 import os.path
+import djcelery
+
+djcelery.setup_loader()
+BROKER_URL = 'amqp://biomembrane:biomembrane@localhost:5672/'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -135,6 +139,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
+	'djcelery',
     'biomembrane',
 )
 
