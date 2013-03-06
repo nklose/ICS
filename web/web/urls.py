@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
-from biomembrane.views import test
+from biomembrane import views as view
 
 admin.autodiscover()
 
@@ -10,7 +10,9 @@ urlpatterns = patterns('',
     # url(r'^$', 'web.views.home', name='home'),
     # url(r'^web/', include('web.foo.urls')),
 
+    #url(r'/', view.home),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^test/', test),
+    url(r'^test/', view.test),
+    url(r'^home/', view.home),
 )

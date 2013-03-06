@@ -1,8 +1,39 @@
 {% block rgb-controls %}
-<p>RGB controls</p>
-<ul>
- <li class="sortable">[[Correlation Settings]]</li>
- <li class="sortable">[[Channels]]</li>
- <li class="sortable">[[Autocorrelation Parameters]]</li>
-</ul>
+<h3>RGB controls</h3>
+<div class="rgbimg-background">
+ <ul class="nav nav-tabs">
+   <li><a href="#auto" data-toggle="tab">Auto-Correlation</a></li>
+   <li><a href="#cross" data-toggle="tab">Cross-Correlation</a></li>
+   <li><a href="#triplecross" data-toggle="tab">Triple-Correlation</a></li>
+    <li><a href="#all" data-toggle="tab">All</a></li>
+ </ul>
+
+<div class="tab-content">
+   <div class="tab-pane active" id="auto">
+    <div class="row-fluid">
+     <div class="span2"><h4>Channel</h4></div>
+     <div class="span2"><h4>Paramters</h4></div>
+    </div>
+   </div>
+   <div class="tab-pane" id="cross">
+    <div class="row-fluid">
+     <div class="span2"><h4>Channel</h4></div>
+     <div class="span2"><h4>Paramters</h4></div>
+    </div>
+   </div>
+   <div class="tab-pane" id="triplecross">
+    <div class="row-fluid">
+     <div class="span2"><h4>Channel</h4></div>
+     <div class="span2"><h4>Paramters</h4></div>
+    </div>
+   </div>
+   <div class="tab-pane" id="all">
+    <div class="row-fluid">
+     <div class="span2"><h4>Channel</h4></div>
+     <div class="span2"><h4>Paramters</h4></div>
+    </div>
+   </div>
+ </div>
+</div>
+
 {% endblock %}

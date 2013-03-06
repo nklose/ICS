@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 
-{% block stylesheet %}
+{% block stylesheet %}{{ block.super }}
 {# Add additional stylesheets here #}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/navbar.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-generic.css">
 {% endblock %}
 
-{% block header %}<div id="header-main" class="header-main">{%block header-main %}{% endblock%}</div>{% endblock %}
-{% block nav-main %}{% endblock %}
-{% block content %}<div id="content-body">{% block content-body %}{% endblock%}</div>{% endblock %}
-
+{% block script %}
+{# Menu Animation Script #}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/navbar.js"></script>
+{{ block.super }}{% endblock %}
+{% block nav-main %}{% include "navbar.html" %}{% endblock nav-main %}
+{% block content %}<div id="content-body">{% block content-body %}<div class="content-main">{% block content-main %}{% endblock content-main %}</div>{% endblock content-body%}</div>{% endblock content %}
 {% block footer %}
 {# Generic footer includes uses University Of Aliberta Website Copyright parm=copyrightdate #}
 <div id="copyright">{% block copyright %}

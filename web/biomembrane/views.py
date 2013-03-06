@@ -33,3 +33,15 @@ def test(request):
         - sec_ title: The title of the section.
     """
     return render(request, 'icslayout.html',{"sec_title": "This is a test"})
+
+def home(request):
+    """ Renders a home  view.
+         Template: /web/web/templates/homepage.html
+
+         Request parameters (ie, parameters in the request object):
+         - None
+
+         Context parameters (ie, keys in the dictionary passed to the template):
+        - sec_ title: The title of the section.
+    """
+    return render(request, 'homepage.html',{"sec_title": "Homepage"})
