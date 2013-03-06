@@ -64,7 +64,7 @@ class Image(models.Model):
     def __unicode__(self):
         return self.imageType
 
-class Paramaters(models.Model):
+class Parameters(models.Model):
     # TODO: Store which images to correlate
     AUTO, CROSS, TRIPLE = u'a', u'c', u't'
     CORRELATION_TYPES = (
