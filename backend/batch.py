@@ -245,6 +245,8 @@ def run_3(info,config):
     info.results[fnum,4+(6*7)+6] = np.sum((info.triple_out-info.triple_fit)**2)
 
 def run_4(info,config):
+    if config.output_type == 'none': return
+    if config.output_type == 'summary': return
     # save out and fit as files
     fprefix = ''
     fnum = info.cur_files
@@ -290,8 +292,7 @@ def run_once(info,config):
     run_1(info,config)
     run_2(info,config)
     run_3(info,config)
-    if config.output_type == 'full':
-        run_4(info,config)
+    run_4(info,config)
 
 def run(info,config):
     setup(info,config)
