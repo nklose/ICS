@@ -2,6 +2,14 @@
 
 import os
 import os.path
+import djcelery
+
+# Get absolute path of project
+PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
+
+# Configure celery
+djcelery.setup_loader()
+BROKER_URL = 'amqp://biomembrane:biomembrane@localhost:5672/'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -48,7 +56,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = PROJECT_ROOT + '/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -135,6 +143,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'djcelery',
     'biomembrane',
 )
 

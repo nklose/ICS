@@ -38,15 +38,13 @@ def run(pdata,image_name,colors):
     b = image[:,:,2].astype('d')
     n = None
     p = [(r,n,n),(g,n,n),(b,n,n),(r,g,n),(r,b,n),(g,b,n),(r,g,b)]
-    res = np.empty((7,4))
+    res = np.empty((7,7))
     np.ndarray.fill(res,np.nan)
     for color in colors:
         i = list.index(ALL_COLORS,color)
-        (par,resnorm) = run_any(pdata,p[i][0],p[i][1],p[i][2],color)
-        res[i,0:3] = par
-        res[i,3] = resnorm
-    header = str.format('{:>9s} {:>9s} {:>9s} {:>9s}',
-                        'g(0)','w','ginf','norm')
+        res[i,:] = run_any(pdata,p[i][0],p[i][1],p[i][2],color)
+    header = str.format('{:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s}',
+                        'g(0)','w','ginf','dx','dy','used','norm')
     fpath = pdata + 'results.txt'
     with open(fpath,'w') as f:
         f.write(header+'\n')
@@ -59,9 +57,10 @@ def run_any(pdata,a,b,c,color):
 
 def run_dual(pdata,a,b,c,color):
     range_val = 20
-    initial_val = np.array([1,10,0],dtype=np.float64)
-    (out,par) = dual.core(a,b,range_val,initial_val)
-    fit = butils.gauss_2d(np.arange(range_val**2),*par)\
+    initial_val = np.array([1,10,0,0,0],dtype=np.float64)
+    consider_deltas = False
+    (out,par,used_deltas) = dual.core(a,b,range_val,initial_val,consider_deltas)
+    fit = butils.gauss_2d_deltas(np.arange(range_val**2),*par)\
         .reshape(range_val,range_val)
     resnorm = np.sum((out-fit)**2)
     if len(color) == 1: code = 'AC'
@@ -70,19 +69,22 @@ def run_dual(pdata,a,b,c,color):
     fname2 = code+color+'Fit.txt'
     np.savetxt(pdata+fname1,out,fmt='%9.5f')
     np.savetxt(pdata+fname2,fit,fmt='%9.5f')
-    return (par,resnorm)
+    full_par = np.zeros(7)
+    full_par[0:5] = par
+    full_par[5] = used_deltas
+    full_par[6] = resnorm
+    return full_par
 
 def run_trip(pdata,r,g,b,color):
     side = np.shape(r)[0]
-    avg_r = np.average(r)
-    avg_g = np.average(g)
-    avg_b = np.average(b)
-    avg_rgb = avg_r*avg_g*avg_b
-    (sr,sg,sb) = triple.core_0(r,g,b)
+    (avg_r,sr) = triple.core_0(r)
+    (avg_g,sg) = triple.core_0(g)
+    (avg_b,sb) = triple.core_0(b)
     # over here in the UI, you would display surfc(abs(sr))
     # to allow the user to determine a suitable lim, rather
     # than hard coding it
     lim = 32
+    avg_rgb = avg_r*avg_g*avg_b
     part_rgb = triple.core_1(sr,sg,sb,avg_rgb,lim)
     # over here in the UI, you would display surfc(part_rgb[0,:,:])
     # to allow the user to determine a suitable range_val and
@@ -97,7 +99,10 @@ def run_trip(pdata,r,g,b,color):
     fname2 = 'TripleCrgbFit.txt'
     np.savetxt(pdata+fname1,out,fmt='%9.5f',delimiter='\n')
     np.savetxt(pdata+fname2,fit,fmt='%9.5f',delimiter='\n')
-    return (par,resnorm)
+    full_par = np.zeros(7)
+    full_par[0:3] = par
+    full_par[6] = resnorm
+    return full_par
     
 def main(): run('output/','../accTests/inputs/RGBtemp/rgb_001.bmp',ALL_COLORS)
 if __name__ == "__main__": main()

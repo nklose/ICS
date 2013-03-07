@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <complex.h>
-#include <fftw3.h>
+#include "fftw3.h"
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
@@ -54,8 +54,9 @@ void core(data,sr,sg,sb,side,lim)
                         isr[na+u1][na+u2] *
                         isg[na+v1][na+v2] *
                         isb[na+u1+v1][na+u2+v2];
-    }}}}}
-    return;
+        }}}}
+        return;
+    }
     memset(data,0,lim*lim*lim*lim*16);
     for (int v1=low; v1<high; v1++){
         int mlow = low-MIN(v1-1,0);
@@ -69,7 +70,6 @@ void core(data,sr,sg,sb,side,lim)
                         isg[na+v1][na+v2] *
                         isb[na+u1+v1][na+u2+v2];
     }}}}}
-    return;
 }
 
 void init(int lim, void *data)

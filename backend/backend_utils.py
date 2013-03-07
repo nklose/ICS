@@ -49,6 +49,27 @@ def gauss_2d(x,g0,w,ginf):
     dim = int(np.sqrt(np.size(x)))
     return g0*np.exp((-((x//dim)**2+(x%dim)**2))/w_sq)+ginf
 
+def gauss_2d_deltas(x,g0,w,ginf,dx,dy):
+    """Computes a 2d gaussian curve at various points,
+    considering deltas in the x and y directions
+
+    Arguments:
+        x: [n^2 int] the array from which the region to calculate
+            the function over is obtained as [0,n) x [0,n)
+        g0: [f64] the first parameter -- amplitude
+        w: [f64] the second parameter -- width
+        ginf: [f64] the third parameter -- value at infinity
+        dx: [f64] the fourth parameter -- delta x
+        dy: [f64] the fifth parameter -- delta y
+
+    Return values:
+        out: [n^2 f64] the value of the gaussian curve with the
+            given parameters at the points obtained from array x
+    """
+    w_sq = w**2
+    dim = int(np.sqrt(np.size(x)))
+    return g0*np.exp((-(((x//dim)+dy)**2+((x%dim)+dx)**2))/w_sq)+ginf
+
 def load_library():
     """Loads the C library used to speed up the program
     
