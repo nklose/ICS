@@ -18,24 +18,25 @@ Omar Qadri, and James Wang under the 401 IP License (see LICENSE file)
 
 from __future__ import division
 import numpy as np
-import scipy.misc
 import os
 import dual
 import triple
-import backend_utils as butils
 
 import warnings
 warnings.simplefilter('ignore',np.ComplexWarning)
+
+import backend_utils as butils
+import backend_imread as bimread
 
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
 
 def run(pdata,image_name,colors):
     if not os.path.exists(pdata):
         os.makedirs(pdata)
-    image = scipy.misc.imread(image_name)
-    r = image[:,:,0].astype('d')
-    g = image[:,:,1].astype('d')
-    b = image[:,:,2].astype('d')
+    (_,image) = bimread.load_image([image_name])
+    r = image[0]
+    g = image[1]
+    b = image[2]
     n = None
     p = [(r,n,n),(g,n,n),(b,n,n),(r,g,n),(r,b,n),(g,b,n),(r,g,b)]
     res = np.empty((7,7))
