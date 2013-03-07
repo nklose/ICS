@@ -18,8 +18,8 @@ def core(image1,image2,range_val,initial_val,consider_deltas):
     """Computes the auto or cross correlation
 
     Arguments:
-        image1: [2^n 2^n f64] the first image
-        image2: [2^n 2^n f64] the second image; if the function is
+        image1: [n n f64] the first image
+        image2: [n n f64] the second image; if the function is
             used to compute autocorrelation, this arg should be None
         range_val: [int] the range to use for the computation
         initial_val: [5 f64] the initial guesses for the five curve fitting

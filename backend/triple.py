@@ -21,36 +21,29 @@ import ctypes
 from ctypes import c_int
 from ctypes import c_void_p
 
-def core_0(r,g,b):
-    """Computes the first part of the triple correlation
+def core_0(c):
+    """Computes the first part of the triple correlation for a single channel
 
     Arguments:
-        r: [2^n 2^n f64] the red channel of the image
-        g: [2^n 2^n f64] the green channel of the image
-        b: [2^n 2^n f64] the blue channel of the image
+        c: [n n f64] a channel of the image
 
     Return values:
-        sr: [2^n 2^n c128] the preprocessed red channel
-        sg: [2^n 2^n c128] the preprocessed green channel
-        sb: [2^n 2^n c128] the preprocessed blue channel
+        avg_c: [f64] the average pixel value of the channel
+        sc: [n n c128] the preprocessed channel
     """
-    avg_r = np.average(r)
-    avg_g = np.average(g)
-    avg_b = np.average(b)
-    return (np.fft.fftshift(np.fft.fft2(r-avg_r)),
-            np.fft.fftshift(np.fft.fft2(g-avg_g)),
-            np.fft.fftshift(np.fft.fft2(b-avg_b)))
+    avg_c = np.average(c)
+    return (avg_c, np.fft.fftshift(np.fft.fft2(c-avg_c)))
 
 def core_1(sr,sg,sb,avg_rgb,lim):
     """Computes the second part of the triple correlation
 
     Arguments:
-        sr: [2^n 2^n c128] the preprocessed red channel
-        sg: [2^n 2^n c128] the preprocessed green channel
-        sb: [2^n 2^n c128] the preprocessed blue channel
+        sr: [n n c128] the preprocessed red channel
+        sg: [n n c128] the preprocessed green channel
+        sb: [n n c128] the preprocessed blue channel
         avg_rgb: [f64] the product of the averages of the
             red, green, blue channels of the original image
-        lim: [2^n] the length of the side of part that requires
+        lim: [int] the length of the side of part that requires
             further computation (the part is square, so this sets
             the sides for all dimensions)
 
