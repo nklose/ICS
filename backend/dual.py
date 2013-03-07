@@ -49,10 +49,12 @@ def core(image1,image2,range_val,initial_val,consider_deltas):
     par = np.zeros(5)
     using_deltas = consider_deltas
     if using_deltas:
-        (par,_) = scipy.optimize.curve_fit(butils.gauss_2d_deltas,xdata,ydata,initial_val)
+        (par,_) = scipy.optimize.curve_fit(butils.gauss_2d_deltas,\
+            xdata,ydata,initial_val)
         if par[3]>initial_val[1] or par[4]>initial_val[1]: using_deltas = False
     if not using_deltas:
-        (par[0:3],_) = scipy.optimize.curve_fit(butils.gauss_2d,xdata,ydata,initial_val[0:3])
+        (par[0:3],_) = scipy.optimize.curve_fit(butils.gauss_2d,\
+            xdata,ydata,initial_val[0:3])
         par[3] = 0
         par[4] = 0
     # since we later square w, we conventionally choose the positive value

@@ -204,7 +204,8 @@ def run(config):
                 (dual_par[i,:],_) = \
                     scipy.optimize.curve_fit(butils.gauss_2d_deltas,dual_xdata,
                     np.reshape(dual_out[i,:,:],rval**2),config.dual_initial)
-                if dual_par[i,3]>config.dual_initial[1] or dual_par[i,4]>config.dual_initial[1]: 
+                if (dual_par[i,3]>config.dual_initial[1] or \
+                    dual_par[i,4]>config.dual_initial[1]): 
                     using_deltas = False
             if not using_deltas:
                 (dual_par[i,0:3],_) = \
