@@ -10,8 +10,8 @@ from PyQt4 import QtCore, QtGui
 from main_ICS import Ui_Dialog
 
 # Globals
-bool singleImage = False
-str mode = "auto"
+singleImage = False
+mode = "auto"
 
 class StartQT4(QtGui.QMainWindow):
     def __init__(self, parent=None):
