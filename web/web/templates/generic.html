@@ -1,16 +1,26 @@
 {% extends "base.html" %}
 
-{% block stylesheet %}
+{% block stylesheet %}{{ block.super }}
 {# Add additional stylesheets here #}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/navbar.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-generic.css">
 {% endblock %}
 
-{% block header %}<div id="header-main" class="header-main">{%block header-main %}{% endblock%}</div>{% endblock %}
-{% block nav-main %}{% endblock %}
-{% block content %}<div id="content-body">{% block content-body %}{% endblock%}</div>{% endblock %}
-
+{% block script %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/navbar.js"></script>
+{{ block.super }}
+{% endblock %}
+{% block nav-main %}{% include "navbar.html" %}{% endblock nav-main %}
+{% block content %}<div id="content-body">{% block content-body %}<div class="content-main">{% block content-main %}{% endblock content-main %}</div>{% endblock content-body%}</div>{% endblock content %}
 {% block footer %}
 {# Generic footer includes uses University Of Aliberta Website Copyright parm=copyrightdate #}
 <div id="copyright">{% block copyright %}
-&copy {{ coyrightdate }}<a href="http://www.ualberta.ca/">University of Alberta</a> 116 St. and 85 Ave., Edmonton, AB, Canada T6G 2R3</div>
+<small><p>CMPUT 401 Project 5 "Simulation and analysis of images for studies of biological membranes" for Dr Nils O. Petersen.</p>
+
+<p>Copryight &copy;  {{ copyrightdate }} Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar Qadri, and James Wang under the 401 IP License.</p>
+
+<p>&copy; {{ coyrightdate }}<a href="http://www.ualberta.ca/">University of Alberta</a> 116 St. and 85 Ave., Edmonton, AB, Canada T6G 2R3</p></small></div>
 {% endblock %}
 {% endblock %}
+
+

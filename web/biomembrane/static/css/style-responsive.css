@@ -7,12 +7,13 @@
 */
 
 .header {
-    height: 180px; /* made responsive using media queries below */
+    height: 100%; /* made responsive using media queries below */
 }
 
 .header-main {
     margin-left:10%;
     margin-right:10%;
+    height: 0.625em;
 }
 .content {
     min width: 600px;
@@ -35,11 +36,6 @@
 
 #footer {
     clear: both;
-}
-
-#copyright {
-    margin-left: 10%;
-    margin-right: 10%;
 }
 
 /*

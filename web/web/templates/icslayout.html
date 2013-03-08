@@ -1,24 +1,20 @@
 {% extends "generic.html" %}
 {% block stylesheet %}
-<style type="text/css">
- .sortable {
-  font-size: 3em;
-  display: inline;
- }
-</style>
-{% endblock %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">
+{% endblock stylesheet %}
 {% block script %}
-<script>
-   $(function() {
-    $( "#sortable-img" ).sortable();
-    $( "#sortable-img" ).disableSelection();
-   });
-</script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/ics_scripts/ics.js"></script>
+{{ block.super }}
 {% endblock %}
-{% block header-main %}<h1>ICS Heading</h1>{% endblock %}
-{% block content-body %}<h2>ICS Content</h2>
-<div id="rgbimg-display">{% include "rgbimg_display.html" %}</div>
-<div id="rgb-settings">{% include "rgb_settings.html" %}</div>
-<div id="ics-controls">{% include "rgb_controls.html" %}</div>
-<div id="app-controls">{% include "app_controls.html" %}<div>
-{% endblock %}
+{% block header-main %}{{block.super}}{% endblock %}
+{% block content-main %}
+<h2>Image Correlation Spectroscopy</h2>
+<form method="post" action="#">
+<div id="rgbimg-display" class="row-fluid">{% include "rgbimg_display.html" %}</div>
+<div id="img-attributes" class="row-fluid">{% include "img_attributes.html" %}</div>
+<div id="ics-controls" class="row-fluid">{% include "rgb_settings.html" %}</div>
+<div id="app-controls" class="row-fluid">{% include "app_controls.html" %}</div>
+</form>
+{% endblock content-main %}
+

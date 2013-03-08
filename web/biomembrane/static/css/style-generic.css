@@ -1,0 +1,42 @@
+/*!
+    * CSS3 Stylesheet for generic template properties
+*/
+
+.header {
+    background: #ECECEC;
+}
+
+body {
+    background: #ECECEC;
+}
+
+#content {
+    background: #ECECEC;
+
+}
+
+#content-body {
+  -webkit-border-radius: 0.625em;
+  -moz-border-radius: 0.625em;
+  border-radius: 0.625em;
+
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+  -moz-box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+  background: white;
+  border: 1px solid #C7C7C7;
+}
+
+.content-main {
+
+   margin-left: 5%;
+   margin-right: 5%;
+}
+
+#copyright {
+    -webkit-border-radius: 0.417em;
+    -moz-border-radius: 0.417em;
+    border-radius: 0.417em;
+    margin-left: 10%;
+    margin-right: 10%;
+}

@@ -1,12 +1,15 @@
  {% block rgbimg-display  %}
+<div class="rgbimg-background">
  <p>Reorder the images by dragging and dropping them.</p>
-    <ul id="sortable-img">
+    <ul class="sortableImgList" id="sortable-img">
     {% for img in rgbimgs %}
-     <li class=""><img src="{{ img.url }}" alt="{{ img.name }}" /></l1>
+     <li><span class="sortableImg"><img src="{{img.url}}" alt="{{img.name}}"/></span>{{img.type}}</li>
     {% empty %}
-     <li class="sortable">[[Red]]</li>
-     <li class="sortable">[[Green]]</li>
-     <li class="sortable">[[Blue]]</li>
+    <li><span class="sortableImg"><img src="{{ STATIC_URL }}img/no_img.png" alt="Image not loaded"/></span>All Channels</li>
+    <li><span class="sortableImg"><img src="{{ STATIC_URL }}img/no_img.png" alt="Image not loaded"/></span>Red</li>
+    <li><span class="sortableImg"><img src="{{ STATIC_URL }}img/no_img.png" alt="Image not loaded"/></span>Blue</li>
+    <li><span class="sortableImg"><img src="{{ STATIC_URL }}img/no_img.png" alt="Image not loaded"/></span>Green</li>
     {% endfor %}
     </ul>
-{% endblock %}
+</div>
+{% endblock rgbimg-display %}
