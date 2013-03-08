@@ -25,9 +25,9 @@ framework for, or take part in the development of, anything that falls within
 the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
+import PythonMagick
 import PIL
 import scipy
-import imghdr
 import logging
 
 
@@ -57,7 +57,7 @@ def open_image(filepath):
     Raises:
         image_converter.ImageFormatException: If file type is invalid
     """
-    validate_image(filepath)
+    image = validate_image(filepath)
     image = PIL.Image.open(filepath)
     return scipy.misc.fromimage(image)
 
@@ -69,32 +69,55 @@ def validate_image(filepath):
         filepath: The path to the file to open
         filepath type: string
 
+    Return Value:
+        The image opened in PIL.
+
     Raises:
         image_converter.ImageFormatException: If file type is invalid
     """
-    header_type = imghdr.what(filepath)
-    if header_type not in ['bmp', 'gif', 'png', 'tiff']:
-        raise ImageFormatException(filepath, header_type)
+    image = PythonMagick.Image(filepath)
+    comp_type = image.attribute("CompressionType")
+    LOGGER.debug("File: %s has CompressionType %s" % (filepath, comp_type))
+    if comp_type != '':
+        raise ImageFormatException(filepath, comp_type)
+    return convertMGtoPIL(image)
 
 
-def get_channels_single(filepath):
+def convertMGtoPIL(magickimage):
+    """ From http://www.imagemagick.org/download/python/README.txt
+    """
+    # make copy
+    img = PythonMagick.Image(magickimage)
+    # this takes 0.04 sec. for 640x480 image
+    img.depth = 8
+    img.magick = "RGB"
+    data = img.data
+    w, h = img.columns(), img.rows()
+    # convert string array to an RGB Pil image
+    pilimage = PIL.Image.fromstring('RGB', (w, h), data)
+    return pilimage
+
+
+def get_channels_single(filepath, astype="d"):
     """ Returns the RGB channels for a single image.
 
     Arguments:
         filepath: The path to the file to open
         filepath type: string
+        astype: The type to open the image as.
+    :   astype type: string or Type.
 
     Return Value:
         Tuple of RGB channels.
     """
     image = open_image(filepath)
-    r = image[:, :, 0].astype('d')
-    g = image[:, :, 1].astype('d')
-    b = image[:, :, 2].astype('d')
+    r = image[:, :, 0].astype(astype)
+    g = image[:, :, 1].astype(astype)
+    b = image[:, :, 2].astype(astype)
     return (r, g, b)
 
 
-def get_channels_separate(red_path, green_path, blue_path):
+def get_channels_separate(red_path, green_path, blue_path, astype="d"):
     """ Returns the RGB channels for channel separated images.
 
     Arguments:
@@ -104,11 +127,13 @@ def get_channels_separate(red_path, green_path, blue_path):
         green_path type: string
         blue_path: The path the blue image
         blue_path type: string
+        astype: The type to open the image as.
+    :   astype type: string or Type.
 
     Return Value:
         Tuple of RGB channels.
     """
-    r = open_image(red_path).astype('d')
-    g = open_image(green_path).astype('d')
-    b = open_image(blue_path).astype('d')
+    r = open_image(red_path).astype(astype)
+    g = open_image(green_path).astype(astype)
+    b = open_image(blue_path).astype(astype)
     return (r, g, b)

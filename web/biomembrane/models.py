@@ -22,37 +22,64 @@ signing of this agreement.
 from django.db import models
 from django.contrib.auth.models import User
 
-class Batch(models.Model):
-   user = models.ForeignKey(User)
+def generateFilePath(instance, filename):
+	""" Return something useful here """
 
-   def __unicode__(self):
-       return u'<placeholder>'
+class Batch(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return unicode(date.__str__())
 
 class Job(models.Model):
+    UPLOADING, RUNNING, COMPLETE = u'u', u'r', u'c'
     JOB_STATES = (
-        (u'u', u'Uploading'),
-        (u'r', u'Running'),
-        (u'c', u'Complete')
+        (UPLOADING, u'Uploading'),
+        (RUNNING, u'Running'),
+        (COMPLETE, u'Complete')
     )
 
+    number = models.IntegerField()
     state = models.CharField(max_length=1, choices=JOB_STATES)
     outputDir = models.CharField(max_length=255)
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
-        return u'<placeholder>'
+        return unicode(number)
 
 class Image(models.Model):
+    RED, GREEN, BLUE, RGB = u'r', u'g', u'b', u'rgb'
     IMAGE_TYPES = (
-        (u'r', u'Red'),
-        (u'g', u'Green'),
-        (u'b', u'Blue'),
-        (u'rgb', u'Red/Green/Blue')
+        (RED, u'Red'),
+        (GREEN, u'Green'),
+        (BLUE, u'Blue'),
+        (RGB, u'Red/Green/Blue')
     )
 
-    path = models.CharField(max_length=255)
+    data = models.ImageField(upload_to=generateFilePath)
     imageType = models.CharField(max_length=3, choices=IMAGE_TYPES)
     job = models.ForeignKey(Job)
 
     def __unicode__(self):
         return self.imageType
+
+class Parameters(models.Model):
+    # TODO: Store which images to correlate
+    AUTO, CROSS, TRIPLE = u'a', u'c', u't'
+    CORRELATION_TYPES = (
+        (AUTO, u'Auto'),
+        (CROSS, u'Cross'),
+        (TRIPLE, u'Triple')
+    )
+
+    correlationType = models.CharField(max_length=1, choices=CORRELATION_TYPES)
+    range = models.FloatField()
+    resNorm = models.FloatField()
+    g = models.FloatField()
+    w = models.FloatField()
+    ginf = models.FloatField()
+    batch = models.ForeignKey(Batch)
+
+    def __unicode__(self):
+        return self.correlationType

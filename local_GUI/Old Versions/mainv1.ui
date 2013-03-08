@@ -668,27 +668,11 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
-        <widget class="QLabel" name="autoResNorm">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>80</y>
-           <width>91</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Res. Norm.:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
         <widget class="QLabel" name="autoG0">
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>120</y>
+           <y>100</y>
            <width>91</width>
            <height>31</height>
           </rect>
@@ -720,7 +704,7 @@
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>200</y>
+           <y>220</y>
            <width>91</width>
            <height>31</height>
           </rect>
@@ -742,21 +726,11 @@
           </rect>
          </property>
         </widget>
-        <widget class="QLineEdit" name="autoResNormTextbox">
-         <property name="geometry">
-          <rect>
-           <x>140</x>
-           <y>80</y>
-           <width>101</width>
-           <height>31</height>
-          </rect>
-         </property>
-        </widget>
         <widget class="QLineEdit" name="autoG0Textbox">
          <property name="geometry">
           <rect>
            <x>140</x>
-           <y>120</y>
+           <y>100</y>
            <width>101</width>
            <height>31</height>
           </rect>
@@ -776,7 +750,7 @@
          <property name="geometry">
           <rect>
            <x>140</x>
-           <y>200</y>
+           <y>220</y>
            <width>101</width>
            <height>31</height>
           </rect>
@@ -822,27 +796,11 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
-        <widget class="QLabel" name="crossResNorm">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>80</y>
-           <width>91</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Res. Norm.:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
         <widget class="QLabel" name="crossG0">
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>120</y>
+           <y>100</y>
            <width>91</width>
            <height>31</height>
           </rect>
@@ -874,7 +832,7 @@
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>200</y>
+           <y>220</y>
            <width>91</width>
            <height>31</height>
           </rect>
@@ -896,21 +854,11 @@
           </rect>
          </property>
         </widget>
-        <widget class="QLineEdit" name="crossResNormTextbox">
-         <property name="geometry">
-          <rect>
-           <x>140</x>
-           <y>80</y>
-           <width>101</width>
-           <height>31</height>
-          </rect>
-         </property>
-        </widget>
         <widget class="QLineEdit" name="crossG0Textbox">
          <property name="geometry">
           <rect>
            <x>140</x>
-           <y>120</y>
+           <y>100</y>
            <width>101</width>
            <height>31</height>
           </rect>
@@ -930,7 +878,7 @@
          <property name="geometry">
           <rect>
            <x>140</x>
-           <y>200</y>
+           <y>220</y>
            <width>101</width>
            <height>31</height>
           </rect>
@@ -1037,27 +985,11 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
-        <widget class="QLabel" name="tripleResNorm">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>80</y>
-           <width>91</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Res. Norm.:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
         <widget class="QLabel" name="tripleG0">
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>120</y>
+           <y>100</y>
            <width>91</width>
            <height>31</height>
           </rect>
@@ -1089,7 +1021,7 @@
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>200</y>
+           <y>220</y>
            <width>91</width>
            <height>31</height>
           </rect>
@@ -1111,21 +1043,11 @@
           </rect>
          </property>
         </widget>
-        <widget class="QLineEdit" name="TripleResNormTextbox">
-         <property name="geometry">
-          <rect>
-           <x>140</x>
-           <y>80</y>
-           <width>101</width>
-           <height>31</height>
-          </rect>
-         </property>
-        </widget>
         <widget class="QLineEdit" name="tripleG0Textbox">
          <property name="geometry">
           <rect>
            <x>140</x>
-           <y>120</y>
+           <y>100</y>
            <width>101</width>
            <height>31</height>
           </rect>
@@ -1145,7 +1067,7 @@
          <property name="geometry">
           <rect>
            <x>140</x>
-           <y>200</y>
+           <y>220</y>
            <width>101</width>
            <height>31</height>
           </rect>
@@ -1191,27 +1113,11 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
-        <widget class="QLabel" name="allTripleResNorm">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>80</y>
-           <width>91</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Res. Norm.:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
         <widget class="QLabel" name="allTripleG0">
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>120</y>
+           <y>100</y>
            <width>91</width>
            <height>31</height>
           </rect>
@@ -1243,7 +1149,7 @@
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>200</y>
+           <y>220</y>
            <width>91</width>
            <height>31</height>
           </rect>
@@ -1265,21 +1171,11 @@
           </rect>
          </property>
         </widget>
-        <widget class="QLineEdit" name="allTripleResNormTextbox">
-         <property name="geometry">
-          <rect>
-           <x>140</x>
-           <y>80</y>
-           <width>101</width>
-           <height>31</height>
-          </rect>
-         </property>
-        </widget>
         <widget class="QLineEdit" name="allTripleG0Textbox">
          <property name="geometry">
           <rect>
            <x>140</x>
-           <y>120</y>
+           <y>100</y>
            <width>101</width>
            <height>31</height>
           </rect>
@@ -1299,7 +1195,7 @@
          <property name="geometry">
           <rect>
            <x>140</x>
-           <y>200</y>
+           <y>220</y>
            <width>101</width>
            <height>31</height>
           </rect>
@@ -1340,27 +1236,11 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
-        <widget class="QLabel" name="allAutoCrossResNorm">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>80</y>
-           <width>91</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Res. Norm.:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
         <widget class="QLabel" name="allAutoCrossG0">
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>120</y>
+           <y>100</y>
            <width>91</width>
            <height>31</height>
           </rect>
@@ -1392,7 +1272,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>200</y>
+           <y>220</y>
            <width>91</width>
            <height>31</height>
           </rect>
@@ -1414,21 +1294,11 @@
           </rect>
          </property>
         </widget>
-        <widget class="QLineEdit" name="allAutoCrossResNormTextbox">
-         <property name="geometry">
-          <rect>
-           <x>130</x>
-           <y>80</y>
-           <width>101</width>
-           <height>31</height>
-          </rect>
-         </property>
-        </widget>
         <widget class="QLineEdit" name="allAutoCrossG0Textbox">
          <property name="geometry">
           <rect>
            <x>130</x>
-           <y>120</y>
+           <y>100</y>
            <width>101</width>
            <height>31</height>
           </rect>
@@ -1448,7 +1318,7 @@
          <property name="geometry">
           <rect>
            <x>130</x>
-           <y>200</y>
+           <y>220</y>
            <width>101</width>
            <height>31</height>
           </rect>
