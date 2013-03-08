@@ -79,7 +79,10 @@ def load_library():
         lib: the library that was loaded
     """
     lib_dir = os.path.dirname(os.path.realpath(__file__))
-    lib_path = os.path.join(lib_dir,'libbackend.so')
+	if (os.name != 'nt')
+		lib_path = os.path.join(lib_dir,'libbackend.so')
+	else
+		lib_path = os.path.join(lib_dir,'libbackend.dll')
     lib = ctypes.cdll.LoadLibrary(lib_path)
     lib.core.argtypes = [c_void_p,c_void_p,c_void_p,c_void_p,c_int,c_int]
     lib.init.argtypes = [c_int,c_void_p]

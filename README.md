@@ -32,3 +32,15 @@ In addition, if you wish to run testcases, the following modules are required:
 
 1. mock (sudo pip install -U mock). mock is Copyright (c) 2003-2010, Michael
    Foord and is licensed under the BSD License.
+
+   
+Compiling Windows Executables
+=============================
+A few items are required:
+
+1. Install python 2.7.3 (64-bit) to C:\Python27 and python 2.7.3 (32-bit) to C:\Python27_32
+   (To use different paths, edit the Makefile).
+2. Install mingw (32-bit) and mingw (64-bit).
+3. Install scipy, numpy, pythonmagic and pyqt for 32 bit and 64-bit. Use premade
+4. Launch the mingw 32-bit shell, run the makefile. This will create the 32-bit executable.
+5. Launch the mingw 64-bit shell, run the makefile. This will create the 64-bit executable.
