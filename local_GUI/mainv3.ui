@@ -1484,6 +1484,9 @@
        <property name="text">
         <string>32 x 32</string>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
       <widget class="QRadioButton" name="resolution48">
        <property name="geometry">
