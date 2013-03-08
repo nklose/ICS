@@ -13,6 +13,6 @@ urlpatterns = patterns('',
     #url(r'/', view.home),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^test/', view.test),
+    url(r'^program/', view.program),
     url(r'^home/', view.home),
 )

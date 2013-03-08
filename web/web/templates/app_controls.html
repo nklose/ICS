@@ -1,8 +1,11 @@
 {% block app-controls %}
 <h3>App Controls</h3>
 <div class="rgbimg-background">
- <button type="button" id="start" class="btn btn-primary" data-loading-text="Loading...">Start</button>
- <button type="button" id="button" class="btn btn-primary" data-loading-text="Restarting...">Restart</button>
- <button type="button" id="button" class="btn btn-primary" data-toggle="button">Batch</button>
+ <div class="progress">
+ <div class="bar" style="width: 0%">Progress 0%</div>
+ </div>
+  <button type="button" id="start" class="btn btn-primary" data-loading-text="Loading...">Start</button>
+  <button type="button" id="restart" class="btn btn-primary" data-loading-text="Restarting...">Restart</button>
+  <button type="button" id="batch" class="btn btn-primary" data-toggle="button">Batch</button>
 </div>
 {% endblock %}

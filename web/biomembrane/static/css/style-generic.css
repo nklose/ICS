@@ -37,6 +37,6 @@ body {
     -webkit-border-radius: 0.417em;
     -moz-border-radius: 0.417em;
     border-radius: 0.417em;
-    margin-left: 5%;
-
+    margin-left: 10%;
+    margin-right: 10%;
 }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="utf-8" />
     <!-- viewport meta to reset iPhone inital scale -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
@@ -20,10 +21,12 @@
     <div id="content" class="content">{% block content %}{% endblock %}</div>
     <div id="sidebar" class="sidebar">{% block sidebar %}{% endblock %}</div>
     <div id="footer" class="footer">{% block footer %}{% endblock %}</div>
-</body>
+
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.10.1.custom.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.js"></script>
 {% comment %}Specify additional scripts{% endcomment %}
-{% block script %}{% endblock %}
+{% block script %}{% endblock script %}
+</body>
 </html>
+

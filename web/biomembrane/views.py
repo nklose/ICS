@@ -21,7 +21,7 @@ signing of this agreement.
 """
 from django.shortcuts import render
 
-def test(request):
+def program(request):
 
     """ Renders a test view.
          Template: /web/web/templates/layout.html
@@ -31,8 +31,10 @@ def test(request):
 
          Context parameters (ie, keys in the dictionary passed to the template):
         - sec_ title: The title of the section.
+        - copyrightdate: The Year of copyright
     """
-    return render(request, 'icslayout.html',{"sec_title": "This is a test"})
+    temp = {"sec_title": "Program View Page", "copyrightdate": 2013}
+    return render(request, 'icslayout.html', temp)
 
 def home(request):
     """ Renders a home  view.
@@ -42,6 +44,8 @@ def home(request):
          - None
 
          Context parameters (ie, keys in the dictionary passed to the template):
-        - sec_ title: The title of the section.
+        - sec_ title: The title of the section
+        - copyrightdate: The year of copyright.
     """
-    return render(request, 'homepage.html',{"sec_title": "Homepage"})
+    temp = {"sec_title": "Welcome to the Homepage", "copyrightdate": 2013}
+    return render(request, 'homepage.html', temp)

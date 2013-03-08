@@ -10,9 +10,11 @@
 {% block header-main %}{{block.super}}{% endblock %}
 {% block content-main %}
 <h2>Image Correlation Spectroscopy</h2>
+<form method="post" action="#">
 <div id="rgbimg-display" class="row-fluid">{% include "rgbimg_display.html" %}</div>
 <div id="img-attributes" class="row-fluid">{% include "img_attributes.html" %}</div>
-<div id="rgb-settings" class="row-fluid">{% include "rgb_settings.html" %}</div>
-<div id="ics-controls" class="row-fluid">{% include "rgb_controls.html" %}</div>
-<div id="app-controls" class="row-fluid">{% include "app_controls.html" %}<div>
+<div id="ics-controls" class="row-fluid">{% include "rgb_settings.html" %}</div>
+<div id="app-controls" class="row-fluid">{% include "app_controls.html" %}</div>
+</form>
 {% endblock content-main %}
+
