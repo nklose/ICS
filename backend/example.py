@@ -26,14 +26,14 @@ import warnings
 warnings.simplefilter('ignore',np.ComplexWarning)
 
 import backend_utils as butils
-import backend_imread as bimread
+import backend_image_loader as bimloader
 
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
 
 def run(pdata,image_name,colors):
     if not os.path.exists(pdata):
         os.makedirs(pdata)
-    (_,image) = bimread.load_image([image_name])
+    (_,image) = bimloader.load_image([image_name])
     r = image[0]
     g = image[1]
     b = image[2]

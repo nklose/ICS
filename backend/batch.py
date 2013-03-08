@@ -23,7 +23,7 @@ warnings.simplefilter('ignore',np.ComplexWarning)
 
 import configs
 import backend_utils as butils
-import backend_imread as bimread
+import backend_image_loader as bimloader
 
 raw_image = None
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
@@ -145,7 +145,7 @@ def run_0(info,config):
         sys.exit(1)
     
     # read image and perform some preprocessing
-    info.max_pixel = bimread.load_image_batch(info.image,fpaths)
+    info.max_pixel = bimloader.load_image_batch(info.image,fpaths)
     for i in range(3):
         info.avg[i] = np.average(info.image[i,:,:])
         info.fft[i,:,:] = np.fft.fft2(info.image[i,:,:])
