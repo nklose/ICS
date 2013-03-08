@@ -17,27 +17,17 @@ import sys
 import ctypes
 from ctypes import c_int
 from ctypes import c_void_p
-import backend_utils as butils
 
 import warnings
 warnings.simplefilter('ignore',np.ComplexWarning)
 
 import configs
+import backend_utils as butils
+import backend_imread as bimread
 
 raw_image = None
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
 DUAL_COMBINATIONS = [(0,0),(1,1),(2,2),(0,1),(0,2),(1,2)]
-
-def load_image(image,fpaths):
-    if len(fpaths) == 1:
-        raw_image = scipy.misc.imread(fpaths[0])
-        for i in range(3):
-            image[i,:,:] = raw_image[:,:,i].astype(np.float)
-    elif len(fpaths) == 3:
-        for i in range(3):
-            raw_image = scipy.misc.imread(fpaths[i])
-            image[i,:,:] = raw_image.astype(np.float)
-    return 2**(8*raw_image.itemsize)
 
 class Info:
 
@@ -155,7 +145,7 @@ def run_0(info,config):
         sys.exit(1)
     
     # read image and perform some preprocessing
-    info.max_pixel = load_image(info.image,fpaths)
+    info.max_pixel = bimread.load_image_batch(info.image,fpaths)
     for i in range(3):
         info.avg[i] = np.average(info.image[i,:,:])
         info.fft[i,:,:] = np.fft.fft2(info.image[i,:,:])
@@ -245,6 +235,8 @@ def run_3(info,config):
     info.results[fnum,4+(6*7)+6] = np.sum((info.triple_out-info.triple_fit)**2)
 
 def run_4(info,config):
+    if config.output_type == 'none': return
+    if config.output_type == 'summary': return
     # save out and fit as files
     fprefix = ''
     fnum = info.cur_files
@@ -290,8 +282,7 @@ def run_once(info,config):
     run_1(info,config)
     run_2(info,config)
     run_3(info,config)
-    if config.output_type == 'full':
-        run_4(info,config)
+    run_4(info,config)
 
 def run(info,config):
     setup(info,config)
