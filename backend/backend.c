@@ -26,8 +26,8 @@ typedef double f64;
 static fftw_plan plan;
 
 void core(data,sr,sg,sb,side,lim)
-	void *data,*sr,*sg,*sb;
-	int side,lim;
+    void *data,*sr,*sg,*sb;
+    int side,lim;
 {
     int na = side/2;
     int nb = lim/2;
