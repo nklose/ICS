@@ -42,7 +42,7 @@ class Job(models.Model):
 
     number = models.IntegerField()
     state = models.CharField(max_length=1, choices=JOB_STATES)
-    outputDir = models.CharField(max_length=255)
+    output_dir = models.CharField(max_length=255)
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
@@ -58,7 +58,7 @@ class Image(models.Model):
     )
 
     data = models.ImageField(upload_to=generateFilePath)
-    imageType = models.CharField(max_length=3, choices=IMAGE_TYPES)
+    image_type = models.CharField(max_length=3, choices=IMAGE_TYPES)
     job = models.ForeignKey(Job)
 
     def __unicode__(self):
@@ -74,11 +74,12 @@ class Parameters(models.Model):
     )
 
     correlationType = models.CharField(max_length=1, choices=CORRELATION_TYPES)
-    range = models.FloatField()
-    resNorm = models.FloatField()
+    range_val = models.FloatField()
     g = models.FloatField()
     w = models.FloatField()
     ginf = models.FloatField()
+    limit = models.FloatField()
+    deltas = models.BooleanField()
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
