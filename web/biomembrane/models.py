@@ -74,11 +74,12 @@ class Parameters(models.Model):
     )
 
     correlationType = models.CharField(max_length=1, choices=CORRELATION_TYPES)
-    range = models.FloatField()
-    resNorm = models.FloatField()
+    rangeVal = models.FloatField()
     g = models.FloatField()
     w = models.FloatField()
     ginf = models.FloatField()
+    limit = models.FloatField()
+    deltas = models.BooleanField()
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
