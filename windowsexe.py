@@ -20,7 +20,7 @@ ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 LOCAL_GUI_PATH = os.path.join(ROOT_PATH, "local_GUI")
 MAIN_FILE = os.path.join(LOCAL_GUI_PATH, "start.py")
 EXE_FILE = "ICS"
-ICON_FILE = "icon.ico"
+ICON_FILE = os.path.join(ROOT_PATH, "icon.ico")
 LOCAL_IMAGES = [os.path.join(LOCAL_GUI_PATH, "r.png"),
                 os.path.join(LOCAL_GUI_PATH, "g.png"),
                 os.path.join(LOCAL_GUI_PATH, "b.png"),

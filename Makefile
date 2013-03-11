@@ -95,6 +95,7 @@ ifeq ($(DLL_64), 1)
 	cp libiomp5md.dll_64 $(BIN)/libiomp5md.dll
 else
 	@# Linux specific stuff here
+	./linuxexe.sh
 endif
 endif
 	@# OS Independant stuff here
@@ -116,8 +117,8 @@ clean:
 	@echo "=== Begin clean ==="
 	@rm -f $(BACK_END)/libbackend.so
 	@rm -f $(BACK_END)/libbackend.dll
-	@rm -f $(BIN)/libbackend.dll
-	@rm -f $(BIN)/libfftw3-3.dll
+	@rm -f $(BACK_END)/backend.o
+	@rm -rf $(BIN)
 	@rm -f backend.o
 	@echo "=== End clean ==="
 	@echo

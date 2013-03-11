@@ -28,8 +28,8 @@ A few packages are required for the program:
 1999-2011 ImageMagick Studio LLC, a non-profit organization dedicated to making
 software imaging solutions freely available.
 
-6. PyQT. PyQT is Copyright (c) 2013, Riverbank Computing Limited. 
-   Riverbank Computing Limited is a company registered in England and Wales 
+6. PyQT. PyQT is Copyright (c) 2013, Riverbank Computing Limited.
+   Riverbank Computing Limited is a company registered in England and Wales
    with company number 4314904.
 
 In addition, if you wish to run testcases, the following modules are required:
@@ -37,16 +37,23 @@ In addition, if you wish to run testcases, the following modules are required:
 1. mock (sudo pip install -U mock). mock is Copyright (c) 2003-2010, Michael
    Foord and is licensed under the BSD License.
 
-   
+
 Compiling Windows Executables
 =============================
 A few items are required:
 
-1. Install python 2.7.3 (64-bit) to C:\Python27 and python 2.7.3 (32-bit) to C:\Python27_32
-   (To use different paths, edit the Makefile).
+1. Install python 2.7.3 (64-bit) to C:\Python27 (To use different paths,
+   edit the Makefile).
 2. Install mingw (32-bit).
 3. Install scipy, numpy, pythonmagic and pyqt for 32 bit and 64-bit. Use premade
-4. Install the Visual Studio C++ Redistributable version here: http://www.microsoft.com/en-us/download/details.aspx?id=29
+4. Install the Visual Studio C++ Redistributable version here:
+   http://www.microsoft.com/en-us/download/details.aspx?id=29 (included in repo)
 5. Launch the mingw 32-bit shell:
      a. To create the 32 bit version, call "make"
-	 b. To create the 64 bit version, call "make DLL_64=1"
+     b. To create the 64 bit version, call "make DLL_64=1"
+
+Compliing Linux Executables
+===========================
+1. Install cx-freeze: sudo apt-get install cx-freeze
+2. Run the makefile
+3. Distribute bin
