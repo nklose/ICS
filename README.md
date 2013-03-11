@@ -7,6 +7,10 @@ membranes" for Dr Nils O. Petersen.
 Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar
 Qadri, and James Wang under the 401 IP License.
 
+Installing in Windows
+=====================
+Run the vcredist_x86.exe and the provided setup.exe
+
 Required Packages
 =================
 A few packages are required for the program:
@@ -40,7 +44,9 @@ A few items are required:
 
 1. Install python 2.7.3 (64-bit) to C:\Python27 and python 2.7.3 (32-bit) to C:\Python27_32
    (To use different paths, edit the Makefile).
-2. Install mingw (32-bit) and mingw (64-bit).
+2. Install mingw (32-bit).
 3. Install scipy, numpy, pythonmagic and pyqt for 32 bit and 64-bit. Use premade
-4. Launch the mingw 32-bit shell, run the makefile. This will create the 32-bit executable.
-5. Launch the mingw 64-bit shell, run the makefile. This will create the 64-bit executable.
+4. Install the Visual Studio C++ Redistributable version here: http://www.microsoft.com/en-us/download/details.aspx?id=29
+5. Launch the mingw 32-bit shell:
+     a. To create the 32 bit version, call "make"
+	 b. To create the 64 bit version, call "make DLL_64=1"

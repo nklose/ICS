@@ -19,19 +19,18 @@ OS = Unix
 # I Don't know if Mac's need something different?
 ifeq ($(UNAME), MINGW32_NT-6.1)
 	# Windows 7, 32-bit compile
-	DLL_32 = 1
-	EXECUTABLE = $(BIN)/ICS.exe
-	PYTHON = "/c/Python27/python"
-	OS = Windows 32
-	BACKEND_ARGS = -shared -Wl,-soname,$(BACK_END)/libbackend.dll -o \
-		$(BACK_END)/libbackend.dll $(BACK_END)/backend.o \
-		$(BACK_END)/libfftw3.dll.a
-	# Temporary, manual control of windows 32 / 64, since its weird.
+ifeq ($(DLL_64), 1)
 	DLL_32 = 0
-	DLL_64 = 1
 	EXECUTABLE = $(BIN)/ICS.exe
 	PYTHON = "/c/Python27/python"
 	OS = Windows 64
+	BACKEND_ARGS = -shared -Wl,-soname,$(BACK_END)/libbackend.dll -o \
+		$(BACK_END)/libbackend.dll $(BACK_END)/backend.o \
+		$(BACK_END)/libfftw3.dll.a
+endif
+	EXECUTABLE = $(BIN)/ICS.exe
+	PYTHON = "/c/Python27/python"
+	OS = Windows 32
 	BACKEND_ARGS = -shared -Wl,-soname,$(BACK_END)/libbackend.dll -o \
 		$(BACK_END)/libbackend.dll $(BACK_END)/backend.o \
 		$(BACK_END)/libfftw3.dll.a

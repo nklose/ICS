@@ -13,10 +13,11 @@ Call in mingw shell:
 from distutils.core import setup
 import py2exe
 import os
+import sys
 import numpy
 
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-MAIN_FILE = os.path.join(ROOT_PATH, os.path.join("backend", "example.py"))
+MAIN_FILE = os.path.join(ROOT_PATH, os.path.join("local_GUI", "start.py"))
 EXE_FILE = "ICS"
 ICON_FILE = "icon.ico"
 
@@ -28,19 +29,21 @@ DESCRIPTION = "Image Correlation Spectroscopy"
 NAME = "ICS"
 
 PACKAGES = []
-INCLUDES = []
+INCLUDES = ["sip"]
 EXCLUDES = []
-DLL_EXCLUDES = ["libiomp5md.dll"]
+DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll"]
 #["MSVCP90.dll", 'libiomp5md.dll', 
 #						 'libifcoremd.dll', 'libmmd.dll',
 #						 'svml_dispmd.dll', 'libifportMD.dll']
+
+sys.path.append("C:\\Program Files\\Microsoft Visual Studio 9.0\\VC\\redist\\x86\\Microsoft.VC90.CRT")
 
 OPTIONS = {
 	'py2exe': {
 		"dist_dir": "bin",
 		"packages": PACKAGES,
 		"includes": INCLUDES,
-		#"excludes": EXCLUDES,
+		"excludes": EXCLUDES,
 		"dll_excludes": DLL_EXCLUDES
     }
 }
