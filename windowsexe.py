@@ -17,9 +17,14 @@ import sys
 import numpy
 
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-MAIN_FILE = os.path.join(ROOT_PATH, os.path.join("local_GUI", "start.py"))
+LOCAL_GUI_PATH = os.path.join(ROOT_PATH, "local_GUI")
+MAIN_FILE = os.path.join(LOCAL_GUI_PATH, "start.py")
 EXE_FILE = "ICS"
 ICON_FILE = "icon.ico"
+LOCAL_IMAGES = [os.path.join(LOCAL_GUI_PATH, "r.png"),
+                os.path.join(LOCAL_GUI_PATH, "g.png"),
+				os.path.join(LOCAL_GUI_PATH, "b.png"),
+				os.path.join(LOCAL_GUI_PATH, "rgb.png")]
 
 print "Main is %s" % MAIN_FILE
 
@@ -32,11 +37,7 @@ PACKAGES = ["backend", "midend", "local_GUI"]
 INCLUDES = ["sip"]
 EXCLUDES = []
 DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll"]
-#["MSVCP90.dll", 'libiomp5md.dll', 
-#						 'libifcoremd.dll', 'libmmd.dll',
-#						 'svml_dispmd.dll', 'libifportMD.dll']
-
-sys.path.append("C:\\Program Files\\Microsoft Visual Studio 9.0\\VC\\redist\\x86\\Microsoft.VC90.CRT")
+DATA_FILES = [('', LOCAL_IMAGES)]
 
 OPTIONS = {
 	'py2exe': {
@@ -69,5 +70,6 @@ setup(
 	description = DESCRIPTION,
 	name = NAME,
 	options = OPTIONS,
+	data_files = DATA_FILES,
 	zipfile = None # Libs go into the .exe
 )

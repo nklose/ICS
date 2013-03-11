@@ -19,6 +19,13 @@ OS = Unix
 # I Don't know if Mac's need something different?
 ifeq ($(UNAME), MINGW32_NT-6.1)
 	# Windows 7, 32-bit compile
+	DLL_32 = 1
+	EXECUTABLE = $(BIN)/ICS.exe
+	PYTHON = "/c/Python27/python"
+	OS = Windows 32
+	BACKEND_ARGS = -shared -Wl,-soname,$(BACK_END)/libbackend.dll -o \
+		$(BACK_END)/libbackend.dll $(BACK_END)/backend.o \
+		$(BACK_END)/libfftw3.dll.a
 ifeq ($(DLL_64), 1)
 	DLL_32 = 0
 	EXECUTABLE = $(BIN)/ICS.exe
@@ -28,15 +35,7 @@ ifeq ($(DLL_64), 1)
 		$(BACK_END)/libbackend.dll $(BACK_END)/backend.o \
 		$(BACK_END)/libfftw3.dll.a
 endif
-	EXECUTABLE = $(BIN)/ICS.exe
-	PYTHON = "/c/Python27/python"
-	OS = Windows 32
-	BACKEND_ARGS = -shared -Wl,-soname,$(BACK_END)/libbackend.dll -o \
-		$(BACK_END)/libbackend.dll $(BACK_END)/backend.o \
-		$(BACK_END)/libfftw3.dll.a
-else
-ifeq ($(UNAME), "How to tell if win64")
-	# Windows 7, 64-bit compile
+# End of if DLL_64
 else
 	# Linux compile
 	LBITS := $(shell getconf LONG_BIT)
@@ -47,9 +46,10 @@ else
 	# do 32 bit stuff here
 	UNIX_BACKEND = $(BACK_END)/libfftw3_32.a
 endif
-endif
+# END OF LBITS
 
 endif
+# END OF 32 bit windows
 
 all: clean $(EXECUTABLE)
 
