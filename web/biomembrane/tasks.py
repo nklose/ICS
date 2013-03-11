@@ -1,5 +1,4 @@
-""" Contains all database models for the web service version of ICS.
-
+"""
 Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar
 Qadri, and James Wang under the 401 IP License.
 
