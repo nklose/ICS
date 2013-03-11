@@ -18,7 +18,7 @@ import numpy
 
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 LOCAL_GUI_PATH = os.path.join(ROOT_PATH, "local_GUI")
-MAIN_FILE = os.path.join(LOCAL_GUI_PATH, "start.py")
+MAIN_FILE = os.path.join(ROOT_PATH, "local_start.py")
 EXE_FILE = "ICS"
 ICON_FILE = os.path.join(ROOT_PATH, "icon.ico")
 LOCAL_IMAGES = [os.path.join(LOCAL_GUI_PATH, "r.png"),
@@ -56,10 +56,6 @@ OPTIONS = {
 WINDOWS = [{"dest_base": EXE_FILE, "script": MAIN_FILE,
             "icon_resources": [(1, ICON_FILE)]
             }]
-
-mydata_files = [
-    ('', ['README.txt', 'Labelmaker.bat'])
-]
 
 setup(
     windows=WINDOWS,
