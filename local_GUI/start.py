@@ -14,7 +14,7 @@ See LICENSE file for more details.
 
 import sys
 from PyQt4 import QtCore, QtGui
-from main_ICS import Ui_Dialog
+from local_GUI.main_ICS import Ui_Dialog
 from os.path import basename
 
 class StartQT4(QtGui.QMainWindow):

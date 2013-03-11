@@ -28,7 +28,7 @@ VERSION = "1.0"
 DESCRIPTION = "Image Correlation Spectroscopy"
 NAME = "ICS"
 
-PACKAGES = []
+PACKAGES = ["backend", "midend", "local_GUI"]
 INCLUDES = ["sip"]
 EXCLUDES = []
 DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll"]
@@ -44,13 +44,23 @@ OPTIONS = {
 		"packages": PACKAGES,
 		"includes": INCLUDES,
 		"excludes": EXCLUDES,
-		"dll_excludes": DLL_EXCLUDES
+		"dll_excludes": DLL_EXCLUDES,
+		'bundle_files': 3,  # 1 = .exe; 2 = .zip; 3 = separate
+		'compressed': 2,
+        'optimize': 2,
+		'xref': False,
+        'skip_archive': False,
+        'ascii': False,
     }
 }
 
 WINDOWS = [{"dest_base": EXE_FILE, "script": MAIN_FILE,
 			"icon_resources": [(1, ICON_FILE)]
 		   }]
+		   
+mydata_files = [
+        ('', ['README.txt', 'Labelmaker.bat'])
+]
 
 setup(
 	windows = WINDOWS,
@@ -58,5 +68,6 @@ setup(
 	version = VERSION,
 	description = DESCRIPTION,
 	name = NAME,
-	options = OPTIONS
+	options = OPTIONS,
+	zipfile = None # Libs go into the .exe
 )
