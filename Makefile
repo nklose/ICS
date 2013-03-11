@@ -16,6 +16,7 @@ BACKEND_ARGS = -shared -Wl,-soname,$(BACK_END)/libbackend.so -o \
 	$(BACK_END)/libbackend.so $(BACK_END)/backend.o $(UNIX_BACKEND)
 WINDOWS_EXE = windowsexe.py
 OS = Unix
+UNIX_64 = 0
 # I Don't know if Mac's need something different?
 ifeq ($(UNAME), MINGW32_NT-6.1)
 	# Windows 7, 32-bit compile
@@ -42,9 +43,11 @@ else
 ifeq ($(LBITS),64)
 	# do 64 bit stuff here, like set some CFLAGS
 	UNIX_BACKEND = $(BACK_END)/libfftw3_64.a
+	UNIX_64 = 1
 else
 	# do 32 bit stuff here
 	UNIX_BACKEND = $(BACK_END)/libfftw3_32.a
+	UNIX_64 = 0
 endif
 # END OF LBITS
 
@@ -78,7 +81,7 @@ frontend:
 	@echo "=== Start: Compiling frontend ==="
 	# TODO
 	@echo "=== End: Compiling frontend ==="
-	
+
 $(EXECUTABLE): $(BIN) clean_backend frontend
 	@echo "=== Start: Compiling executable ==="
 ifeq ($(DLL_32), 1)
@@ -96,16 +99,16 @@ endif
 endif
 	@# OS Independant stuff here
 	@echo "=== End: Compiling executable ==="
-	
+
 
 clean_backend: libbackend
 	@# After running the backend, cleans up a bit, moves any windows dlls.
-	@mv -f $(BACK_END)/libfftw3-3.dll  $(BIN)/libfftw3-3.dll
-	@cp -f $(BACK_END)/libbackend.dll  $(BIN)/libbackend.dll
+	-@[ -e $(BACK_END)/libfftw3-3.dll ] && mv -f $(BACK_END)/libfftw3-3.dll $(BIN)/libfftw3-3.dll
+	-@[ -e $(BACK_END)/libbackend.dll ] && mv -f $(BACK_END)/libbackend.dll $(BIN)/libbackend.dll
 	@rm -f $(BACK_END)/libfftw3.dll.a
 	@rm -f $(BACK_END)/fftw3.h
 	@rm -f backend.o
-	
+
 $(BIN):
 	@mkdir $(BIN)
 

@@ -23,10 +23,8 @@ EXE_FILE = "ICS"
 ICON_FILE = "icon.ico"
 LOCAL_IMAGES = [os.path.join(LOCAL_GUI_PATH, "r.png"),
                 os.path.join(LOCAL_GUI_PATH, "g.png"),
-				os.path.join(LOCAL_GUI_PATH, "b.png"),
-				os.path.join(LOCAL_GUI_PATH, "rgb.png")]
-
-print "Main is %s" % MAIN_FILE
+                os.path.join(LOCAL_GUI_PATH, "b.png"),
+                os.path.join(LOCAL_GUI_PATH, "rgb.png")]
 
 AUTHOR = "CMPUT 401 - Biomembranes Team"
 VERSION = "1.0"
@@ -40,36 +38,36 @@ DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll"]
 DATA_FILES = [('', LOCAL_IMAGES)]
 
 OPTIONS = {
-	'py2exe': {
-		"dist_dir": "bin",
-		"packages": PACKAGES,
-		"includes": INCLUDES,
-		"excludes": EXCLUDES,
-		"dll_excludes": DLL_EXCLUDES,
-		'bundle_files': 3,  # 1 = .exe; 2 = .zip; 3 = separate
-		'compressed': 2,
+    'py2exe': {
+        "dist_dir": "bin",
+        "packages": PACKAGES,
+        "includes": INCLUDES,
+        "excludes": EXCLUDES,
+        "dll_excludes": DLL_EXCLUDES,
+        'bundle_files': 3,  # 1 = .exe; 2 = .zip; 3 = separate
+        'compressed': 2,
         'optimize': 2,
-		'xref': False,
+        'xref': False,
         'skip_archive': False,
         'ascii': False,
     }
 }
 
 WINDOWS = [{"dest_base": EXE_FILE, "script": MAIN_FILE,
-			"icon_resources": [(1, ICON_FILE)]
-		   }]
-		   
+            "icon_resources": [(1, ICON_FILE)]
+            }]
+
 mydata_files = [
-        ('', ['README.txt', 'Labelmaker.bat'])
+    ('', ['README.txt', 'Labelmaker.bat'])
 ]
 
 setup(
-	windows = WINDOWS,
-	author = AUTHOR,
-	version = VERSION,
-	description = DESCRIPTION,
-	name = NAME,
-	options = OPTIONS,
-	data_files = DATA_FILES,
-	zipfile = None # Libs go into the .exe
+    windows=WINDOWS,
+    author=AUTHOR,
+    version=VERSION,
+    description=DESCRIPTION,
+    name=NAME,
+    options=OPTIONS,
+    data_files=DATA_FILES,
+    zipfile=None  # Libs go into the .exe
 )

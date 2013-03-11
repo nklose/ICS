@@ -14,7 +14,7 @@ See LICENSE file for more details.
 
 import sys
 from PyQt4 import QtCore, QtGui
-from local_GUI.main_ICS import Ui_Dialog
+from main_ICS import Ui_Dialog
 from os.path import basename
 
 class StartQT4(QtGui.QMainWindow):
@@ -22,7 +22,7 @@ class StartQT4(QtGui.QMainWindow):
         QtGui.QWidget.__init__(self, parent)
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        
+
         # Interface variables
         self.redPath = ""
         self.greenPath = ""
@@ -37,7 +37,7 @@ class StartQT4(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.loadImageRed,
                                QtCore.SIGNAL("clicked()"),
                                self.load_red_image)
-        
+
         QtCore.QObject.connect(self.ui.loadImageGreen,
                                QtCore.SIGNAL("clicked()"),
                                self.load_green_image)
@@ -89,7 +89,7 @@ class StartQT4(QtGui.QMainWindow):
         self.message("Loaded image " + self.greenPath)
         self.ui.greenChannelFile.setText(basename(self.greenPath))
         self.ui.imageGreen.setPixmap(QtGui.QPixmap(self.greenPath))
- 
+
     # Loads a blue channel image into the interface.
     def load_blue_image(self):
         self.message("Loading blue image...")
@@ -100,10 +100,10 @@ class StartQT4(QtGui.QMainWindow):
 
     # Start button functionality
     def start(self):
-        
+
         # Find out which correlation to do
         mode = self.get_correlation_tab()
-            
+
         # Input Checking
         validInput = True
 
@@ -116,7 +116,7 @@ class StartQT4(QtGui.QMainWindow):
                 text += "correlation process."
                 self.message(text)
 
-        if mode == "auto":           
+        if mode == "auto":
             # no channels selected
             none_checked = True
             if self.get_red_checkbox() == True:
@@ -139,7 +139,7 @@ class StartQT4(QtGui.QMainWindow):
             elif self.get_auto_G0() == "":
                 self.message("g(0) parameter missing.")
                 validInput = False
-            
+
             # blank W
             elif self.get_auto_W() == "":
                 self.message("W parameter missing.")
@@ -157,7 +157,7 @@ class StartQT4(QtGui.QMainWindow):
                 except ValueError:
                     validInput = False
                     self.message("Range must be a number.")
-                
+
                 # non-numeric g(0)
                 try:
                     float(self.get_auto_G0())
@@ -202,7 +202,7 @@ class StartQT4(QtGui.QMainWindow):
             elif self.get_cross_G0() == "":
                 validInput = False
                 self.message("g(0) parameter missing.")
-            
+
             # blank W
             elif self.get_cross_W() == "":
                 validInput = False
@@ -247,7 +247,7 @@ class StartQT4(QtGui.QMainWindow):
             if self.get_all_range() == "":
                 validInput = False
                 self.message("Range parameter missing.")
-            
+
             # blank g(0)
             elif self.get_all_G0() == "":
                 validInput = False
@@ -262,7 +262,7 @@ class StartQT4(QtGui.QMainWindow):
             elif self.get_all_Ginf() == "":
                 validInput = False
                 self.message("gInf parameter missing.")
-        
+
             else:
                 # non-numeric range
                 try:
@@ -270,28 +270,28 @@ class StartQT4(QtGui.QMainWindow):
                 except ValueError:
                     validInput = False
                     self.message("Range must be a number.")
-                    
+
                 # non-numeric g(0)
                 try:
                     float (self.get_all_G0())
                 except ValueError:
                     validInput = False
                     self.message("g(0) must be a number.")
-                        
+
                 # non-numeric W
                 try:
                     float (self.get_all_W())
                 except ValueError:
                     validInput = False
                     self.message("W must be a number.")
-                            
+
                 # non-numeric gInf
                 try:
                     float (self.get_all_Ginf())
                 except ValueError:
                     validInput = False
                     self.message("gInf must be a number.")
-        
+
         # Continue if input is valid
         if validInput:
             # Update message bar with input parameters
@@ -318,12 +318,12 @@ class StartQT4(QtGui.QMainWindow):
                             channels = "green channel"
                     else:
                         channels = "blue channel"
-                        
+
                 # Construct output string
                 text = "Starting auto-correlation using " + channels
                 text += " and parameters\n[range = " + self.get_auto_range()
                 text += ", g(0) = " + self.get_auto_G0() +", w = "
-                text += self.get_auto_W() + ", gInf = " + self.get_auto_Ginf() 
+                text += self.get_auto_W() + ", gInf = " + self.get_auto_Ginf()
                 text += "],"
                 if self.get_auto_deltas_checkbox() == False:
                     text += " do not"
@@ -332,7 +332,7 @@ class StartQT4(QtGui.QMainWindow):
                 text += res + " x " + res + "."
                 self.message(text)
                  # Do auto-correlation
-            
+
             elif mode == "cross":
                 channels = ""
                 if self.get_red_green_checkbox():
@@ -354,16 +354,16 @@ class StartQT4(QtGui.QMainWindow):
                             channels = "RB channel pair"
                     else:
                         channels = "GB channel pair"
-                
+
                 text = "Starting cross-correlation using " + channels
-                text += " and parameters\n[Range = " 
-                text += self.get_cross_range() + ", g(0) = " 
+                text += " and parameters\n[Range = "
+                text += self.get_cross_range() + ", g(0) = "
                 text += self.get_cross_G0() + ", w = "
                 text += self.get_cross_W() + ", gInf = "
                 text += self.get_cross_Ginf() + "],"
                 if self.get_cross_deltas_checkbox() == False:
                     text+= " do not"
-                text += " consider deltas, S.R. " 
+                text += " consider deltas, S.R. "
                 res = str(self.get_sample_resolution())
                 text += res + " x " + res + "."
                 # Do cross-correlation
@@ -388,13 +388,13 @@ class StartQT4(QtGui.QMainWindow):
                 text += res + " x " + res + "."
                 # Do all correlations
                 self.message(text)
-                        
+
 
 
     # Restart button functionality (unused currently)
     def restart(self):
         self.message("Restarting.")
-        
+
     ######################################################
     # Functions to get the current state of the program  #
     ######################################################
@@ -409,7 +409,7 @@ class StartQT4(QtGui.QMainWindow):
         else:
             return "<error in mainTabWidget>"
 
-    # Returns "three" or "one" depending on which tab the 
+    # Returns "three" or "one" depending on which tab the
     #  user has selected in Image Settings
     def get_image_tab(self):
         cur = self.ui.imageSettingsTabWidget.currentIndex()
@@ -519,7 +519,7 @@ class StartQT4(QtGui.QMainWindow):
     # Returns inputted Range in XC
     def get_cross_range(self):
         return str(self.ui.crossRangeTextbox.text())
-    
+
     # Returns inputted G(0) in XC
     def get_cross_G0(self):
         return str(self.ui.crossG0Textbox.text())
@@ -527,7 +527,7 @@ class StartQT4(QtGui.QMainWindow):
     # Returns inputted W in XC
     def get_cross_W(self):
         return str(self.ui.crossWTextbox.text())
-    
+
     # Returns inputted G(Inf) in XC
     def get_cross_Ginf(self):
         return str(self.ui.crossGinfTextbox.text())
@@ -535,11 +535,11 @@ class StartQT4(QtGui.QMainWindow):
     # Returns inputted Range in AXC
     def get_all_range(self):
         return str(self.ui.allAutoCrossRangeTextbox.text())
-    
+
     # Returns inputted G(0) in AXC
     def get_all_G0(self):
         return str(self.ui.allAutoCrossG0Textbox.text())
-    
+
     # Returns inputted W in AXC
     def get_all_W(self):
         return str(self.ui.allAutoCrossWTextbox.text())
@@ -580,7 +580,7 @@ class StartQT4(QtGui.QMainWindow):
             return 64
         else:
             return -1
-    
+
     #####################################################
     # Miscellaneous Functions                           #
     #####################################################
@@ -589,7 +589,8 @@ class StartQT4(QtGui.QMainWindow):
     def message(self, text):
         self.ui.messageBox.setText(str(text))
 
-if __name__ == "__main__":
+
+def start():
     app = QtGui.QApplication(sys.argv)
     myapp = StartQT4()
     myapp.show()

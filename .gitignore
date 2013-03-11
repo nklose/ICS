@@ -1,5 +1,7 @@
 *.pyc
 *.log
+*.o
+backend/libbackend.dll
 output/*
 *.so
 settings_local.py
