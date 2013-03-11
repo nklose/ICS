@@ -13,6 +13,7 @@ Call in mingw shell:
 from distutils.core import setup
 import py2exe
 import os
+import numpy
 
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 MAIN_FILE = os.path.join(ROOT_PATH, os.path.join("backend", "example.py"))
@@ -27,22 +28,32 @@ DESCRIPTION = "Image Correlation Spectroscopy"
 NAME = "ICS"
 
 PACKAGES = []
-INCLUDES = ['numpy']
+INCLUDES = []
+EXCLUDES = []
+DLL_EXCLUDES = ["libiomp5md.dll"]
+#["MSVCP90.dll", 'libiomp5md.dll', 
+#						 'libifcoremd.dll', 'libmmd.dll',
+#						 'svml_dispmd.dll', 'libifportMD.dll']
 
 OPTIONS = {
 	'py2exe': {
 		"dist_dir": "bin",
 		"packages": PACKAGES,
 		"includes": INCLUDES,
-		"dll_excludes": ["MSVCP90.dll", 'libiomp5md.dll', 
-						 'libifcoremd.dll', 'libmmd.dll',
-						 'svml_dispmd.dll', 'libifportMD.dll']
+		#"excludes": EXCLUDES,
+		"dll_excludes": DLL_EXCLUDES
     }
 }
 
 WINDOWS = [{"dest_base": EXE_FILE, "script": MAIN_FILE,
-			"icon_resources": [(0, ICON_FILE)]
+			"icon_resources": [(1, ICON_FILE)]
 		   }]
 
-setup(windows = WINDOWS, author = AUTHOR, version = VERSION,
-	  description = DESCRIPTION, name = NAME, options = OPTIONS)
+setup(
+	windows = WINDOWS,
+	author = AUTHOR,
+	version = VERSION,
+	description = DESCRIPTION,
+	name = NAME,
+	options = OPTIONS
+)

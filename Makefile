@@ -26,9 +26,8 @@ ifeq ($(UNAME), MINGW32_NT-6.1)
 	BACKEND_ARGS = -shared -Wl,-soname,$(BACK_END)/libbackend.dll -o \
 		$(BACK_END)/libbackend.dll $(BACK_END)/backend.o \
 		$(BACK_END)/libfftw3.dll.a
-else
-ifeq ($(UNAME), MINGW64_NT-6.1)
-	# Windows 7, 64-bit compile
+	# Temporary, manual control of windows 32 / 64, since its weird.
+	DLL_32 = 0
 	DLL_64 = 1
 	EXECUTABLE = $(BIN)/ICS.exe
 	PYTHON = "/c/Python27/python"
@@ -37,15 +36,18 @@ ifeq ($(UNAME), MINGW64_NT-6.1)
 		$(BACK_END)/libbackend.dll $(BACK_END)/backend.o \
 		$(BACK_END)/libfftw3.dll.a
 else
+ifeq ($(UNAME), "How to tell if win64")
+	# Windows 7, 64-bit compile
+else
 	# Linux compile
 	LBITS := $(shell getconf LONG_BIT)
-	ifeq ($(LBITS),64)
-		# do 64 bit stuff here, like set some CFLAGS
-		UNIX_BACKEND = $(BACK_END)/libfftw3_64.a
-	else
-		# do 32 bit stuff here
-		UNIX_BACKEND = $(BACK_END)/libfftw3_32.a
-	endif
+ifeq ($(LBITS),64)
+	# do 64 bit stuff here, like set some CFLAGS
+	UNIX_BACKEND = $(BACK_END)/libfftw3_64.a
+else
+	# do 32 bit stuff here
+	UNIX_BACKEND = $(BACK_END)/libfftw3_32.a
+endif
 endif
 
 endif
@@ -58,13 +60,14 @@ ifeq ($(DLL_32), 1)
 	@cp $(BACK_END)/libfftw3-3.dll_32 $(BACK_END)/libfftw3-3.dll
 	@cp $(BACK_END)/libfftw3-3.dll_32 $(BACK_END)/libfftw3.dll.a
 else
-	ifeq ($(DLL_64), 1)
-		@cp $(BACK_END)/fftw3.h_64 $(BACK_END)/fftw3.h
-		@cp $(BACK_END)/libfftw3-3.dll_64 $(BACK_END)/libfftw3-3.dll
-		@cp $(BACK_END)/libfftw3-3.dll_64 $(BACK_END)/libfftw3.dll.a
-	else
-		cp $(BACK_END)/fftw3.h_ux $(BACK_END)/fftw3.h
-	endif
+ifeq ($(DLL_64), 1)
+	@cp $(BACK_END)/fftw3.h_64 $(BACK_END)/fftw3.h
+	@cp $(BACK_END)/libfftw3-3.dll_64 $(BACK_END)/libfftw3-3.dll
+	@# This is not a bug. The 32 bit version must be used as the .a
+	@cp $(BACK_END)/libfftw3-3.dll_32 $(BACK_END)/libfftw3.dll.a
+else
+	cp $(BACK_END)/fftw3.h_ux $(BACK_END)/fftw3.h
+endif
 endif
 	@echo "=== Start: Compiling $(OS) backend ==="
 	gcc -O3 -std=c99 -fPIC -c $(C_SRC) -o $(BACK_END)/backend.o
@@ -77,18 +80,20 @@ frontend:
 	# TODO
 	@echo "=== End: Compiling frontend ==="
 	
-$(EXECUTABLE): clean_backend frontend
+$(EXECUTABLE): $(BIN) clean_backend frontend
 	@echo "=== Start: Compiling executable ==="
 ifeq ($(DLL_32), 1)
 	@# Windows 32 specific stuff here
 	@$(PYTHON) $(WINDOWS_EXE) py2exe
+	cp libiomp5md.dll_32 $(BIN)/libiomp5md.dll
 else
-	ifeq ($(DLL_64), 1)
-		@# Windows 64 specific stuff here
-		@$(PYTHON) $(WINDOWS_EXE) py2exe
-	else
-		@# Linux specific stuff here
-	endif
+ifeq ($(DLL_64), 1)
+	@# Windows 64 specific stuff here
+	@$(PYTHON) $(WINDOWS_EXE) py2exe
+	cp libiomp5md.dll_64 $(BIN)/libiomp5md.dll
+else
+	@# Linux specific stuff here
+endif
 endif
 	@# OS Independant stuff here
 	@echo "=== End: Compiling executable ==="
@@ -102,6 +107,9 @@ clean_backend: libbackend
 	@rm -f $(BACK_END)/fftw3.h
 	@rm -f backend.o
 	
+$(BIN):
+	@mkdir $(BIN)
+
 clean:
 	@echo "=== Begin clean ==="
 	@rm -f $(BACK_END)/libbackend.so
