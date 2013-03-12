@@ -22,6 +22,10 @@ Installation
 Running
 =======
 
-1. Run the development server on localhost:8000
+1. Start the Celery worker process
+
+        python manage.py celery worker --loglevel=info
+
+2. Run the development server on localhost:8000
 
         python manage.py runserver
