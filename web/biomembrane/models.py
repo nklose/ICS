@@ -116,5 +116,6 @@ class Results(models.Model):
     par = models.TextField()
     out = models.TextField()
     res_norm = models.TextField()
+    used_deltas = models.TextField()
     params = models.ForeignKey(Parameters)
     job = models.ForeignKey(Job)
