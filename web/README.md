@@ -1,7 +1,7 @@
 Requirements
 ============
 
-* Django 1.4.3+
+* Django 1.4
 * django-celery
 * sqlite3
 * rabbitmq-server 
