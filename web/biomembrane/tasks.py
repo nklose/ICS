@@ -67,7 +67,7 @@ def run_triple(job, params):
     initial_val = np.array([50,2,0], dtype=np.float64)
     (out, par) = triple.core_2(part_rgb, params.range_val, initial_val)
     fit = butils.guass_1d(np.arange(params.range_val), *par)
-    par[1] = int(par[1]*(side/lim)*10)/10
+    par[1] = int(par[1]*(side/params.limit)*10)/10
     res_norm = np.sum((out-fit)**2)
     return (out, par, res_norm)
 

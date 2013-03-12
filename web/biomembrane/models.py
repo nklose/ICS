@@ -34,7 +34,7 @@ class Batch(models.Model):
     user = models.ForeignKey(User)
 
     def __unicode__(self):
-        return unicode(date.__str__())
+        return unicode(self.date.__str__())
 
 
 class Job(models.Model):
@@ -53,7 +53,7 @@ class Job(models.Model):
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
-        return unicode(number)
+        return unicode(self.number)
 
 
 class Image(models.Model):
@@ -71,21 +71,21 @@ class Image(models.Model):
 
     def save(self, *args, **kwargs):
         super(Image, self).save(*args, **kwargs)
-        if image_type == RED:
-            job.red = pickle.dumps(image_reader.get_channel(data.name))
-        elif image_type == GREEN:
-            job.green = pickle.dumps(image_reader.get_channel(data.name))
-        elif image_type == BLUE:
-            job.blue = pickle.dumps(image_reader.get_channel(data.name))
+        if self.image_type == self.RED:
+            self.job.red = pickle.dumps(image_reader.get_channel(self.data.name))
+        elif self.image_type == self.GREEN:
+            self.job.green = pickle.dumps(image_reader.get_channel(self.data.name))
+        elif self.image_type == self.BLUE:
+            self.job.blue = pickle.dumps(image_reader.get_channel(self.data.name))
         else:
-            r, g, b = image_reader.get_channels(data.name)
-            job.red = pickle.dumps(r)
-            job.green = pickle.dumps(g)
-            job.blue = pickle.dumps(b)
-        job.save()
+            r, g, b = image_reader.get_channels(self.data.name)
+            self.job.red = pickle.dumps(r)
+            self.job.green = pickle.dumps(g)
+            self.job.blue = pickle.dumps(b)
+        self.job.save()
 
     def __unicode__(self):
-        return self.imageType
+        return self.image_type
 
 
 class Parameters(models.Model):
