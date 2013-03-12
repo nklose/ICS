@@ -21,9 +21,13 @@ signing of this agreement.
 """
 from django.db import models
 from django.contrib.auth.models import User
+import pickle
+import image_reader
 
-def generateFilePath(instance, filename):
+
+def generate_file_path(instance, filename):
 	""" Return something useful here """
+
 
 class Batch(models.Model):
     date = models.DateTimeField(auto_now_add=True)
@@ -31,6 +35,7 @@ class Batch(models.Model):
 
     def __unicode__(self):
         return unicode(date.__str__())
+
 
 class Job(models.Model):
     UPLOADING, RUNNING, COMPLETE = u'u', u'r', u'c'
@@ -42,11 +47,14 @@ class Job(models.Model):
 
     number = models.IntegerField()
     state = models.CharField(max_length=1, choices=JOB_STATES)
-    output_dir = models.CharField(max_length=255)
+    red = models.TextField()
+    green = models.TextField()
+    blue = models.TextField()
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
         return unicode(number)
+
 
 class Image(models.Model):
     RED, GREEN, BLUE, RGB = u'r', u'g', u'b', u'rgb'
@@ -57,15 +65,30 @@ class Image(models.Model):
         (RGB, u'Red/Green/Blue')
     )
 
-    data = models.ImageField(upload_to=generateFilePath)
+    data = models.ImageField(upload_to=generate_file_path)
     image_type = models.CharField(max_length=3, choices=IMAGE_TYPES)
     job = models.ForeignKey(Job)
+
+    def save(self, *args, **kwargs):
+        super(Image, self).save(*args, **kwargs)
+        if image_type == RED:
+            job.red = pickle.dumps(image_reader.get_channel(data.name))
+        elif image_type == GREEN:
+            job.green = pickle.dumps(image_reader.get_channel(data.name))
+        elif image_type == BLUE:
+            job.blue = pickle.dumps(image_reader.get_channel(data.name))
+        else:
+            r, g, b = image_reader.get_channels(data.name)
+            job.red = pickle.dumps(r)
+            job.green = pickle.dumps(g)
+            job.blue = pickle.dumps(b)
+        job.save()
 
     def __unicode__(self):
         return self.imageType
 
+
 class Parameters(models.Model):
-    # TODO: Store which images to correlate
     AUTO, CROSS, TRIPLE = u'a', u'c', u't'
     CORRELATION_TYPES = (
         (AUTO, u'Auto'),
@@ -74,13 +97,24 @@ class Parameters(models.Model):
     )
 
     correlationType = models.CharField(max_length=1, choices=CORRELATION_TYPES)
+    red = models.BooleanField()
+    green = models.BooleanField()
+    blue = models.BooleanField()
     range_val = models.FloatField()
     g = models.FloatField()
     w = models.FloatField()
     ginf = models.FloatField()
     limit = models.FloatField()
-    deltas = models.BooleanField()
+    use_deltas = models.BooleanField()
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
         return self.correlationType
+
+
+class Results(models.Model):
+    par = models.TextField()
+    out = models.TextField()
+    res_norm = models.TextField()
+    params = models.ForeignKey(Parameters)
+    job = models.ForeignKey(Job)

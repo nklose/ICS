@@ -19,26 +19,44 @@ the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
 from celery import task
+from models import Job, Parameters, Results
+from ics import dual, triple
+from ics import backend_utils as butils
 import numpy as np
+import pickle
 
-# TODO: Import dual, triple and backend_utils so this actually works
 
-@task()
-def run_dual(a, b, params):
-	""" Dual correlation """
+def run_dual(job, params):
+    if params.correlationType == Parameters.AUTO:
+        if params.red == True:
+            a = b = pickle.loads(job.red)
+        elif params.green == True:
+            a = b = pickle.loads(job.green)
+        else:
+            a = b = pickle.loads(job.blue)
+
+    if params.correlationType == Parameters.CROSS:
+        if params.red == True:
+            a = pickle.loads(job.red)
+            if params.green == True:
+                b = pickle.loads(job.green)
+            else:
+                b = pickle.loads(job.blue)
+        else:
+            a = pickle.loads(job.green)
+            b = pickle.loads(job.blue)
+
     initial_val = np.array([1,10,0,0,0], dtype=np.float64)
-    (out, par, used_deltas) = dual.core(a, b, params.range_val, initial_val, params.deltas)
+    (out, par, used_deltas) = dual.core(a, b, params.range_val, initial_val, params.use_deltas)
     fit = butils.gauss_2d_deltas(np.arange(params.range_val**2), *par).reshape(params.range_val, params.range_val)
     res_norm = np.sum((out-fit)**2)
-    full_par = np.zeroes(7)
-    full_par[0:5] = par
-    full_par[5] = used_deltas
-    full_par[6] = res_norm
-    return full_par
+    return (out, par, used_deltas, res_norm)
 
-@task()
-def run_triple(a, b, c, params):
-	""" Triple correlation """
+
+def run_triple(job, params):
+    r = pickle.loads(job.red)
+    g = pickle.loads(job.green)
+    b = pickle.loads(job.blue)
     side = np.shape(r)[0]
     (avg_r, sr) = triple.core_0(r)
     (avg_g, sg) = triple.core_0(g)
@@ -51,7 +69,27 @@ def run_triple(a, b, c, params):
     fit = butils.guass_1d(np.arange(params.range_val), *par)
     par[1] = int(par[1]*(side/lim)*10))/10
     res_norm = np.sum((out-fit)**2)
-    full_par = np.zeroes(7)
-    full_par[0:3] = par
-    full_par[6] = res_norm
-    return full_par
+    return (out, par, res_norm)
+
+
+@task()
+def run(job):
+    job.state = Job.RUNNING
+    job.save()
+
+    all_params = Parameters.objects.filter(batch=job.batch)
+    for params in all_params:
+        results = Results(job=job, params=params)
+        if params.correlationType == Parameters.TRIPLE:
+            out, par, res_norm = run_triple(job, params)
+        else:
+            out, par, used_deltas, res_norm = run_dual(job, params)
+            results.used_deltas = pickle.dumps(used_deltas)
+        results.par = pickle.dumps(par)
+        results.out = pickle.dumps(out)
+        results.res_norm = pickle.dumps(res_norm)
+        results.save()
+        
+    job.state = Job.COMPLETE
+    job.save()
+
