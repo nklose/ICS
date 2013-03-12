@@ -20,6 +20,9 @@ the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
 from django.shortcuts import render
+import scipy.misc
+import icsform
+
 
 def program(request):
 
@@ -36,6 +39,7 @@ def program(request):
     temp = {"sec_title": "Program View Page", "copyrightdate": 2013}
     return render(request, 'icslayout.html', temp)
 
+
 def home(request):
     """ Renders a home  view.
          Template: /web/web/templates/homepage.html
@@ -47,5 +51,28 @@ def home(request):
         - sec_ title: The title of the section
         - copyrightdate: The year of copyright.
     """
-    temp = {"sec_title": "Welcome to the Homepage", "copyrightdate": 2013}
+    myForm = icsform.ImgCorrelateForm(request.POST, request.FILES)
+
+    temp = {"sec_title": "Welcome to the Homepage", "copyrightdate": 2013,
+            "form": myForm}
     return render(request, 'homepage.html', temp)
+
+
+def sample_upload(request):
+    if request.method == 'POST':  # If the form has been submitted...
+        form = icsform.SampleImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            # All validation rules pass
+            # Process the data in form.cleaned_data
+            image = form.cleaned_data['img']
+            # Change to scipy image:
+            sciImg = scipy.misc.fromimage(image)
+        else:
+            image = None
+    else:
+        form = icsform.SampleImageForm()  # An unbound form
+        image = None
+
+    temp = {"sec_title": "upload", "copyrightdate": 2013,
+            "form": form, "imgtype": str(sciImg)}
+    return render(request, 'upload.html', temp)

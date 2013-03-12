@@ -177,6 +177,13 @@ LOGGING = {
     }
 }
 
+# Import the root project
+
+import sys, os.path
+root_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(root_dir)
+
+
 # Overrides above settings with settings in settings_local.py, if any.
 try:
     from settings_local import *

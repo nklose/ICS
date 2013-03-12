@@ -24,8 +24,10 @@ from django import forms
 from io import BytesIO
 from django.core.exceptions import ValidationError
 from PIL import Image
+import tempfile
+import os
 
-import Biomembrane.commandline.image_reader as image_reader
+import commandline.image_reader as image_reader
 
 
 class LosslessImageField(forms.FileField):
@@ -45,12 +47,14 @@ class LosslessImageField(forms.FileField):
         Checks that the file-upload field data contains a valid image
         """
         f = super(LosslessImageField, self).to_python(data)
+
         if f is None:
             return None
 
         # We need to get a file object for PIL. We might have a path or we might
         # have to read the data into memory.
-        if hasattr(data, 'temporary_file_path'):
+        isPath = hasattr(data, 'temporary_file_path')
+        if isPath:
             file = data.temporary_file_path()
         else:
             if hasattr(data, 'read'):
@@ -72,12 +76,18 @@ class LosslessImageField(forms.FileField):
             # Python Imaging Library doesn't recognize it as an image
             raise ValidationError(self.error_messages['invalid_image'])
 
-        if hasattr(f, 'seek') and callable(f.seek):
-            f.seek(0)
-        # return f
-
+        fd, path = tempfile.mkstemp()
         try:
-            scipyImage = image_reader.validate_image(file)
-            return scipyImage
+            if isPath:
+                image_reader.validate_image(file)
+            else:
+                file.seek(0)
+                lines = file.readlines()
+                for line in lines:
+                    os.write(fd, line)
+                os.close(fd)
+                return image_reader.validate_image(path)
         except:
             raise ValidationError(self.error_messages['not_losseless'])
+        finally:
+            os.remove(path)

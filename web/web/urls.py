@@ -17,4 +17,5 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^program/', view.program),
     url(r'^home/', view.home),
+    url(r'^upload/', view.sample_upload),
 )
