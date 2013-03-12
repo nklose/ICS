@@ -35,8 +35,8 @@ PACKAGES = ["backend", "midend", "local_GUI"]
 INCLUDES = ["sip"]
 EXCLUDES = []
 DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll"]
-DATA_FILES = [('', LOCAL_IMAGES)]
 
+DATA_FILES = [('', LOCAL_IMAGES)]
 OPTIONS = {
     'py2exe': {
         "dist_dir": "bin",
