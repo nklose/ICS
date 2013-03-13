@@ -20,6 +20,7 @@ the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
 from django.shortcuts import render
+from icsform import RgbSettingsForm;
 
 def program(request):
 
@@ -33,7 +34,15 @@ def program(request):
         - sec_ title: The title of the section.
         - copyrightdate: The Year of copyright
     """
-    temp = {"sec_title": "Program View Page", "copyrightdate": 2013}
+    if request.method == 'POST':  #form has been submitted
+        form = RgbSettingsForm(request.POST)
+        if form.is_valid():
+        # proccess the data in form.cleaned_data
+        # ...
+          return HttpResponseRedirect('/proccess/') # redirect after post
+    else:
+        form = RgbSettingsForm()
+    temp = {"sec_title": "Program View Page", "copyrightdate": 2013, "form": form}
     return render(request, 'icslayout.html', temp)
 
 def home(request):
