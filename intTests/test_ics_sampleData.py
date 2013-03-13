@@ -30,6 +30,7 @@ class TestICSSampleData(ics_single_base.TestBackendSingleImage):
     """ INT TEST ID: 7
     """
     def set_vars(self):
+        self.d_range = 30
         self.inFilePath = os.path.join("sampleData", "rgb_001.bmp")
         self.outputDirName = "sampleData"
 
@@ -38,7 +39,8 @@ class TestSeperateSampleData(ics_seperate_base.TestBackendSeperateImage):
     """ INT TEST ID: 8
     """
     def set_vars(self):
-        self.inFilePathR = os.path.join("sampleData", "r_001.bmp")
-        self.inFilePathG = os.path.join("sampleData", "g_001.bmp")
-        self.inFilePathB = os.path.join("sampleData", "b_001.bmp")
+        self.d_range = 30
+        self.inFilePathR = os.path.join("sampleData", "r_000.png")
+        self.inFilePathG = os.path.join("sampleData", "g_000.png")
+        self.inFilePathB = os.path.join("sampleData", "b_000.png")
         self.outputDirName = "sampleData"

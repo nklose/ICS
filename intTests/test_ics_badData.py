@@ -21,14 +21,55 @@ signing of this agreement.
 """
 
 import os
+import numpy as np
 
-import ics_seperate_base
+import ics_batch
+import ics_single_base
+
+IN_PATH_ACC = ics_single_base.get_acceptance_path()
+IN_PATH_IN = os.path.join(IN_PATH_ACC, "inputs")
 
 
-class TestICSBadData(ics_seperate_base.TestBackendSeperateImage):
+class BadConfig:
+    side = 512
+    input_directory = os.path.join(IN_PATH_IN, "badData")
+    output_directory = os.path.join(ics_single_base.get_cur_dir(), 'output')
+    name_min = 1
+    name_max = 10
+    name_format = '{:s}_{:03d}.bmp'
+    dual_range = 20
+    triple_range = 15
+    auto_consider_deltas = False
+    cross_consider_deltas = False
+    dual_initial = np.array([1, 10, 0, 0, 0], dtype=np.float)
+    triple_initial = np.array([50, 2, 0], dtype=np.float)
+    triple_lim = 64
+    input_type = 'split'
+    output_type = 'full'
+    output_numbering = '{:03d}'
+
+
+class TestICSBadData(ics_batch.TestBatch):
+    """ INT TEST ID: 6
+    """
 
     def set_vars(self):
-        self.inFilePathR = os.path.join("badData", "r_001.bmp")
-        self.inFilePathG = os.path.join("badData", "g_001.bmp")
-        self.inFilePathB = os.path.join("badData", "b_001.bmp")
+        self.config = BadConfig()
         self.outputDirName = "badData"
+
+    def validate_output(self):
+        fnames = ['ACb', 'ACg', 'ACr', 'XCrg', 'XCrb', 'XCrg']
+        fname_old = fname_new = None
+        for i in range(10):
+            for fname in fnames:
+                fname_old = os.path.join(self.expectedOutput,
+                                         '%03d_%s.txt' % (i + 1, fname))
+                fname_new = os.path.join(self.config.output_directory,
+                                         '%03d_%s.txt' % (i + 1, fname))
+                self.assertIsSimiliar(fname_old, fname_new)
+
+                fname_old = os.path.join(self.expectedOutput,
+                                         '%03d_%sFit.txt' % (i + 1, fname))
+                fname_new = os.path.join(self.config.output_directory,
+                                         '%03d_%sFit.txt' % (i + 1, fname))
+                self.assertIsSimiliar(fname_old, fname_new)

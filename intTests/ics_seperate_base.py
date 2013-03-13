@@ -48,4 +48,5 @@ self.outputDirName and the file path for each color in self.inFilePathR, etc..")
 
     def call_script(self):
         example.run_seperate(self.output, self.inFileR, self.inFileG,
-                             self.inFileB, example.ALL_COLORS)
+                             self.inFileB, example.ALL_COLORS,
+                             d_range=self.d_range, t_range=self.t_range)

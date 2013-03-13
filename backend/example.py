@@ -65,7 +65,7 @@ def run(pdata,image_name,colors,d_range=20,t_range=15):
         res[i,:] = run_any(pdata,p[i][0],p[i][1],p[i][2],color,d_range,t_range)
     header = str.format('{:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s}',
                         'g(0)','w','ginf','dx','dy','used','norm')
-    fpath = pdata + 'results.txt'
+    fpath = get_filename(pdata, 'results.txt')
     with open(fpath,'w') as f:
         f.write(header+'\n')
         np.savetxt(f,res,fmt='%9.5f')
