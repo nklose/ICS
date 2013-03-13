@@ -23,10 +23,22 @@ signing of this agreement.
 import os
 
 import ics_single_base
+import ics_seperate_base
 
 
-class TestICSSampleData(ics_single_base.TestICS):
-
+class TestICSSampleData(ics_single_base.TestBackendSingleImage):
+    """ INT TEST ID: 7
+    """
     def set_vars(self):
-        self.inFilePath = os.path.join("sampleData", "rgb-01.bmp")
+        self.inFilePath = os.path.join("sampleData", "rgb_001.bmp")
+        self.outputDirName = "sampleData"
+
+
+class TestSeperateSampleData(ics_seperate_base.TestBackendSeperateImage):
+    """ INT TEST ID: 8
+    """
+    def set_vars(self):
+        self.inFilePathR = os.path.join("sampleData", "r_001.bmp")
+        self.inFilePathG = os.path.join("sampleData", "g_001.bmp")
+        self.inFilePathB = os.path.join("sampleData", "b_001.bmp")
         self.outputDirName = "sampleData"

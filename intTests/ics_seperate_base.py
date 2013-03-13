@@ -1,4 +1,5 @@
-""" Tests one item of the "badData" data set. TODO, add correct output data.x
+""" Contains the base class for an acceptance test using channel seperated
+files.
 
 Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar
 Qadri, and James Wang under the 401 IP License.
@@ -22,13 +23,29 @@ signing of this agreement.
 
 import os
 
-import ics_seperate_base
+import backend.example as example
+import ics_single_base
 
 
-class TestICSBadData(ics_seperate_base.TestICSSeperate):
+class TestBackendSeperateImage(ics_single_base.TestBackendSingleImage):
+    inFilePathR = ""
+    inFilePathG = ""
+    inFilePathB = ""
 
     def set_vars(self):
-        self.inFilePathR = os.path.join("badData", "r_001.bmp")
-        self.inFilePathG = os.path.join("badData", "g_001.bmp")
-        self.inFilePathB = os.path.join("badData", "b_001.bmp")
-        self.outputDirName = "badData"
+        raise NotImplementedError("Sub-classes must use this method to set \
+self.outputDirName and the file path for each color in self.inFilePathR, etc..")
+
+    def setUp(self):
+        super(TestBackendSeperateImage, self).setUp()
+        self.inFileR = os.path.join(ics_single_base.get_acceptance_path(),
+                                    os.path.join("inputs", self.inFilePathR))
+        self.inFileG = os.path.join(ics_single_base.get_acceptance_path(),
+                                    os.path.join("inputs", self.inFilePathG))
+        self.inFileB = os.path.join(ics_single_base.get_acceptance_path(),
+                                    os.path.join("inputs", self.inFilePathB))
+        self.inFile = self.inFileR
+
+    def call_script(self):
+        example.run_seperate(self.output, self.inFileR, self.inFileG,
+                             self.inFileB, example.ALL_COLORS)

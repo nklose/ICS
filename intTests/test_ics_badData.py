@@ -1,5 +1,4 @@
-""" Contains the base class for an acceptance test using channel seperated
-files.
+""" Tests one item of the "badData" data set. TODO, add correct output data.x
 
 Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar
 Qadri, and James Wang under the 401 IP License.
@@ -23,29 +22,13 @@ signing of this agreement.
 
 import os
 
-import ics_single_base
-import image_reader
+import ics_seperate_base
 
 
-class TestICSSeperate(ics_single_base.TestICS):
-    inFilePathR = ""
-    inFilePathG = ""
-    inFilePathB = ""
+class TestICSBadData(ics_seperate_base.TestBackendSeperateImage):
 
     def set_vars(self):
-        raise NotImplementedError("Sub-classes must use this method to set \
-self.outputDirName and the file path for each color in self.inFilePathR, etc..")
-
-    def setUp(self):
-        super(TestICSSeperate, self).setUp()
-        self.inFileR = os.path.join(ics_single_base.get_cur_dir(),
-                                    os.path.join("inputs", self.inFilePathR))
-        self.inFileG = os.path.join(ics_single_base.get_cur_dir(),
-                                    os.path.join("inputs", self.inFilePathG))
-        self.inFileB = os.path.join(ics_single_base.get_cur_dir(),
-                                    os.path.join("inputs", self.inFilePathB))
-        self.inFile = self.inFileR
-
-    def loadImages(self):
-        return image_reader.get_channels_separate(self.inFileR, self.inFileG,
-                                                  self.inFileB)
+        self.inFilePathR = os.path.join("badData", "r_001.bmp")
+        self.inFilePathG = os.path.join("badData", "g_001.bmp")
+        self.inFilePathB = os.path.join("badData", "b_001.bmp")
+        self.outputDirName = "badData"

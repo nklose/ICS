@@ -1,4 +1,4 @@
-""" Contains the base class for an acceptance test using a single image.
+""" Contains the base class for an integration test using a single image.
 
 Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar
 Qadri, and James Wang under the 401 IP License.
@@ -24,11 +24,10 @@ import unittest
 import os
 import shutil
 import numpy as np
-import ics
-import image_reader
+import backend.example as example
 
 
-class TestICS(unittest.TestCase):
+class TestBackendSingleImage(unittest.TestCase):
     outputDirName = ""
     inFilePath = ""
 
@@ -38,11 +37,11 @@ self.outputDirName and self.inFilePath.")
 
     def setUp(self):
         self.set_vars()
-        self.output = os.path.join(get_root_dir(), "mdata")
+        self.output = os.path.join(get_root_dir(), "pdata")
         self.expectedOutput = os.path.join(
-            get_cur_dir(), os.path.join("outputs", self.outputDirName))
+            get_acceptance_path(), os.path.join("outputs", self.outputDirName))
         self.inFile = os.path.join(
-            get_cur_dir(), os.path.join("inputs", self.inFilePath))
+            get_acceptance_path(), os.path.join("inputs", self.inFilePath))
         if (os.path.exists(self.output)):
             shutil.rmtree(self.output)
 
@@ -50,11 +49,15 @@ self.outputDirName and self.inFilePath.")
         self.assertTrue(ics_similar(oldFile, newFile))
 
     def test_ics_output(self):
+        self.call_script()
+        self.validate_output()
+
+    def call_script(self):
+        example.run(self.output, self.inFile, example.ALL_COLORS)
+
+    def validate_output(self):
         fnames = ['ACb', 'ACg', 'ACr', 'XCrg', 'XCrb', 'XCrg']
         fname_old = fname_new = None
-        red, green, blue = self.loadImages()
-        ics.run(self.output, red, green, blue, self.inFile,
-                ics.ALL_INPUT_COLORS, False)
         for fname in fnames:
             fname_old = os.path.join(self.expectedOutput, '%s.txt' % (fname))
             fname_new = os.path.join(self.output, '%s.txt' % fname)
@@ -64,16 +67,23 @@ self.outputDirName and self.inFilePath.")
             fname_new = os.path.join(self.output, '%sFit.txt' % fname)
             self.assertIsSimiliar(fname_old, fname_new)
 
-    def loadImages(self):
-        return image_reader.get_channels_single(self.inFile)
+    def tearDown(self):
+        if (os.path.exists(self.output)):
+            shutil.rmtree(self.output)
 
 
 def get_root_dir():
-    return os.path.dirname(get_cur_dir())
+    return os.path.dirname(os.path.abspath(get_cur_dir()))
 
 
 def get_cur_dir():
     return os.path.dirname(__file__)
+
+
+def get_acceptance_path():
+    """ inputs are stored with the acceptance tests, so grab input from there.
+    """
+    return os.path.join(get_root_dir(), "accTests")
 
 
 def ics_similar(fname_old, fname_new):
