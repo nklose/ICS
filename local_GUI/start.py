@@ -28,7 +28,7 @@ ROOT_DIR = os.path.dirname(CUR_DIR)
 sys.path.append(ROOT_DIR)
 
 # Import backend modules
-import backend.backend_image_loader as loader
+import backend.bimloader as bimloader
 
 class StartQT4(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -101,8 +101,8 @@ class StartQT4(QtGui.QMainWindow):
 
         # Call the backend to separate the image by channel
         try:
-            images = loader.load_image([str(self.rgbPath)])
-        except loader.ImageFormatException:
+            images = bimloader.load_image_mixed(str(self.rgbPath))
+        except bimloader.ImageFormatException:
             validImage = False
             self.msgBadFormat()
             self.rgbPath = ""
@@ -114,9 +114,9 @@ class StartQT4(QtGui.QMainWindow):
             self.ui.imageRgb.setPixmap(QtGui.QPixmap(self.rgbPath))
             
             # Save the three channel arrays
-            self.redChannel = images[1][0]
-            self.greenChannel = images[1][1]
-            self.blueChannel = images[1][2]
+            self.redChannel = images[0]
+            self.greenChannel = images[1]
+            self.blueChannel = images[2]
 
             # Save the image dimension
             self.update_size(self.redChannel.shape[1])
@@ -159,20 +159,32 @@ class StartQT4(QtGui.QMainWindow):
 
         # Call the backend to check that the file extension is valid
         try:
-            loader.check_paths([str(self.redPath)])
-        except loader.ImageFormatException:
+            self.redChannel = bimloader.load_image_split(str(self.redPath))
+        except bimloader.ImageFormatException:
             validImage = False
             self.msgBadFormat()
             self.redPath = ""
 
         if validImage:
+            # Clear RGB path, since the user has opted to use single-channel images
+            self.rgbPath = ""
+
             # Update user interface with image
             self.message("Loaded image " + self.redPath)
             self.ui.redChannelFile.setText(os.path.basename(self.redPath))
             self.ui.imageRed.setPixmap(QtGui.QPixmap(self.redPath))
 
-            # Clear RGB path, since the user has opted to use single-channel images
-            self.rgbPath = ""
+            # Remove any temporary images from the interface
+            self.refresh_temp()
+            if not os.path.isfile(self.rgbPath):
+                self.ui.imageRgb.clear()
+                self.rgbPath = ""
+            if not os.path.isfile(self.greenPath):
+                self.ui.imageGreen.clear()
+                self.greenPath = ""
+            if not os.path.isfile(self.bluePath):
+                self.ui.imageBlue.clear()
+                self.bluePath = ""
 
             # Construct an RGB image from three channel images, if possible
             self.constructRGB()
@@ -187,8 +199,8 @@ class StartQT4(QtGui.QMainWindow):
         
         # Call the backend to load the image as an array
         try:
-            loader.check_paths([str(self.greenPath)])
-        except:
+            self.greenChannel = bimloader.load_image_split(str(self.greenPath))
+        except bimloader.ImageFormatException:
             validImage = False
             self.msgBadFormat()
             self.greenPath = ""
@@ -201,6 +213,18 @@ class StartQT4(QtGui.QMainWindow):
 
             # Clear RGB path, since the user has opted to use single-channel images
             self.rgbPath = ""
+
+            # Remove any temporary images from the interface
+            self.refresh_temp()
+            if not os.path.isfile(self.rgbPath):
+                self.ui.imageRgb.clear()
+                self.rgbPath = ""
+            if not os.path.isfile(self.redPath):
+                self.ui.redGreen.clear()
+                self.greenPath = ""
+            if not os.path.isfile(self.bluePath):
+                self.ui.imageBlue.clear()
+                self.bluePath = ""
 
             # Construct an RGB image from three channel types, if possible
             self.constructRGB()
@@ -215,8 +239,8 @@ class StartQT4(QtGui.QMainWindow):
         
         # Call the backend to load the image as an array
         try:
-            loader.check_paths([str(self.bluePath)])
-        except:
+            self.blueChannel = bimloader.load_image_split(str(self.bluePath))
+        except bimloader.ImageFormatException:
             validImage = False
             self.msgBadFormat()
             self.bluePath = ""
@@ -229,6 +253,18 @@ class StartQT4(QtGui.QMainWindow):
 
             # Clear RGB path, since the user has opted to use single-channel images
             self.rgbPath = ""
+
+            # Remove any temporary images from the interface
+            self.refresh_temp()
+            if not os.path.isfile(self.rgbPath):
+                self.ui.imageRgb.clear()
+                self.rgbPath = ""
+            if not os.path.isfile(self.redPath):
+                self.ui.imageRed.clear()
+                self.greenPath = ""
+            if not os.path.isfile(self.greenPath):
+                self.ui.imageGreen.clear()
+                self.bluePath = ""
 
             # Construct an RGB image from three channel types, if possible
             self.constructRGB()
@@ -728,14 +764,6 @@ class StartQT4(QtGui.QMainWindow):
             # Make a list of file paths
             imagePaths = [str(self.redPath), str(self.greenPath), str(self.bluePath)]
 
-            # Get a list of channel arrays from the backend
-            rgb = loader.load_image(imagePaths)
-
-            # Save the three channel arrays
-            self.redChannel = rgb[1][0]
-            self.greenChannel = rgb[1][1]
-            self.blueChannel = rgb[1][2]
-
             # Save the image dimension
             self.update_size(self.redChannel.shape[1])
             
@@ -785,17 +813,17 @@ class StartQT4(QtGui.QMainWindow):
     def msgBadFormat(self):
         self.message("Invalid file format. Please use a different type of file.")
 
-    # Calculates the normalized average intensity per pixel given an image
+    # Calculates the average intensity per pixel given an image
     def aipp(self, path, dim):
         image  = Image.open(path)
-        sum = 0.0
+        sum = 0
         num = 0
         for x in range(0, dim):
             for y in range(0, dim):
                 pixel = image.load()
                 sum += pixel[x,y]
                 num += 1
-        return sum / num / 256
+        return sum / num
 
 def start():
     app = QtGui.QApplication(sys.argv)
