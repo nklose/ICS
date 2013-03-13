@@ -30,8 +30,7 @@ import bimloader
 
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
 
-
-def run_seperate(pdata, rfile, gfile, bfile, colors):
+def run_seperate(pdata, rfile, gfile, bfile, colors, d_range, t_range):
     """Added for integration tests"""
     if not os.path.exists(pdata):
         os.makedirs(pdata)
@@ -44,7 +43,7 @@ def run_seperate(pdata, rfile, gfile, bfile, colors):
     np.ndarray.fill(res,np.nan)
     for color in colors:
         i = list.index(ALL_COLORS,color)
-        res[i,:] = run_any(pdata,p[i][0],p[i][1],p[i][2],color)
+        res[i,:] = run_any(pdata,p[i][0],p[i][1],p[i][2],color,d_range,t_range)
     header = str.format('{:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s}',
                         'g(0)','w','ginf','dx','dy','used','norm')
     fpath = get_filename(pdata, 'results.txt')
@@ -53,8 +52,7 @@ def run_seperate(pdata, rfile, gfile, bfile, colors):
         np.savetxt(f,res,fmt='%9.5f')
     print 'Done'
 
-
-def run(pdata,image_name,colors):
+def run(pdata,image_name,colors,d_range,t_range):
     if not os.path.exists(pdata):
         os.makedirs(pdata)
     (r,g,b) = bimloader.load_image_mixed(image_name)
@@ -64,7 +62,7 @@ def run(pdata,image_name,colors):
     np.ndarray.fill(res,np.nan)
     for color in colors:
         i = list.index(ALL_COLORS,color)
-        res[i,:] = run_any(pdata,p[i][0],p[i][1],p[i][2],color)
+        res[i,:] = run_any(pdata,p[i][0],p[i][1],p[i][2],color,d_range,t_range)
     header = str.format('{:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s}',
                         'g(0)','w','ginf','dx','dy','used','norm')
     fpath = pdata + 'results.txt'
@@ -73,12 +71,12 @@ def run(pdata,image_name,colors):
         np.savetxt(f,res,fmt='%9.5f')
     print 'Done'
 
-def run_any(pdata,a,b,c,color):
-    if len(color) <= 2: return run_dual(pdata,a,b,c,color)
-    if len(color) == 3: return run_trip(pdata,a,b,c,color)
+def run_any(pdata,a,b,c,color,d_range,t_range):
+    if len(color) <= 2: return run_dual(pdata,a,b,c,color,d_range)
+    if len(color) == 3: return run_trip(pdata,a,b,c,color,t_range)
 
-def run_dual(pdata,a,b,c,color):
-    range_val = 20
+def run_dual(pdata,a,b,c,color,d_range):
+    range_val = d_range
     initial_val = np.array([1,10,0,0,0],dtype=np.float64)
     consider_deltas = False
     (out,par,used_deltas) = dual.core(a,b,range_val,initial_val,consider_deltas)
@@ -97,7 +95,7 @@ def run_dual(pdata,a,b,c,color):
     full_par[6] = resnorm
     return full_par
 
-def run_trip(pdata,r,g,b,color):
+def run_trip(pdata,r,g,b,color,t_range):
     side = np.shape(r)[0]
     (avg_r,sr) = triple.core_0(r)
     (avg_g,sg) = triple.core_0(g)
@@ -111,7 +109,7 @@ def run_trip(pdata,r,g,b,color):
     # over here in the UI, you would display surfc(part_rgb[0,:,:])
     # to allow the user to determine a suitable range_val and
     # initial_val, rather than hard coding them
-    range_val = 15
+    range_val = t_range
     initial_val = np.array([50,2,0],dtype=np.float64)
     (out,par) = triple.core_2(part_rgb,range_val,initial_val)
     fit = butils.gauss_1d(np.arange(range_val),*par)
@@ -126,9 +124,8 @@ def run_trip(pdata,r,g,b,color):
     full_par[6] = resnorm
     return full_par
 
-
 def get_filename(pdata, fname):
     return os.path.join(pdata, fname)
 
-def main(): run('output/','../accTests/inputs/RGBtemp/rgb_001.bmp',ALL_COLORS)
+def main(): run('output/','../accTests/inputs/RGBtemp/rgb_001.bmp',ALL_COLORS,20,15)
 if __name__ == "__main__": main()
