@@ -17,17 +17,17 @@
   });
 
 $(function() {
-    var select = $( "#resolutions" );
+    var select = $( "#id_resolutions" );
     var slider = $( "<div id='slider'></div>" ).insertAfter( select ).slider({
       min: 1,
-      max: 5,
+      max: 3,
       range: "min",
       value: select[ 0 ].selectedIndex + 1,
       slide: function( event, ui ) {
         select[ 0 ].selectedIndex = ui.value - 1;
       }
     });
-    $( "#resolutions" ).change(function() {
+    $( "#id_resolutions" ).change(function() {
       slider.slider( "value", this.selectedIndex + 1 );
     });
   });
