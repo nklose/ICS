@@ -139,6 +139,16 @@ class StartQT4(QtGui.QMainWindow):
             self.ui.imageGreen.setPixmap(QtGui.QPixmap(self.greenPath))
             self.ui.imageBlue.setPixmap(QtGui.QPixmap(self.bluePath))
 
+            # Calculate the average intensity per pixel of each channel
+            redAvgInt = self.aipp(self.redPath, self.size)
+            greenAvgInt = self.aipp(self.greenPath, self.size)
+            blueAvgInt = self.aipp(self.bluePath, self.size)
+
+            # Update the interface with average intensities per pixel
+            self.ui.redIntensityText.setText(str(redAvgInt))
+            self.ui.greenIntensityText.setText(str(greenAvgInt))
+            self.ui.blueIntensityText.setText(str(blueAvgInt))
+
     # Loads a red channel image into the interface.
     def load_red_image(self):
         self.message("Loading red image...")
@@ -772,8 +782,20 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.imageSizeText.setText(sizeStr)
 
     # Informs the user that they have selected an invalid file format
-    def badFormat(self):
+    def msgBadFormat(self):
         self.message("Invalid file format. Please use a different type of file.")
+
+    # Calculates the normalized average intensity per pixel given an image
+    def aipp(self, path, dim):
+        image  = Image.open(path)
+        sum = 0.0
+        num = 0
+        for x in range(0, dim):
+            for y in range(0, dim):
+                pixel = image.load()
+                sum += pixel[x,y]
+                num += 1
+        return sum / num / 256
 
 def start():
     app = QtGui.QApplication(sys.argv)
