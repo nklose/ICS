@@ -186,11 +186,30 @@ class StartQT4(QtGui.QMainWindow):
                 self.ui.imageBlue.clear()
                 self.bluePath = ""
 
+            # Remember old size in case something bad happens
+            oldSize = self.size
+
             # Update image size
             self.update_size(self.redChannel.shape[1])
 
-            # Construct an RGB image from three channel images, if possible
-            self.constructRGB()
+            # Calculate average intensity per pixel
+            monochrome = True
+            redAvgInt = 0
+            try:
+                redAvgInt = self.aipp(self.redPath, self.size)
+            except:
+                self.msgBadChannels()
+                self.ui.imageRed.clear()
+                self.redPath = ""
+                self.redChannel = ""
+                monochrome = False
+                self.update_size(oldSize)
+            
+            if monochrome:
+                self.ui.redIntensityText.setText(str(redAvgInt))
+
+                # Construct an RGB image from three channel images, if possible
+                self.constructRGB()
 
     # Loads a green channel image into the interface.
     def load_green_image(self):
@@ -203,9 +222,16 @@ class StartQT4(QtGui.QMainWindow):
         # Call the backend to load the image as an array
         try:
             self.greenChannel = bimloader.load_image_split(str(self.greenPath))
+
+            
+
         except bimloader.ImageFormatException:
             validImage = False
             self.msgBadFormat()
+            self.greenPath = ""
+        except:
+            validImage = False
+            self.msgBadChannels()
             self.greenPath = ""
 
         if validImage:
@@ -229,11 +255,30 @@ class StartQT4(QtGui.QMainWindow):
                 self.ui.imageBlue.clear()
                 self.bluePath = ""
 
+            # Remember old size in case something bad happens
+            oldSize = self.size
+
             # Update image size
             self.update_size(self.greenChannel.shape[1])
 
-            # Construct an RGB image from three channel types, if possible
-            self.constructRGB()
+            # Calculate average intensity per pixel
+            monochrome = True
+            greenAvgInt = 0
+            try:
+                greenAvgInt = self.aipp(self.greenPath, self.size)
+            except:
+                self.msgBadChannels()
+                self.ui.imageGreen.clear()
+                self.greenPath = ""
+                self.greenChannel = ""
+                monochrome = False
+                self.update_size(oldSize)
+            
+            if monochrome:
+                self.ui.greenIntensityText.setText(str(greenAvgInt))
+
+                # Construct an RGB image from three channel images, if possible
+                self.constructRGB()# Update average intensity per pixel
 
     # Loads a blue channel image into the interface
     def load_blue_image(self):
@@ -246,9 +291,16 @@ class StartQT4(QtGui.QMainWindow):
         # Call the backend to load the image as an array
         try:
             self.blueChannel = bimloader.load_image_split(str(self.bluePath))
+
+           
+
         except bimloader.ImageFormatException:
             validImage = False
             self.msgBadFormat()
+            self.bluePath = ""
+        except:
+            validImage = False
+            self.msgBadChannels()
             self.bluePath = ""
 
         if validImage:
@@ -272,11 +324,29 @@ class StartQT4(QtGui.QMainWindow):
                 self.ui.imageGreen.clear()
                 self.bluePath = ""
 
+            # Remember old size in case something bad happens
+            oldSize = self.size
+
             # Update image size
             self.update_size(self.blueChannel.shape[1])
 
-            # Construct an RGB image from three channel types, if possible
-            self.constructRGB()
+            # Calculate average intensity per pixel
+            monochrome = True
+            blueAvgInt = 0
+            try:
+                blueAvgInt = self.aipp(self.bluePath, self.size)
+            except:
+                self.msgBadChannels()
+                self.ui.imageBlue.clear()
+                self.bluePath = ""
+                monochrome = False
+                self.update_size(oldSize)
+            
+            if monochrome:
+                self.ui.blueIntensityText.setText(str(blueAvgInt))
+
+                # Construct an RGB image from three channel images, if possible
+                self.constructRGB()
 
 
     # Start button functionality
@@ -821,6 +891,10 @@ class StartQT4(QtGui.QMainWindow):
     # Informs the user that they have selected an invalid file format
     def msgBadFormat(self):
         self.message("Invalid file format. Please use a different type of file.")
+
+    # Informs the user that they have selected a non-monochrome image
+    def msgBadChannels(self):
+        self.message("Image has too many channels. Please use a monochrome image.")
 
     # Calculates the average intensity per pixel given an image
     def aipp(self, path, dim):
