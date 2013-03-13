@@ -186,6 +186,9 @@ class StartQT4(QtGui.QMainWindow):
                 self.ui.imageBlue.clear()
                 self.bluePath = ""
 
+            # Update image size
+            self.update_size(self.redChannel.shape[1])
+
             # Construct an RGB image from three channel images, if possible
             self.constructRGB()
 
@@ -226,6 +229,9 @@ class StartQT4(QtGui.QMainWindow):
                 self.ui.imageBlue.clear()
                 self.bluePath = ""
 
+            # Update image size
+            self.update_size(self.greenChannel.shape[1])
+
             # Construct an RGB image from three channel types, if possible
             self.constructRGB()
 
@@ -265,6 +271,9 @@ class StartQT4(QtGui.QMainWindow):
             if not os.path.isfile(self.greenPath):
                 self.ui.imageGreen.clear()
                 self.bluePath = ""
+
+            # Update image size
+            self.update_size(self.blueChannel.shape[1])
 
             # Construct an RGB image from three channel types, if possible
             self.constructRGB()
