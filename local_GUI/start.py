@@ -16,8 +16,10 @@ See LICENSE file for more details.
 import sys
 import os.path
 import scipy
+import numpy
 import shutil # used to recursively remove directories
 from PyQt4 import QtCore, QtGui
+from PIL import Image
 from main_ICS import Ui_Dialog
 
 # Enable backend importing
@@ -712,9 +714,38 @@ class StartQT4(QtGui.QMainWindow):
     # Construct an RGB Image from three separate channel images
     def constructRGB(self):
         if self.redPath != "" and self.greenPath != "" and self.bluePath != "":
-            print("hello")
 
+            # Make a list of file paths
+            imagePaths = [str(self.redPath), str(self.greenPath), str(self.bluePath)]
 
+            # Get a list of channel arrays from the backend
+            rgb = loader.load_image(imagePaths)
+
+            # Save the three channel arrays
+            self.redChannel = rgb[1][0]
+            self.greenChannel = rgb[1][1]
+            self.blueChannel = rgb[1][2]
+
+            # Save the image dimension
+            self.update_size(self.redChannel.shape[1])
+            
+            # Construct an image from the individual channels
+            # Code from http://stackoverflow.com/questions/10443295/
+            #   combine-3-separate-numpy-arrays-to-an-rgb-image-in-python
+            rgbArray = numpy.zeros((self.size, self.size, 3), 'uint8')
+            rgbArray[..., 0] = self.redChannel * 256
+            rgbArray[..., 1] = self.greenChannel * 256
+            rgbArray[..., 2] = self.blueChannel * 256
+            rgbImage = Image.fromarray(rgbArray)
+
+            # Save the image to a file in the temporary directory
+            self.rgbPath = self.temp_dir + "/rgb.png"
+            self.refresh_temp()
+            rgbImage.save(self.rgbPath)
+            
+            # Load the image into the interface
+            self.ui.imageRgb.setPixmap(QtGui.QPixmap(self.rgbPath))
+            
     # Message Box functionality
     def message(self, text):
         self.ui.messageBox.setText(str(text))
