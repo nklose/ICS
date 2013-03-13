@@ -30,7 +30,7 @@ import bimloader
 
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
 
-def run_seperate(pdata, rfile, gfile, bfile, colors, d_range, t_range):
+def run_seperate(pdata, rfile, gfile, bfile, colors, d_range=20, t_range=15):
     """Added for integration tests"""
     if not os.path.exists(pdata):
         os.makedirs(pdata)
@@ -52,7 +52,7 @@ def run_seperate(pdata, rfile, gfile, bfile, colors, d_range, t_range):
         np.savetxt(f,res,fmt='%9.5f')
     print 'Done'
 
-def run(pdata,image_name,colors,d_range,t_range):
+def run(pdata,image_name,colors,d_range=20,t_range=15):
     if not os.path.exists(pdata):
         os.makedirs(pdata)
     (r,g,b) = bimloader.load_image_mixed(image_name)
@@ -127,5 +127,5 @@ def run_trip(pdata,r,g,b,color,t_range):
 def get_filename(pdata, fname):
     return os.path.join(pdata, fname)
 
-def main(): run('output/','../accTests/inputs/RGBtemp/rgb_001.bmp',ALL_COLORS,20,15)
+def main(): run('output/','../accTests/inputs/RGBtemp/rgb_001.bmp',ALL_COLORS)
 if __name__ == "__main__": main()
