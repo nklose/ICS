@@ -60,7 +60,7 @@ def load_image(fpaths):
         for i in range(3):
             image = scipy.misc.imread(fpaths[i])
             channels[i] = image.astype(np.float)
-    return (2**(8*image.itemsize), channels)
+    return ((2**(8*image.itemsize))-1, channels)
 
 def check_paths(fpaths):
     """Checks whether file paths are valid
@@ -123,4 +123,4 @@ def load_image_batch(image,fpaths):
         for i in range(3):
             raw_image = scipy.misc.imread(fpaths[i])
             image[i,:,:] = raw_image.astype(np.float)
-    return 2**(8*raw_image.itemsize)
+    return (2**(8*raw_image.itemsize))-1

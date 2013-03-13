@@ -220,7 +220,7 @@ def run_3(info,config):
     # assign results for a single row
     fnum = info.cur_files
     info.results[fnum,0] = config.name_min+fnum
-    info.results[fnum,1:4] = info.avg[:]/info.max_pixel
+    info.results[fnum,1:4] = info.avg[:]
     
     # assign dual results for a single row
     for i in range(6):

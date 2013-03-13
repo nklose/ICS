@@ -48,6 +48,12 @@
     </div>
    </div>
    <div class="tab-pane" id="triplecross">
+    <div class="tab-pane" id="all">
+     <div class="rgbimg-background">
+     <div id="imgSize">
+     <label for="id_resolutions">Set Image resolution to sample</label>
+      {{ form.resolutions }}
+    </div>
     <div class="row-fluid">
      <div class="span"><strong>Triple-Correlation Parameters</strong>
      <fieldset>
@@ -61,8 +67,13 @@
     </div>
    </div>
    <div class="tab-pane" id="all">
+    <div class="rgbimg-background">
+    <div id="imgSize">
+    <label for="id_resolutions">Set Image resolution to sample</label>
+     {{ form.resolutions }}
+    </div>
     <div class="row-fluid">
-    {{ form.all }}
+    {{ form.all }}All
      <div class="span4"><strong>Auto/Cross Parameters</strong>
        <fieldset>
        <legend>Paramters:</lengend>

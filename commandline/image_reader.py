@@ -26,7 +26,7 @@ the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
 import PythonMagick
-import PIL
+from PIL import Image
 import scipy
 import logging
 
@@ -77,7 +77,7 @@ def validate_image(filepath):
     """
     image = PythonMagick.Image(filepath)
     comp_type = image.attribute("CompressionType")
-    LOGGER.debug("File: %s has CompressionType %s" % (filepath, comp_type))
+    LOGGER.debug("File: %s has CompressionType \"%s\"" % (filepath, comp_type))
     if comp_type != '':
         raise ImageFormatException(filepath, comp_type)
     return convertMGtoPIL(image)
@@ -91,10 +91,12 @@ def convertMGtoPIL(magickimage):
     # this takes 0.04 sec. for 640x480 image
     img.depth = 8
     img.magick = "RGB"
-    data = img.data
+    blob = PythonMagick.Blob()
+    img.write(blob, "RGB")
+    data = PythonMagick.get_blob_data(blob)
     w, h = img.columns(), img.rows()
     # convert string array to an RGB Pil image
-    pilimage = PIL.Image.fromstring('RGB', (w, h), data)
+    pilimage = Image.fromstring('RGB', (w, h), data)
     return pilimage
 
 

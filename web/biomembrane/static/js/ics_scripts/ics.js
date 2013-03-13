@@ -31,4 +31,3 @@ $(function() {
       slider.slider( "value", this.selectedIndex + 1 );
     });
   });
-

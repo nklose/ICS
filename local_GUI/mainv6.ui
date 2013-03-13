@@ -37,7 +37,7 @@
     <string>START</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="restartButton">
+  <widget class="QPushButton" name="stopButton">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -55,7 +55,7 @@
     </font>
    </property>
    <property name="text">
-    <string>RESTART</string>
+    <string>STOP</string>
    </property>
   </widget>
   <widget class="QPushButton" name="batchModeButton">
@@ -748,7 +748,7 @@
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>501</width>
+        <width>611</width>
         <height>181</height>
        </rect>
       </property>
@@ -1323,80 +1323,6 @@
          </property>
         </widget>
        </widget>
-      </widget>
-     </widget>
-     <widget class="QFrame" name="frame">
-      <property name="geometry">
-       <rect>
-        <x>520</x>
-        <y>30</y>
-        <width>101</width>
-        <height>181</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <widget class="QLabel" name="sampleResolutionLabel">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>91</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Sample Resolution:</string>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="resolution32">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>60</y>
-         <width>82</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>32 x 32</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="resolution48">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>100</y>
-         <width>82</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>48 x 48</string>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="resolution64">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>140</y>
-         <width>82</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>64 x 64</string>
-       </property>
       </widget>
      </widget>
     </widget>
@@ -2089,22 +2015,6 @@
         <enum>Qt::Vertical</enum>
        </property>
       </widget>
-      <widget class="QLabel" name="tripleOutputStartingPoint">
-       <property name="geometry">
-        <rect>
-         <x>340</x>
-         <y>50</y>
-         <width>151</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Starting Point (Limit):</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
       <widget class="QLabel" name="labelOutputTripleCorrelation3D">
        <property name="geometry">
         <rect>
@@ -2204,16 +2114,6 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="startingPointInput">
-       <property name="geometry">
-        <rect>
-         <x>500</x>
-         <y>50</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
        </property>
       </widget>
       <widget class="QLabel" name="tripleG0">
@@ -2385,6 +2285,80 @@
        <property name="scaledContents">
         <bool>true</bool>
        </property>
+      </widget>
+      <widget class="QFrame" name="frame">
+       <property name="geometry">
+        <rect>
+         <x>340</x>
+         <y>10</y>
+         <width>281</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <widget class="QLabel" name="sampleResolutionLabel">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>91</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Sample Resolution:</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="resolution32">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>10</y>
+          <width>82</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>32 x 32</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="resolution48">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>30</y>
+          <width>82</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>48 x 48</string>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="resolution64">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>50</y>
+          <width>82</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>64 x 64</string>
+        </property>
+       </widget>
       </widget>
      </widget>
     </widget>
