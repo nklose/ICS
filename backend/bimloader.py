@@ -32,7 +32,7 @@ def validate_format(fpath):
     if fpath[-4:] == '.png': return
     if fpath[-4:] == '.tif': return
     if fpath[-5:] == '.tiff': return
-    raise ImageFormatException
+    raise ImageFormatException(fpath)
 
 def load_image_mixed(fpath):
     """Loads a mixed image
