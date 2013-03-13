@@ -294,5 +294,5 @@ def run(info,config):
     finish(info,config)
     print 'Done'
 
-def main(): run(Info(),configs.BadConfig())  
+def main(): run(Info(),configs.MixedConfig())  
 if __name__ == "__main__": main()
