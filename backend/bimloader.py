@@ -1,7 +1,7 @@
 """Loads images
 
 This file contains functions to load images from the filesystem.
-Only certain image formats are allowed, and attempting to use 
+Only certain image formats are allowed, and attempting to use
 unsupported formats will raise an exception.
 
 Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson,
@@ -25,7 +25,7 @@ class ImageFormatException(Exception):
         super(ImageFormatException, self).__init__(msg)
 
 def validate_format(fpath):
-    """Raises an exception if 
+    """Raises an exception if
     format of image is invalid
     """
     if fpath[-4:] == '.bmp': return
@@ -36,15 +36,15 @@ def validate_format(fpath):
 
 def load_image_mixed(fpath):
     """Loads a mixed image
-    
+
     Arguments:
         fpath: the file path to open
-        
+
     Return values:
         r: the red channel
         g: the green channel
         b: the blue channel
-        
+
     Exceptions:
         ImageFormatException
     """
@@ -54,31 +54,31 @@ def load_image_mixed(fpath):
     g = image[:,:,1].astype(np.float)
     b = image[:,:,2].astype(np.float)
     return (r,g,b)
-    
+
 def load_image_split(fpath):
     """Loads a channel of a split image
-    
-    Arguments: 
-        fpath: the file path to open        
-    Return values: 
-        channel: the loaded channel        
-    Exceptions: 
+
+    Arguments:
+        fpath: the file path to open
+    Return values:
+        channel: the loaded channel
+    Exceptions:
         ImageFormatException
     """
     validate_format(fpath)
     image = scipy.misc.imread(fpath)
     channel = image.astype(np.float)
     return channel
-    
+
 def load_image_mixed_batch(image,fpath):
     """Loads a mixed image for batch mode
-    
+
     Arguments:
         image: the array in which to store the loaded image
-        fpath: the file path to open        
+        fpath: the file path to open
     There are no return values.
     Exceptions:
-        ImageFormatException        
+        ImageFormatException
     """
     validate_format(fpath)
     raw_image = scipy.misc.imread(fpath)
@@ -89,7 +89,7 @@ def load_image_mixed_batch(image,fpath):
 
 def load_image_split_batch(image,fpath):
     """Loads one channel of a split image for batch mode
-    
+
     Arguments:
         image: the array in which to store the loaded channel
         fpath: the file path to open
@@ -100,4 +100,3 @@ def load_image_split_batch(image,fpath):
     validate_format(fpath)
     raw_image = scipy.misc.imread(fpath)
     image[:,:] = raw_image.astype(np.float)
-

@@ -30,6 +30,30 @@ import bimloader
 
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
 
+
+def run_seperate(pdata, rfile, gfile, bfile, colors):
+    """Added for integration tests"""
+    if not os.path.exists(pdata):
+        os.makedirs(pdata)
+    r = bimloader.load_image_split(rfile)
+    g = bimloader.load_image_split(gfile)
+    b = bimloader.load_image_split(bfile)
+    n = None
+    p = [(r,n,n),(g,n,n),(b,n,n),(r,g,n),(r,b,n),(g,b,n),(r,g,b)]
+    res = np.empty((7,7))
+    np.ndarray.fill(res,np.nan)
+    for color in colors:
+        i = list.index(ALL_COLORS,color)
+        res[i,:] = run_any(pdata,p[i][0],p[i][1],p[i][2],color)
+    header = str.format('{:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s}',
+                        'g(0)','w','ginf','dx','dy','used','norm')
+    fpath = get_filename(pdata, 'results.txt')
+    with open(fpath,'w') as f:
+        f.write(header+'\n')
+        np.savetxt(f,res,fmt='%9.5f')
+    print 'Done'
+
+
 def run(pdata,image_name,colors):
     if not os.path.exists(pdata):
         os.makedirs(pdata)
@@ -65,8 +89,8 @@ def run_dual(pdata,a,b,c,color):
     if len(color) == 2: code = 'XC'
     fname1 = code+color+'.txt'
     fname2 = code+color+'Fit.txt'
-    np.savetxt(pdata+fname1,out,fmt='%9.5f')
-    np.savetxt(pdata+fname2,fit,fmt='%9.5f')
+    np.savetxt(get_filename(pdata, fname1),out,fmt='%9.5f')
+    np.savetxt(get_filename(pdata, fname2),fit,fmt='%9.5f')
     full_par = np.zeros(7)
     full_par[0:5] = par
     full_par[5] = used_deltas
@@ -95,12 +119,16 @@ def run_trip(pdata,r,g,b,color):
     resnorm = np.sum((out-fit)**2)
     fname1 = 'TripleCrgb.txt'
     fname2 = 'TripleCrgbFit.txt'
-    np.savetxt(pdata+fname1,out,fmt='%9.5f',delimiter='\n')
-    np.savetxt(pdata+fname2,fit,fmt='%9.5f',delimiter='\n')
+    np.savetxt(get_filename(pdata, fname1),out,fmt='%9.5f',delimiter='\n')
+    np.savetxt(get_filename(pdata, fname2),fit,fmt='%9.5f',delimiter='\n')
     full_par = np.zeros(7)
     full_par[0:3] = par
     full_par[6] = resnorm
     return full_par
-    
+
+
+def get_filename(pdata, fname):
+    return os.path.join(pdata, fname)
+
 def main(): run('output/','../accTests/inputs/RGBtemp/rgb_001.bmp',ALL_COLORS)
 if __name__ == "__main__": main()
