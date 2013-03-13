@@ -13,8 +13,6 @@ import numpy as np
 import scipy.misc
 import sys
 
-raw_image = None
-
 class ImageFormatException(Exception):
     """ The exception that is raised when
     the format of an image file is invalid
@@ -49,10 +47,10 @@ def load_image_mixed(fpath):
         ImageFormatException
     """
     validate_format(fpath)
-    image = scipy.misc.imread(fpath)
-    r = image[:,:,0].astype(np.float)
-    g = image[:,:,1].astype(np.float)
-    b = image[:,:,2].astype(np.float)
+    raw_image = scipy.misc.imread(fpath)
+    r = raw_image[:,:,0].astype(np.float)
+    g = raw_image[:,:,1].astype(np.float)
+    b = raw_image[:,:,2].astype(np.float)
     return (r,g,b)
     
 def load_image_split(fpath):
@@ -66,8 +64,8 @@ def load_image_split(fpath):
         ImageFormatException
     """
     validate_format(fpath)
-    image = scipy.misc.imread(fpath)
-    channel = image.astype(np.float)
+    raw_channel = scipy.misc.imread(fpath)
+    channel = raw_channel.astype(np.float)
     return channel
     
 def load_image_mixed_batch(image,fpath):
@@ -85,7 +83,6 @@ def load_image_mixed_batch(image,fpath):
     image[0,:,:] = raw_image[:,:,0].astype(np.float)
     image[1,:,:] = raw_image[:,:,1].astype(np.float)
     image[2,:,:] = raw_image[:,:,2].astype(np.float)
-    return
 
 def load_image_split_batch(image,fpath):
     """Loads one channel of a split image for batch mode
@@ -98,6 +95,6 @@ def load_image_split_batch(image,fpath):
         ImageFormatException
     """
     validate_format(fpath)
-    raw_image = scipy.misc.imread(fpath)
-    image[:,:] = raw_image.astype(np.float)
+    raw_channel = scipy.misc.imread(fpath)
+    image[:,:] = raw_channel.astype(np.float)
 
