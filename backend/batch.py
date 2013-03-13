@@ -23,7 +23,7 @@ warnings.simplefilter('ignore',np.ComplexWarning)
 
 import configs
 import backend_utils as butils
-import backend_image_loader as bimloader
+import bimloader
 
 raw_image = None
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb',':')
@@ -34,7 +34,6 @@ class Info:
     lib = None              # handle to backend C library
     avg = None              # average of r,g,b channels
     image = None            # image in three channels
-    max_pixel = None        # max possible pixel value
     
     fft = None              # ffts
     shifted = None          # shifted ffts
@@ -130,22 +129,21 @@ def setup(info,config):
     info.lib.init(info.ilim,info.idata)
 
 def run_0(info,config):
-    # generate file paths
+    # read image
     fnum = info.cur_files
     if config.input_type == 'mixed':
         fname = str.format(config.name_format,config.name_min+fnum)
-        fpaths = [config.input_directory + fname]
+        fpath = config.input_directory + fname
+        bimloader.load_image_mixed_batch(info.image,fpath)
     elif config.input_type == 'split':
-        fpaths = ['','','']
         for i in range(3):
             fname = str.format(config.name_format,'rgb'[i],config.name_min+fnum)
-            fpaths[i] = config.input_directory + fname
+            fpath = config.input_directory + fname
+            bimloader.load_image_split_batch(info.image[i,:,:],fpath)
     else:
-        print 'Invalid input type: ' + config.input_type
-        sys.exit(1)
+        sys.exit('Input type must be mixed or split')
     
-    # read image and perform some preprocessing
-    info.max_pixel = bimloader.load_image_batch(info.image,fpaths)
+    # perform some preprocessing
     for i in range(3):
         info.avg[i] = np.average(info.image[i,:,:])
         info.fft[i,:,:] = np.fft.fft2(info.image[i,:,:])
@@ -296,5 +294,5 @@ def run(info,config):
     finish(info,config)
     print 'Done'
 
-def main(): run(Info(),configs.MixedConfig())  
+def main(): run(Info(),configs.BadConfig())  
 if __name__ == "__main__": main()
