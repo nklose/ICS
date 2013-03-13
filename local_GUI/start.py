@@ -12,10 +12,21 @@ Glen Nelson, Omar Qadri, and James Wang under the 401 IP License.
 See LICENSE file for more details.
 """
 
+# Import python modules
 import sys
+import os.path
+import scipy
+import shutil # used to recursively remove directories
 from PyQt4 import QtCore, QtGui
 from main_ICS import Ui_Dialog
-from os.path import basename
+
+# Enable backend importing
+CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = os.path.dirname(CUR_DIR)
+sys.path.append(ROOT_DIR)
+
+# Import backend modules
+import backend.backend_image_loader as loader
 
 class StartQT4(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -28,6 +39,18 @@ class StartQT4(QtGui.QMainWindow):
         self.greenPath = ""
         self.bluePath = ""
         self.rgbPath = ""
+
+        # Image arrays
+        self.redChannel = ""
+        self.greenChannel = ""
+        self.blueChannel = ""
+        self.rgbChannel = ""
+
+        # Temporary file directory (used during runtime only)
+        self.temp_dir = "./ics_tmp"
+
+        # Size of the images in pixels (e.g. 64 would mean a 64x64 image)
+        self.size = 0
 
         #######################################################
         # Interface Object Connections                        #
@@ -69,34 +92,135 @@ class StartQT4(QtGui.QMainWindow):
     # Loads an RGB image into the interface.
     def load_RGB_image(self):
         self.message("Loading RGB Image...")
+        validImage = True
+
+        # Open the file loader and get the path of the desired image
         self.rgbPath = str(QtGui.QFileDialog.getOpenFileName())
-        self.message("Loaded image " + self.rgbPath)
-        self.ui.rgbFile.setText(basename(self.rgbPath))
-        self.ui.imageRgb.setPixmap(QtGui.QPixmap(self.rgbPath))
+
+        # Call the backend to separate the image by channel
+        try:
+            images = loader.load_image([str(self.rgbPath)])
+        except loader.ImageFormatException:
+            validImage = False
+            self.msgBadFormat()
+            self.rgbPath = ""
+
+        if validImage:
+            # Update user interface with image
+            self.message("Loaded image " + self.rgbPath)
+            self.ui.rgbFile.setText(os.path.basename(self.rgbPath))
+            self.ui.imageRgb.setPixmap(QtGui.QPixmap(self.rgbPath))
+            
+            # Save the three channel arrays
+            self.redChannel = images[1][0]
+            self.greenChannel = images[1][1]
+            self.blueChannel = images[1][2]
+
+            # Save the image dimension
+            self.update_size(self.redChannel.shape[1])
+
+            # Update the red, green, and blue paths
+            self.redPath = self.temp_dir + "/red.png"
+            self.greenPath = self.temp_dir + "/green.png"
+            self.bluePath = self.temp_dir + "/blue.png"
+
+            # Refresh the temporary directory (delete and recreate)
+            self.refresh_temp()
+
+            # Use the arrays to generate images
+            scipy.misc.imsave(self.redPath, self.redChannel)
+            scipy.misc.imsave(self.greenPath, self.greenChannel)
+            scipy.misc.imsave(self.bluePath, self.blueChannel)
+
+            # Load the images into the interface
+            self.ui.imageRed.setPixmap(QtGui.QPixmap(self.redPath))
+            self.ui.imageGreen.setPixmap(QtGui.QPixmap(self.greenPath))
+            self.ui.imageBlue.setPixmap(QtGui.QPixmap(self.bluePath))
 
     # Loads a red channel image into the interface.
     def load_red_image(self):
         self.message("Loading red image...")
+        validImage = True
+
+        # Open the file loader to get the path of the desired image
         self.redPath = str(QtGui.QFileDialog.getOpenFileName())
-        self.message("Loaded image " + self.redPath)
-        self.ui.redChannelFile.setText(basename(self.redPath))
-        self.ui.imageRed.setPixmap(QtGui.QPixmap(self.redPath))
+
+        # Call the backend to check that the file extension is valid
+        try:
+            loader.check_paths([str(self.redPath)])
+        except loader.ImageFormatException:
+            validImage = False
+            self.msgBadFormat()
+            self.redPath = ""
+
+        if validImage:
+            # Update user interface with image
+            self.message("Loaded image " + self.redPath)
+            self.ui.redChannelFile.setText(os.path.basename(self.redPath))
+            self.ui.imageRed.setPixmap(QtGui.QPixmap(self.redPath))
+
+            # Clear RGB path, since the user has opted to use single-channel images
+            self.rgbPath = ""
+
+            # Construct an RGB image from three channel images, if possible
+            self.constructRGB()
 
     # Loads a green channel image into the interface.
     def load_green_image(self):
         self.message("Loading green image...")
-        self.greenPath = str(QtGui.QFileDialog.getOpenFileName())
-        self.message("Loaded image " + self.greenPath)
-        self.ui.greenChannelFile.setText(basename(self.greenPath))
-        self.ui.imageGreen.setPixmap(QtGui.QPixmap(self.greenPath))
+        validImage = True
 
-    # Loads a blue channel image into the interface.
+        # Open the file loader to get the path of the desired image
+        self.greenPath = str(QtGui.QFileDialog.getOpenFileName())
+        
+        # Call the backend to load the image as an array
+        try:
+            loader.check_paths([str(self.greenPath)])
+        except:
+            validImage = False
+            self.msgBadFormat()
+            self.greenPath = ""
+
+        if validImage:
+            # Update user interface with image
+            self.message("Loaded image " + self.greenPath)
+            self.ui.greenChannelFile.setText(os.path.basename(self.greenPath))
+            self.ui.imageGreen.setPixmap(QtGui.QPixmap(self.greenPath))
+
+            # Clear RGB path, since the user has opted to use single-channel images
+            self.rgbPath = ""
+
+            # Construct an RGB image from three channel types, if possible
+            self.constructRGB()
+
+    # Loads a blue channel image into the interface
     def load_blue_image(self):
         self.message("Loading blue image...")
+        validImage = True
+
+        # Open the file loader to get the path of the desired image
         self.bluePath = str(QtGui.QFileDialog.getOpenFileName())
-        self.message("Loaded image " + self.bluePath)
-        self.ui.blueChannelFile.setText(basename(self.bluePath))
-        self.ui.imageBlue.setPixmap(QtGui.QPixmap(self.bluePath))
+        
+        # Call the backend to load the image as an array
+        try:
+            loader.check_paths([str(self.bluePath)])
+        except:
+            validImage = False
+            self.msgBadFormat()
+            self.bluePath = ""
+
+        if validImage:
+            # Update user interface with image
+            self.message("Loaded image " + self.bluePath)
+            self.ui.blueChannelFile.setText(os.path.basename(self.bluePath))
+            self.ui.imageBlue.setPixmap(QtGui.QPixmap(self.bluePath))
+
+            # Clear RGB path, since the user has opted to use single-channel images
+            self.rgbPath = ""
+
+            # Construct an RGB image from three channel types, if possible
+            self.constructRGB()
+
 
     # Start button functionality
     def start(self):
@@ -585,10 +709,40 @@ class StartQT4(QtGui.QMainWindow):
     # Miscellaneous Functions                           #
     #####################################################
 
+    # Construct an RGB Image from three separate channel images
+    def constructRGB(self):
+        if self.redPath != "" and self.greenPath != "" and self.bluePath != "":
+            print("hello")
+
+
     # Message Box functionality
     def message(self, text):
         self.ui.messageBox.setText(str(text))
 
+    # Refreshes the temporary directory by deleting and recreating it
+    def refresh_temp(self):
+        self.remove_temp()
+        self.create_temp()
+
+    # Creates the temporary directory if it does not exist.
+    def create_temp(self):
+        if not os.path.exists(self.temp_dir):
+            os.makedirs(self.temp_dir)
+            
+    # Removes the temporary directory if it exists.
+    def remove_temp(self):
+        if os.path.exists(self.temp_dir):
+            shutil.rmtree(self.temp_dir)     
+
+    # Updates the size of the image internally and on the GUI label.
+    def update_size(self, size):
+        self.size = size
+        sizeStr = str(size) + " x " + str(size)
+        self.ui.imageSizeText.setText(sizeStr)
+
+    # Informs the user that they have selected an invalid file format
+    def badFormat(self):
+        self.message("Invalid file format. Please use a different type of file.")
 
 def start():
     app = QtGui.QApplication(sys.argv)
