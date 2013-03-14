@@ -123,6 +123,13 @@ class StartQT4(QtGui.QMainWindow):
             self.redChannel = images[0]
             self.greenChannel = images[1]
             self.blueChannel = images[2]
+            
+            print("RED")
+            print(self.redChannel)
+            print("GREEN")
+            print(self.greenChannel)
+            print("BLUE")
+            print(self.blueChannel)
 
             # Save the image dimension
             self.update_size(self.redChannel.shape[1])
@@ -182,6 +189,7 @@ class StartQT4(QtGui.QMainWindow):
 
             # Remove any temporary images from the interface
             self.refresh_temp()
+            self.refresh_paths()
 
             # Remember old size in case something bad happens
             oldSize = self.size
@@ -240,6 +248,7 @@ class StartQT4(QtGui.QMainWindow):
 
             # Remove any temporary images from the interface
             self.refresh_temp()
+            self.refresh_paths()
 
             # Remember old size in case something bad happens
             oldSize = self.size
@@ -297,6 +306,7 @@ class StartQT4(QtGui.QMainWindow):
 
             # Remove any temporary images from the interface
             self.refresh_temp()
+            self.refresh_paths()
 
             # Remember old size in case something bad happens
             oldSize = self.size
@@ -339,7 +349,7 @@ class StartQT4(QtGui.QMainWindow):
 
             # Update message bar with input parameters
             text = ""
-            if mode == "auto" or mode == "all":
+            if mode == "auto":
                 # Construct string containing channels to be used
                 self.msgAuto()
 
@@ -348,28 +358,19 @@ class StartQT4(QtGui.QMainWindow):
                     result = self.correlate(self.redChannel)
                     path = self.temp_dir + "/AC_R.png"
                     scipy.misc.imsave(path, result[0])
-                    if mode == "auto":
-                        self.progress(33)
-                    else:
-                        self.progress(12)
+                    self.progress(33)
                 if self.get_green_checkbox():
                     result = self.correlate(self.greenChannel)
                     path = self.temp_dir + "/AC_G.png"
                     scipy.misc.imsave(path, result[0])
-                    if mode == "auto":
-                        self.progress(66)
-                    else:
-                        self.progress(24)
+                    self.progress(66)
                 if self.get_blue_checkbox():
                     result = self.correlate(self.blueChannel)
                     path = self.temp_dir + "/AC_B.png"
                     scipy.misc.imsave(path, result[0])
-                    if mode == "auto":
-                        self.progress(99)
-                    else:
-                        self.progress(36)
-                   
-            if mode == "cross" or mode == "all":
+                    self.progress(99)
+                
+            elif mode == "cross":
                 # Construct string containing channels to be used
                 self.msgCross()
 
@@ -378,37 +379,31 @@ class StartQT4(QtGui.QMainWindow):
                     result = self.correlate(self.redChannel, self.greenChannel)
                     path = self.temp_dir + "/XC_RG.png"
                     scipy.misc.imsave(path, result[0])
-                    if mode == "cross":
-                        self.progress(33)
-                    else:
-                        self.progress(48)
+                    self.progress(33)
                 if self.get_red_blue_checkbox():
                     result = self.correlate(self.redChannel, self.blueChannel)
                     path = self.temp_dir + "/XC_RB.png"
                     scipy.misc.imsave(path, result[0])
-                    if mode == "cross":
-                        self.progress(66)
-                    else:
-                        self.progress(60)
+                    self.progress(66)
                 if self.get_green_blue_checkbox():
                     result = self.correlate(self.greenChannel, self.blueChannel)
                     path = self.temp_dir + "/XC_GB.png"
                     scipy.misc.imsave(path, result[0])
-                    if mode == "cross":
-                        self.progress(99)
-                    else:
-                        self.progress(72)
+                    self.progress(99)
 
-            if mode == "triple" or mode == "all":
+            elif mode == "triple":
                 # Construct string containing channels to be used
                 self.msgTriple()
 
                 # Do triple-correlation by calling the backend
                 self.correlate(self.redChannel, self.greenChannel, self.blueChannel)
                 self.progress(99)
-            if mode == "all":
+            elif mode == "all":
                 # Construct string containing channels to be used
                 self.msgAll()
+                self.correlate_all(self.redChannel, self.greenChannel, self.blueChannel)
+            else:
+                self.message("Mode error.")
             self.progress(100)
 
     # Stop button functionality
@@ -795,7 +790,7 @@ class StartQT4(QtGui.QMainWindow):
     # Correlation Functions                             #
     #####################################################
     
-    # Perform an autocorrelation by calling the backend on a given image array
+    # Perform a single correlation by calling the backend
     def correlate(self, array1, array2 = None, array3 = None):
         # auto-correlation
         if array2 == None:  
@@ -817,6 +812,30 @@ class StartQT4(QtGui.QMainWindow):
         else:
             #TODO: write code here
             return None
+
+    # Perform all possible correlations
+    def correlate_all(self, array1, array2, array3):
+        range = float(self.get_all_range())
+        g0 = float(self.get_all_G0())
+        w = float(self.get_all_W())
+        gInf = float(self.get_all_Ginf())
+        deltas = bool(self.get_all_deltas_checkbox())
+        
+        auto1 = dual.core(array1, None, range, [g0, w, gInf, 0, 0], deltas)
+        self.progress(12) # update progress bar
+        auto2 = dual.core(array2, None, range, [g0, w, gInf, 0, 0], deltas)
+        self.progress(24)
+        auto3 = dual.core(array3, None, range, [g0, w, gInf, 0, 0], deltas)
+        self.progress(36)
+        cross1 = dual.core(array1, array2, range, [g0, w, gInf, 0, 0], deltas)
+        self.progress(48)
+        cross2 = dual.core(array1, array3, range, [g0, w, gInf, 0, 0], deltas)
+        self.progress(60)
+        cross3 = dual.core(array2, array3, range, [g0, w, gInf, 0, 0], deltas)
+        self.progress(72)
+        triple = None #TODO: write code here
+        self.progress(84)
+        return (auto1, auto2, auto3, cross1, cross2, cross3, triple)
         
     #####################################################
     # Message Box Functions                             #
@@ -932,14 +951,6 @@ class StartQT4(QtGui.QMainWindow):
     # Miscellaneous Functions                           #
     #####################################################
 
-    # Initialize the user interface
-    def initialize(self):
-        self.ui.imageRgb.setPixmap(QtGui.QPixmap("./rgb.png"))
-        self.ui.imageRed.setPixmap(QtGui.QPixmap("./r.png"))
-        self.ui.imageGreen.setPixmap(QtGui.QPixmap("./g.png"))
-        self.ui.imageBlue.setPixmap(QtGui.QPixmap("./b.png"))
-        print(self.ui.imageRgb.pixmap())
-
     # Construct an RGB Image from three separate channel images
     def constructRGB(self):
         if self.redPath != "" and self.greenPath != "" and self.bluePath != "":
@@ -975,15 +986,6 @@ class StartQT4(QtGui.QMainWindow):
     def refresh_temp(self):
         self.remove_temp()
         self.create_temp()
-        if not os.path.isfile(self.rgbPath):
-            self.ui.imageRgb.clear()
-            self.rgbPath = ""
-        if not os.path.isfile(self.greenPath):
-            self.ui.imageGreen.clear()
-            self.greenPath = ""
-        if not os.path.isfile(self.bluePath):
-            self.ui.imageBlue.clear()
-            self.bluePath = ""
 
     # Creates the temporary directory if it does not exist.
     def create_temp(self):
@@ -1016,6 +1018,18 @@ class StartQT4(QtGui.QMainWindow):
     # Updates the progress bar
     def progress(self, percent):
         self.ui.progressBar.setValue(percent)
+
+    # Remove paths for any nonexistent images
+    def remove_paths(self):
+        if not os.path.isfile(self.rgbPath):
+            self.ui.imageRgb.clear()
+            self.rgbPath = ""
+        if not os.path.isfile(self.greenPath):
+            self.ui.imageGreen.clear()
+            self.greenPath = ""
+        if not os.path.isfile(self.bluePath):
+            self.ui.imageBlue.clear()
+            self.bluePath = ""
 
 def start():
     app = QtGui.QApplication(sys.argv)
