@@ -353,14 +353,16 @@ class StartQT4(QtGui.QMainWindow):
                 # Do auto-correlation by calling the backend
                 if self.get_red_checkbox():
                     result = self.correlate(self.redChannel)
+                    self.update_auto(result)
                     self.progress(33)
                 if self.get_green_checkbox():
                     result = self.correlate(self.greenChannel)
+                    self.update_auto(result)
                     self.progress(66)
                 if self.get_blue_checkbox():
                     result = self.correlate(self.blueChannel)
-                    path = self.temp_dir + "/AC_B.png"
-                
+                    self.update_auto(result)
+                    self.progress(99)
             elif mode == "cross":
                 # Construct string containing channels to be used
                 self.msgCross()
@@ -368,12 +370,15 @@ class StartQT4(QtGui.QMainWindow):
                 # Do cross-correlation by calling the backend
                 if self.get_red_green_checkbox():
                     result = self.correlate(self.redChannel, self.greenChannel)
+                    self.update_cross(result)
                     self.progress(33)
                 if self.get_red_blue_checkbox():
                     result = self.correlate(self.redChannel, self.blueChannel)
+                    self.update_cross(result)
                     self.progress(66)
                 if self.get_green_blue_checkbox():
                     result = self.correlate(self.greenChannel, self.blueChannel)
+                    self.update_cross(result)
                     self.progress(99)
 
             elif mode == "triple":
@@ -782,6 +787,70 @@ class StartQT4(QtGui.QMainWindow):
 
         return validInput
 
+    ######################################################
+    # Interface Output Functions                         #
+    ######################################################
+    
+    # Set the Res. Norm. value on the auto tab
+    def set_auto_resnorm(self, value):
+        self.ui.autoResNormValue.setText(str(value))
+
+    # Set the g0 value on the auto tab
+    def set_auto_G0(self, value):
+        self.ui.autoG0Value.setText(str(value))
+
+    # Set the W value on the auto tab
+    def set_auto_W(self, value):
+        self.ui.autoWValue.setText(str(value))
+
+    # Set the gInf value on the auto tab
+    def set_auto_Ginf(self, value):
+        self.ui.autoGinfValue.setText(str(value))
+    
+    # Set the deltas checkbox on the auto tab
+    def set_auto_deltas(self, value):
+        self.ui.autoDeltasUsedCheckbox.setChecked(bool(value))
+
+    # Set the Res. Norm. value on the cross tab
+    def set_cross_resnorm(self, value):
+        self.ui.crossResNormValue.setText(str(value))
+    
+    # Set the g0 value on the cross tab
+    def set_cross_G0(self, value):
+        self.ui.crossG0Value.setText(str(value))
+
+    # set the W value on the cross tab
+    def set_cross_W(self, value):
+        self.ui.crossWValue.setText(str(value))
+
+    # Set the gInf value on the cross tab
+    def set_cross_Ginf(self, value):
+        self.ui.crossGinfValue.setText(str(value))
+
+    # Set the deltas checkbox on the cross tab
+    def set_cross_deltas(self, value):
+        self.ui.crossDeltasUsedCheckbox.setChecked(bool(value))
+
+    # Set the Res. Norm. value on the triple tab
+    def set_triple_resnorm(self, value):
+        self.ui.tripleResNormValue.setText(str(value))
+
+    # Set the g0 value on the triple tab
+    def set_triple_G0(self, value):
+        self.ui.tripleG0Value.setText(str(value))
+
+    # Set the w value on the triple tab
+    def set_triple_W(self, value):
+        self.ui.tripleWValue.setText(str(value))
+
+    # Set the gInf value on the triple tab
+    def set_triple_Ginf(self, value):
+        self.ui.tripleGinfValue.setText(str(value))
+
+    # Set the deltas checkbox on the triple tab
+    def set_triple_deltas(self, value):
+        self.ui.tripleDeltasUsedCheckbox.setChecked(bool(value))
+
     #####################################################
     # Correlation Functions                             #
     #####################################################
@@ -943,6 +1012,66 @@ class StartQT4(QtGui.QMainWindow):
         # Do all correlations
         self.message(text)
             
+
+    #####################################################
+    # Interface Update Functions                        #
+    #####################################################
+    # Updates the output tab based on result values for autocorrelations
+    def update_auto(self, result):
+        range = self.get_auto_range()
+        g0 = result[1][0]
+        w = result[1][1]
+        gInf = result[1][2]
+        deltas = result[2]
+
+        self.set_auto_G0(g0)
+        self.set_auto_W(w)
+        self.set_auto_Ginf(gInf)
+        self.set_auto_deltas(deltas)
+
+    # Updates the output tab based on the result values for cross-correlations
+    def update_cross(self, result):
+        range = self.get_cross_range()
+        g0 = result[1][0]
+        w = result[1][1]
+        gInf = result[1][2]
+        deltas = result[2]
+        
+        self.set_cross_G0(g0)
+        self.set_cross_W(w)
+        self.set_cross_Ginf(gInf)
+        self.set_cross_deltas(deltas)
+
+    # Updates the output tab based on result values for triple-correlations
+
+    # Updates the output tab based on result values for all correlations
+
+    # Selects a specific tab on the interface
+    def select_tab(self, mainTab, subTab):
+        if mainTab == "input":
+            self.ui.mainTabWidget.setCurrentIndex(0)
+            if subTab == "auto":
+                self.ui.correlationTabWidget.setCurrentIndex(0)
+            elif subTab == "cross":
+                self.ui.correlationTabWidget.setCurrentIndex(1)
+            elif subTab == "triple":
+                self.ui.correlationTabWidget.setCurrentIndex(2)
+        else:
+            self.ui.mainTabWidget.setCurrentIndex(1)
+            if subTab == "auto":
+                self.ui.outputCorrelationTabWidget.setCurrentIndex(0)
+            elif subTab == "cross":
+                self.ui.outputCorrelationTabWidget.setCurrentIndex(1)
+            elif subTab == "triple":
+                self.ui.outputCorrelationTabWidget.setCurrentIndex(2)
+
+        if subTab == "three":
+            self.ui.imageSettingsTabWidget.setCurrentIndex(0)
+        elif subTab == "single":
+            self.ui.imageSettingsTabWidget.setCurrentIndex(1)
+        elif subTab == "all":
+            self.ui.correlationTabWidget.setCurrentIndex(3)
+
     #####################################################
     # Miscellaneous Functions                           #
     #####################################################

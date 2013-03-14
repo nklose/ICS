@@ -1676,6 +1676,25 @@
         <bool>true</bool>
        </property>
       </widget>
+      <widget class="QCheckBox" name="autoDeltasUsedCheckbox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>620</x>
+         <y>340</y>
+         <width>131</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Deltas Used</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="crossOutputTab">
       <attribute name="title">
@@ -1971,6 +1990,25 @@
        </property>
        <property name="scaledContents">
         <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="crossDeltasUsedCheckbox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>620</x>
+         <y>340</y>
+         <width>131</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Deltas Used</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
        </property>
       </widget>
      </widget>
@@ -2359,6 +2397,25 @@
          <string>64 x 64</string>
         </property>
        </widget>
+      </widget>
+      <widget class="QCheckBox" name="tripleDeltasUsedCheckbox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>670</x>
+         <y>440</y>
+         <width>131</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Deltas Used</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
       </widget>
      </widget>
     </widget>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainv6.ui'
 #
-# Created: Thu Mar 14 12:15:17 2013
+# Created: Thu Mar 14 12:22:34 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -543,6 +543,11 @@ class Ui_Dialog(object):
         self.imageAutoBlue.setText(_fromUtf8(""))
         self.imageAutoBlue.setScaledContents(True)
         self.imageAutoBlue.setObjectName(_fromUtf8("imageAutoBlue"))
+        self.autoDeltasUsedCheckbox = QtGui.QCheckBox(self.autoOutputTab)
+        self.autoDeltasUsedCheckbox.setEnabled(False)
+        self.autoDeltasUsedCheckbox.setGeometry(QtCore.QRect(620, 340, 131, 22))
+        self.autoDeltasUsedCheckbox.setChecked(False)
+        self.autoDeltasUsedCheckbox.setObjectName(_fromUtf8("autoDeltasUsedCheckbox"))
         self.outputCorrelationTabWidget.addTab(self.autoOutputTab, _fromUtf8(""))
         self.crossOutputTab = QtGui.QWidget()
         self.crossOutputTab.setObjectName(_fromUtf8("crossOutputTab"))
@@ -641,6 +646,11 @@ class Ui_Dialog(object):
         self.imageCrossGB.setText(_fromUtf8(""))
         self.imageCrossGB.setScaledContents(True)
         self.imageCrossGB.setObjectName(_fromUtf8("imageCrossGB"))
+        self.crossDeltasUsedCheckbox = QtGui.QCheckBox(self.crossOutputTab)
+        self.crossDeltasUsedCheckbox.setEnabled(False)
+        self.crossDeltasUsedCheckbox.setGeometry(QtCore.QRect(620, 340, 131, 22))
+        self.crossDeltasUsedCheckbox.setChecked(False)
+        self.crossDeltasUsedCheckbox.setObjectName(_fromUtf8("crossDeltasUsedCheckbox"))
         self.outputCorrelationTabWidget.addTab(self.crossOutputTab, _fromUtf8(""))
         self.tripleOutputTab = QtGui.QWidget()
         self.tripleOutputTab.setObjectName(_fromUtf8("tripleOutputTab"))
@@ -759,6 +769,11 @@ class Ui_Dialog(object):
         self.resolution64 = QtGui.QRadioButton(self.frame)
         self.resolution64.setGeometry(QtCore.QRect(100, 50, 82, 17))
         self.resolution64.setObjectName(_fromUtf8("resolution64"))
+        self.tripleDeltasUsedCheckbox = QtGui.QCheckBox(self.tripleOutputTab)
+        self.tripleDeltasUsedCheckbox.setEnabled(False)
+        self.tripleDeltasUsedCheckbox.setGeometry(QtCore.QRect(670, 440, 131, 22))
+        self.tripleDeltasUsedCheckbox.setChecked(False)
+        self.tripleDeltasUsedCheckbox.setObjectName(_fromUtf8("tripleDeltasUsedCheckbox"))
         self.outputCorrelationTabWidget.addTab(self.tripleOutputTab, _fromUtf8(""))
         self.mainTabWidget.addTab(self.outputTab, _fromUtf8(""))
         self.progressBar = QtGui.QProgressBar(Dialog)
@@ -845,6 +860,7 @@ class Ui_Dialog(object):
         self.labelAutoG0.setText(_translate("Dialog", "g(0)", None))
         self.labelAutoW.setText(_translate("Dialog", "w", None))
         self.labelAutoGinf.setText(_translate("Dialog", "gInf", None))
+        self.autoDeltasUsedCheckbox.setText(_translate("Dialog", "Deltas Used", None))
         self.outputCorrelationTabWidget.setTabText(self.outputCorrelationTabWidget.indexOf(self.autoOutputTab), _translate("Dialog", "Auto-Correlation", None))
         self.labelOutputRB.setText(_translate("Dialog", "Red-Blue", None))
         self.labelOutputRG.setText(_translate("Dialog", "Red-Green", None))
@@ -853,6 +869,7 @@ class Ui_Dialog(object):
         self.labelCrossG0.setText(_translate("Dialog", "g(0)", None))
         self.labelCrossW.setText(_translate("Dialog", "w", None))
         self.labelCrossGinf.setText(_translate("Dialog", "gInf", None))
+        self.crossDeltasUsedCheckbox.setText(_translate("Dialog", "Deltas Used", None))
         self.outputCorrelationTabWidget.setTabText(self.outputCorrelationTabWidget.indexOf(self.crossOutputTab), _translate("Dialog", "Cross-Correlation", None))
         self.labelOutputTripleFourier.setText(_translate("Dialog", "Fourier Transform (Red) Surface Plot", None))
         self.labelOutputTripleCorrelation3D.setText(_translate("Dialog", "Triple-Correlation Surface Plot", None))
@@ -866,6 +883,7 @@ class Ui_Dialog(object):
         self.resolution32.setText(_translate("Dialog", "32 x 32", None))
         self.resolution48.setText(_translate("Dialog", "48 x 48", None))
         self.resolution64.setText(_translate("Dialog", "64 x 64", None))
+        self.tripleDeltasUsedCheckbox.setText(_translate("Dialog", "Deltas Used", None))
         self.outputCorrelationTabWidget.setTabText(self.outputCorrelationTabWidget.indexOf(self.tripleOutputTab), _translate("Dialog", "Triple-Correlation", None))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.outputTab), _translate("Dialog", "Output", None))
 
