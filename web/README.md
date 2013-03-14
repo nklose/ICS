@@ -3,6 +3,7 @@ Requirements
 
 * Django 1.4
 * django-celery
+* django-registration
 * sqlite3
 * rabbitmq-server 
 
