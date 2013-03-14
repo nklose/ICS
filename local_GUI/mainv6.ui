@@ -190,7 +190,7 @@
      <widget class="QLabel" name="imageRgb">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>40</x>
         <y>30</y>
         <width>192</width>
         <height>192</height>
@@ -209,7 +209,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>rgb.png</pixmap>
+       <pixmap>images/rgb.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -218,7 +218,7 @@
      <widget class="QLabel" name="imageRed">
       <property name="geometry">
        <rect>
-        <x>270</x>
+        <x>280</x>
         <y>30</y>
         <width>192</width>
         <height>192</height>
@@ -237,7 +237,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>r.png</pixmap>
+       <pixmap>images/r.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -246,7 +246,7 @@
      <widget class="QLabel" name="imageGreen">
       <property name="geometry">
        <rect>
-        <x>510</x>
+        <x>520</x>
         <y>30</y>
         <width>192</width>
         <height>192</height>
@@ -265,7 +265,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>g.png</pixmap>
+       <pixmap>images/g.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -274,7 +274,7 @@
      <widget class="QLabel" name="imageBlue">
       <property name="geometry">
        <rect>
-        <x>750</x>
+        <x>760</x>
         <y>30</y>
         <width>192</width>
         <height>192</height>
@@ -293,7 +293,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>b.png</pixmap>
+       <pixmap>images/b.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
