@@ -30,6 +30,8 @@ import backend.example as example
 class TestBackendSingleImage(unittest.TestCase):
     outputDirName = ""
     inFilePath = ""
+    d_range = 20
+    t_range = 15
 
     def set_vars(self):
         raise NotImplementedError("Sub-classes must use this method to set \
@@ -53,7 +55,8 @@ self.outputDirName and self.inFilePath.")
         self.validate_output()
 
     def call_script(self):
-        example.run(self.output, self.inFile, example.ALL_COLORS)
+        example.run(self.output, self.inFile, example.ALL_COLORS,
+                    d_range=self.d_range, t_range=self.t_range)
 
     def validate_output(self):
         fnames = ['ACb', 'ACg', 'ACr', 'XCrg', 'XCrb', 'XCrg']

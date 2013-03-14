@@ -60,5 +60,5 @@ class BadConfig:
     triple_initial = np.array([50,2,0],dtype=np.float)
     triple_lim = 64
     input_type = 'split'
-    output_type = 'summary'
+    output_type = 'full'
     output_numbering = '{:03d}'
