@@ -1,17 +1,19 @@
 {% block rgb-controls %}
 <h3>RGB controls</h3>
 <div class="rgbimg-background">
+<div class="alert alert-info" id="userNotice"><strong>Note: </strong>Please Select the Type of Correlation(s) to Run</div>
+{{ form.userSelected.as_hidden }} 
  <ul class="nav nav-tabs">
-   <li><a href="#auto" data-toggle="tab">Auto-Correlation</a></li>
-   <li><a href="#cross" data-toggle="tab">Cross-Correlation</a></li>
-   <li><a href="#triplecross" data-toggle="tab">Triple-Correlation</a></li>
-    <li><a href="#all" data-toggle="tab">All</a></li>
+   <li><a href="#auto" id="id_auto" data-toggle="tab">Auto-Correlation</a></li>
+   <li><a href="#cross" id="id_cross" data-toggle="tab">Cross-Correlation</a></li>
+   <li><a href="#triplecross" id="id_triplecross" data-toggle="tab">Triple-Correlation</a></li>
+   <li><a href="#all" id="id_all" data-toggle="tab">All</a></li>
  </ul>
 
 <div class="tab-content">
-   <div class="tab-pane active" id="auto">
+   <div class="tab-pane" id="auto">
     <div class="row-fluid">
-     <div class="span2"><h4>Channels</h4></div>
+     <div class="span2"><strong>Channels</strong></div>
       <div class="row-fluid">
        {{ form.red }}Red
        {{ form.blue }}Blue
@@ -48,12 +50,10 @@
     </div>
    </div>
    <div class="tab-pane" id="triplecross">
-    <div class="tab-pane" id="all">
-     <div class="rgbimg-background">
      <div id="imgSize">
      <label for="id_resolutions">Set Image resolution to sample</label>
       {{ form.resolutions }}
-    </div>
+     </div>
     <div class="row-fluid">
      <div class="span"><strong>Triple-Correlation Parameters</strong>
      <fieldset>
@@ -64,32 +64,30 @@
        <label> ginf:</label>{{ form.ginfTriple }}<br>
      </fieldset>
     </div>
-    </div>
    </div>
-   <div class="tab-pane" id="all">
-    <div class="rgbimg-background">
-    <div id="imgSize">
-    <label for="id_resolutions">Set Image resolution to sample</label>
-     {{ form.resolutions }}
+  </div>
+  <div class="tab-pane" id="all">
+    <div class="row-fluid">
+    <div class="span2"><strong>Channels</strong></div>
+    <div class="span2">{{ form.all }}All</div>
     </div>
     <div class="row-fluid">
-    {{ form.all }}All
      <div class="span4"><strong>Auto/Cross Parameters</strong>
        <fieldset>
        <legend>Paramters:</lengend>
-       <label>Range:</label>{{ form.rangeAutoCross }}<br>
-       <label> g(0):</label>{{ form.gzeroAutoCross }}<br>
-       <label>    w:</label>{{ form.wAutoCross }}<br>
-       <label> ginf:</label>{{ form.ginfAutoCross }}<br>
+       <label>Range:</label>{{ form.rangeAutoCrossAll }}<br>
+       <label> g(0):</label>{{ form.gzeroAutoCrossAll }}<br>
+       <label>    w:</label>{{ form.wAutoCrossAll }}<br>
+       <label> ginf:</label>{{ form.ginfAutoCrossAll }}<br>
      </fieldset>
      </div>
      <div class="span4"><strong>Triple-Correlation Parameters</strong>
        <fieldset>
        <legend>Paramters:</lengend>
-       <label>Range:</label>{{ form.rangeTriple }}<br>
-       <label> g(0):</label>{{ form.gzeroTriple }}<br>
-       <label>    w:</label>{{ form.wTriple }}<br>
-       <label> ginf:</label>{{ form.ginfTriple }}<br>
+       <label>Range:</label>{{ form.rangeTripleAll }}<br>
+       <label> g(0):</label>{{ form.gzeroTripleAll }}<br>
+       <label>    w:</label>{{ form.wTripleAll }}<br>
+       <label> ginf:</label>{{ form.ginfTripleAll }}<br>
      </fieldset>
      </div>
     </div>
