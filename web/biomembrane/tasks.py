@@ -50,9 +50,18 @@ def run_dual(job, params):
 
     initial_val = np.array([params.g0, params.w, params.ginf, 0, 0], dtype=np.float64)
     (out, par, used_deltas) = dual.core(a, b, params.range_val, initial_val, params.use_deltas)
-    fit = butils.gauss_2d_deltas(np.arange(params.range_val**2), *par).reshape(params.range_val, params.range_val)
+    fit_before_reshape = butils.gauss_2d_deltas(np.arange(params.range_val**2), *par)
+    fit = fit_before_reshape.reshape(params.range_val, params.range_val)
     res_norm = np.sum((out-fit)**2)
-    return (out, par, used_deltas, res_norm)
+
+    results = Results(job=job, params=params)
+    results.par = pickle.dumps(par)
+    results.out = pickle.dumps(out)
+    results.res_norm = pickle.dumps(res_norm)
+    results.fit = pickle.dumps(fit)
+    results.fit_before_reshape = pickle.dumps(fit_before_reshape)
+    results.used_deltas = pickle.dumps(used_deltas)
+    results.save()
 
 
 def run_triple(job, params):
@@ -70,7 +79,13 @@ def run_triple(job, params):
     fit = butils.guass_1d(np.arange(params.range_val), *par)
     par[1] = int(par[1]*(side/params.limit)*10)/10
     res_norm = np.sum((out-fit)**2)
-    return (out, par, res_norm)
+
+    results = Results(job=job, params=params)
+    results.par = pickle.dumps(par)
+    results.out = pickle.dumps(out)
+    results.res_norm = pickle.dumps(res_norm)
+    results.fit = pickle.dumps(fit)
+    results.save()
 
 
 @task()
@@ -80,16 +95,10 @@ def run(job):
 
     all_params = Parameters.objects.filter(batch=job.batch)
     for params in all_params:
-        results = Results(job=job, params=params)
         if params.correlationType == Parameters.TRIPLE:
-            out, par, res_norm = run_triple(job, params)
+            run_triple(job, params)
         else:
-            out, par, used_deltas, res_norm = run_dual(job, params)
-            results.used_deltas = pickle.dumps(used_deltas)
-        results.par = pickle.dumps(par)
-        results.out = pickle.dumps(out)
-        results.res_norm = pickle.dumps(res_norm)
-        results.save()
+            run_dual(job, params)
         
     job.state = Job.COMPLETE
     job.save()

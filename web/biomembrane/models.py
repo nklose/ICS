@@ -115,6 +115,8 @@ class Parameters(models.Model):
 class Results(models.Model):
     par = models.TextField()
     out = models.TextField()
+    fit = models.TextField()
+    fit_before_reshape = models.TextField()
     res_norm = models.TextField()
     used_deltas = models.TextField()
     params = models.ForeignKey(Parameters)
