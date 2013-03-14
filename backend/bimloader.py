@@ -77,8 +77,12 @@ def load_image_mixed(fpath):
     Exceptions:
         ImageFormatException
     """
-    image = validate_image(fpath)
-    return load_image_pil_mixed(image)
+    validate_image(fpath)
+    raw_image = scipy.misc.imread(fpath)
+    r = raw_image[:, :, 0].astype(np.float)
+    g = raw_image[:, :, 1].astype(np.float)
+    b = raw_image[:, :, 2].astype(np.float)
+    return (r, g, b)
 
 
 def load_image_pil_mixed(pilImage):
@@ -112,8 +116,10 @@ def load_image_split(fpath):
     Exceptions:
         ImageFormatException
     """
-    image = validate_image(fpath)
-    return load_image_pil_split(image)
+    validate_image(fpath)
+    image = scipy.misc.imread(fpath)
+    channel = image.astype(np.float)
+    return channel
 
 
 def load_image_pil_split(pilImage):
@@ -141,11 +147,11 @@ def load_image_mixed_batch(image, fpath):
     Exceptions:
         ImageFormatException
     """
-    validate_format(fpath)
+    validate_image(fpath)
     raw_image = scipy.misc.imread(fpath)
-    image[0,:,:] = raw_image[:,:,0].astype(np.float)
-    image[1,:,:] = raw_image[:,:,1].astype(np.float)
-    image[2,:,:] = raw_image[:,:,2].astype(np.float)
+    image[0, :, :] = raw_image[:, :, 0].astype(np.float)
+    image[1, :, :] = raw_image[:, :, 1].astype(np.float)
+    image[2, :, :] = raw_image[:, :, 2].astype(np.float)
 
 
 def load_image_split_batch(image, fpath):
@@ -158,6 +164,6 @@ def load_image_split_batch(image, fpath):
     Exceptions:
         ImageFormatException
     """
-    zimage = validate_image(fpath)
-    raw_channel = scipy.misc.fromimage(zimage)
+    validate_image(fpath)
+    raw_channel = scipy.misc.imread(fpath)
     image[:, :] = raw_channel.astype(np.float)
