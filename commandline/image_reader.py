@@ -58,7 +58,7 @@ def open_image(filepath):
         image_converter.ImageFormatException: If file type is invalid
     """
     image = validate_image(filepath)
-    image = PIL.Image.open(filepath)
+    #image = PIL.Image.open(filepath)
     return scipy.misc.fromimage(image)
 
 

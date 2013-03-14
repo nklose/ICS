@@ -77,6 +77,7 @@ def run_any(pdata,a,b,c,color,d_range,t_range):
 
 def run_dual(pdata,a,b,c,color,d_range):
     range_val = d_range
+    #g0, w, ginf, deltaX?, deltaY?
     initial_val = np.array([1,10,0,0,0],dtype=np.float64)
     consider_deltas = False
     (out,par,used_deltas) = dual.core(a,b,range_val,initial_val,consider_deltas)

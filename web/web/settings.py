@@ -179,7 +179,8 @@ LOGGING = {
 
 # Import the root project
 
-import sys, os.path
+import sys
+import os.path
 root_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(root_dir)
 
