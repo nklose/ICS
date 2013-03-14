@@ -92,6 +92,16 @@ class StartQT4(QtGui.QMainWindow):
                                QtCore.SIGNAL("clicked()"),
                                self.stop)
 
+        # Continue Button 1
+        QtCore.QObject.connect(self.ui.continueButton1,
+                               QtCore.SIGNAL("clicked()"),
+                               self.triple_process)
+
+        # Continue Button 2
+        QtCore.QObject.connect(self.ui.continueButton2,
+                               QtCore.SIGNAL("clicked()"),
+                               self.triple_complete)
+
 
     #######################################################
     # Interface Object Functions                          #
@@ -363,6 +373,10 @@ class StartQT4(QtGui.QMainWindow):
                     result = self.correlate(self.blueChannel)
                     self.update_auto(result)
                     self.progress(99)
+
+                # Change to auto section of output tab
+                self.select_tab("output", "auto")
+
             elif mode == "cross":
                 # Construct string containing channels to be used
                 self.msgCross()
@@ -381,13 +395,21 @@ class StartQT4(QtGui.QMainWindow):
                     self.update_cross(result)
                     self.progress(99)
 
+                # Change to cross section of output tab
+                self.select_tab("output", "cross")
+
             elif mode == "triple":
                 # Construct string containing channels to be used
                 self.msgTriple()
 
-                # Do triple-correlation by calling the backend
-                self.correlate(self.redChannel, self.greenChannel, self.blueChannel)
-                self.progress(99)
+                # Change to triple section of output tab
+                self.select_tab("output", "triple")
+
+                # Show Fourier transform (red) surface plot
+                self.show_fourier()
+                
+                # Triple correlation doesn't actually happen until user clicks Continue
+
             elif mode == "all":
                 # Construct string containing channels to be used
                 self.msgAll()
@@ -402,6 +424,9 @@ class StartQT4(QtGui.QMainWindow):
                 redBlueCross = result[4]
                 greenBlueCross = result[5]
                 triple = result[6]
+
+                # Change to auto section of output tab
+                self.select_tab("output", "auto")
 
             else:
                 self.message("Mode error.")
@@ -510,6 +535,13 @@ class StartQT4(QtGui.QMainWindow):
 
     # Returns the state of the All Correlations Consider Deltas checkbox
     def get_all_deltas_checkbox(self):
+        if self.ui.allDeltasCheckbox.checkState() != 0:
+            return True
+        else:
+            return False
+
+    # Returns the state of the TC Consider Deltas checkbox
+    def get_triple_deltas_checkbox(self):
         if self.ui.allDeltasCheckbox.checkState() != 0:
             return True
         else:
@@ -884,7 +916,7 @@ class StartQT4(QtGui.QMainWindow):
         g0 = float(self.get_all_G0())
         w = float(self.get_all_W())
         gInf = float(self.get_all_Ginf())
-        deltas = bool(self.get_all_deltas_checkbox())
+        deltas = self.get_all_deltas_checkbox()
         
         auto1 = dual.core(array1, None, range, [g0, w, gInf, 0, 0], deltas)
         self.progress(12) # update progress bar
@@ -901,6 +933,32 @@ class StartQT4(QtGui.QMainWindow):
         triple = None #TODO: write code here
         self.progress(84)
         return (auto1, auto2, auto3, cross1, cross2, cross3, triple)
+
+    # Show Fourier transform (red) surface plot
+    def show_fourier(self):
+        print("hello")
+
+    # Begin triple correlation process
+    def triple_process(self):
+        # Read sample resolution (limit)
+        limit = self.get_sample_resolution()
+
+        # Show triple-correlation surface plot
+
+    # Finish off triple correlation process
+    def triple_complete(self):
+        range = float(self.get_triple_range())
+        g0 = float(self.get_triple_G0())
+        w = float(self.get_triple_W())
+        gInf = float(self.get_triple_Ginf())
+        deltas = self.get_triple_deltas_checkbox()
+
+        # Do triple correlation
+
+        # Show fitting curve
+
+        # Show res. norm. and whether deltas were used
+        
         
     #####################################################
     # Message Box Functions                             #
@@ -1042,12 +1100,10 @@ class StartQT4(QtGui.QMainWindow):
         self.set_cross_Ginf(gInf)
         self.set_cross_deltas(deltas)
 
-    # Updates the output tab based on result values for triple-correlations
-
     # Updates the output tab based on result values for all correlations
 
     # Selects a specific tab on the interface
-    def select_tab(self, mainTab, subTab):
+    def select_tab(self, mainTab, subTab=None):
         if mainTab == "input":
             self.ui.mainTabWidget.setCurrentIndex(0)
             if subTab == "auto":

@@ -209,7 +209,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>images/rgb.png</pixmap>
+       <pixmap>../../.designer/backup/images/rgb.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -237,7 +237,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>images/r.png</pixmap>
+       <pixmap>../../.designer/backup/images/r.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -265,7 +265,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>images/g.png</pixmap>
+       <pixmap>../../.designer/backup/images/g.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -293,7 +293,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>images/b.png</pixmap>
+       <pixmap>../../.designer/backup/images/b.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -2020,7 +2020,7 @@
        <property name="geometry">
         <rect>
          <x>70</x>
-         <y>380</y>
+         <y>420</y>
          <width>181</width>
          <height>61</height>
         </rect>
@@ -2057,7 +2057,7 @@
        <property name="geometry">
         <rect>
          <x>410</x>
-         <y>380</y>
+         <y>420</y>
          <width>161</width>
          <height>61</height>
         </rect>
@@ -2094,7 +2094,7 @@
        <property name="geometry">
         <rect>
          <x>730</x>
-         <y>380</y>
+         <y>420</y>
          <width>161</width>
          <height>21</height>
         </rect>
@@ -2115,7 +2115,7 @@
        <property name="geometry">
         <rect>
          <x>840</x>
-         <y>410</y>
+         <y>440</y>
          <width>91</width>
          <height>31</height>
         </rect>
@@ -2131,7 +2131,7 @@
        <property name="geometry">
         <rect>
          <x>850</x>
-         <y>440</y>
+         <y>470</y>
          <width>101</width>
          <height>31</height>
         </rect>
@@ -2262,7 +2262,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>99</y>
+         <y>139</y>
          <width>281</width>
          <height>271</height>
         </rect>
@@ -2284,7 +2284,7 @@
        <property name="geometry">
         <rect>
          <x>340</x>
-         <y>99</y>
+         <y>139</y>
          <width>281</width>
          <height>271</height>
         </rect>
@@ -2306,7 +2306,7 @@
        <property name="geometry">
         <rect>
          <x>670</x>
-         <y>99</y>
+         <y>139</y>
          <width>281</width>
          <height>271</height>
         </rect>
@@ -2330,7 +2330,7 @@
          <x>340</x>
          <y>10</y>
          <width>281</width>
-         <height>81</height>
+         <height>71</height>
         </rect>
        </property>
        <property name="frameShape">
@@ -2405,7 +2405,7 @@
        <property name="geometry">
         <rect>
          <x>670</x>
-         <y>440</y>
+         <y>470</y>
          <width>131</width>
          <height>22</height>
         </rect>
@@ -2415,6 +2415,45 @@
        </property>
        <property name="checked">
         <bool>false</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="continueButton2">
+       <property name="geometry">
+        <rect>
+         <x>870</x>
+         <y>90</y>
+         <width>81</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Continue</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="continueButton1">
+       <property name="geometry">
+        <rect>
+         <x>540</x>
+         <y>90</y>
+         <width>81</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Continue</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="tripleDeltasCheckbox">
+       <property name="geometry">
+        <rect>
+         <x>680</x>
+         <y>100</y>
+         <width>171</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Consider Deltas</string>
        </property>
       </widget>
      </widget>
