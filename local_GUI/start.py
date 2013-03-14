@@ -30,6 +30,7 @@ sys.path.append(ROOT_DIR)
 # Import backend modules
 import backend.bimloader as bimloader
 import backend.dual as dual
+import backend.triple as triple
 
 class StartQT4(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -91,6 +92,10 @@ class StartQT4(QtGui.QMainWindow):
                                QtCore.SIGNAL("clicked()"),
                                self.stop)
 
+
+    #######################################################
+    # Interface Object Functions                          #
+    #######################################################
 
     # Loads an RGB image into the interface.
     def load_RGB_image(self):
@@ -177,15 +182,6 @@ class StartQT4(QtGui.QMainWindow):
 
             # Remove any temporary images from the interface
             self.refresh_temp()
-            if not os.path.isfile(self.rgbPath):
-                self.ui.imageRgb.clear()
-                self.rgbPath = ""
-            if not os.path.isfile(self.greenPath):
-                self.ui.imageGreen.clear()
-                self.greenPath = ""
-            if not os.path.isfile(self.bluePath):
-                self.ui.imageBlue.clear()
-                self.bluePath = ""
 
             # Remember old size in case something bad happens
             oldSize = self.size
@@ -244,15 +240,6 @@ class StartQT4(QtGui.QMainWindow):
 
             # Remove any temporary images from the interface
             self.refresh_temp()
-            if not os.path.isfile(self.rgbPath):
-                self.ui.imageRgb.clear()
-                self.rgbPath = ""
-            if not os.path.isfile(self.redPath):
-                self.ui.imageGreen.clear()
-                self.greenPath = ""
-            if not os.path.isfile(self.bluePath):
-                self.ui.imageBlue.clear()
-                self.bluePath = ""
 
             # Remember old size in case something bad happens
             oldSize = self.size
@@ -310,15 +297,6 @@ class StartQT4(QtGui.QMainWindow):
 
             # Remove any temporary images from the interface
             self.refresh_temp()
-            if not os.path.isfile(self.rgbPath):
-                self.ui.imageRgb.clear()
-                self.rgbPath = ""
-            if not os.path.isfile(self.redPath):
-                self.ui.imageRed.clear()
-                self.greenPath = ""
-            if not os.path.isfile(self.greenPath):
-                self.ui.imageGreen.clear()
-                self.bluePath = ""
 
             # Remember old size in case something bad happens
             oldSize = self.size
@@ -351,299 +329,87 @@ class StartQT4(QtGui.QMainWindow):
         # Find out which correlation to do
         mode = self.get_correlation_tab()
 
-        # Input Checking
-        validInput = True
-
-        # Make sure a file has been loaded
-        if self.rgbPath == "":
-            if self.redPath == "" or self.greenPath == "" or self.bluePath == "":
-                validInput = False
-                text = "Load either one RGB image, or three "
-                text += "monochrome images\nbefore starting the "
-                text += "correlation process."
-                self.message(text)
-
-        if mode == "auto":
-            # no channels selected
-            none_checked = True
-            if self.get_red_checkbox() == True:
-                none_checked = False
-            elif self.get_green_checkbox() == True:
-                none_checked = False
-            elif self.get_blue_checkbox() == True:
-                none_checked = False
-
-            if none_checked:
-                self.message("You must select at least one channel.")
-                validInput = False
-
-            # blank range
-            elif self.get_auto_range() == "":
-                self.message("Range parameter missing.")
-                validInput = False
-
-            # blank g(0)
-            elif self.get_auto_G0() == "":
-                self.message("g(0) parameter missing.")
-                validInput = False
-
-            # blank W
-            elif self.get_auto_W() == "":
-                self.message("W parameter missing.")
-                validInput = False
-
-            # blank gInf
-            elif self.get_auto_Ginf() == "":
-                self.message("gInf parameter missing.")
-                validInput = False
-
-            else:
-                # non-numeric range
-                try:
-                    float(self.get_auto_range())
-                except ValueError:
-                    validInput = False
-                    self.message("Range must be a number.")
-
-                # non-numeric g(0)
-                try:
-                    float(self.get_auto_G0())
-                except ValueError:
-                    validInput = False
-                    self.message("g(0) must be a number.")
-
-                # non-numeric W
-                try:
-                    float(self.get_auto_W())
-                except ValueError:
-                    validInput = False
-                    self.message("w must be a number.")
-
-                # non-numeric gInf
-                try:
-                    float(self.get_auto_Ginf())
-                except ValueError:
-                    validInput = False
-                    self.message("gInf must be a number.")
-
-        elif mode == "cross":
-            # no channels selected
-            none_checked = True
-            if self.get_red_green_checkbox() == True:
-                none_checked = False
-            elif self.get_red_blue_checkbox() == True:
-                none_checked = False
-            elif self.get_green_blue_checkbox() == True:
-                none_checked = False
-
-            if none_checked:
-                validInput = False
-                self.message("You must select at least one channel pair.")
-
-            # blank range
-            elif self.get_cross_range() == "":
-                validInput = False
-                self.message("Range parameter missing.")
-
-            # blank g(0)
-            elif self.get_cross_G0() == "":
-                validInput = False
-                self.message("g(0) parameter missing.")
-
-            # blank W
-            elif self.get_cross_W() == "":
-                validInput = False
-                self.message("W parameter missing.")
-
-            # blank gInf
-            elif self.get_cross_Ginf() == "":
-                validInput = False
-                self.message("Ginf parameter missing.")
-
-            else:
-                # non-numeric range
-                try:
-                    float(self.get_cross_range())
-                except ValueError:
-                    validInput = False
-                    self.message("Range must be a number.")
-
-                # non-numeric g(0)
-                try:
-                    float(self.get_cross_G0())
-                except ValueError:
-                    validInput = False
-                    self.message("g(0) must be a number.")
-
-                # non-numeric W
-                try:
-                    float(self.get_cross_W())
-                except ValueError:
-                    validInput = False
-                    self.message("W must be a number.")
-
-                # non-numeric gInf
-                try:
-                    float(self.get_cross_Ginf())
-                except ValueError:
-                    validInput = False
-                    self.message("gInf must be a number.")
-
-        elif mode == "all":
-            # blank range
-            if self.get_all_range() == "":
-                validInput = False
-                self.message("Range parameter missing.")
-
-            # blank g(0)
-            elif self.get_all_G0() == "":
-                validInput = False
-                self.message("g(0) parameter missing.")
-
-            # blank W
-            elif self.get_all_W() == "":
-                validInput = False
-                self.message("W parameter missing.")
-
-            # blank gInf
-            elif self.get_all_Ginf() == "":
-                validInput = False
-                self.message("gInf parameter missing.")
-
-            else:
-                # non-numeric range
-                try:
-                    float (self.get_all_range())
-                except ValueError:
-                    validInput = False
-                    self.message("Range must be a number.")
-
-                # non-numeric g(0)
-                try:
-                    float (self.get_all_G0())
-                except ValueError:
-                    validInput = False
-                    self.message("g(0) must be a number.")
-
-                # non-numeric W
-                try:
-                    float (self.get_all_W())
-                except ValueError:
-                    validInput = False
-                    self.message("W must be a number.")
-
-                # non-numeric gInf
-                try:
-                    float (self.get_all_Ginf())
-                except ValueError:
-                    validInput = False
-                    self.message("gInf must be a number.")
+        # Validate input
+        validInput = self.validate_input(mode)
 
         # Continue if input is valid
         if validInput:
+            # Update progress bar
+            self.progress(5)
+
             # Update message bar with input parameters
             text = ""
-            if mode == "auto":
+            if mode == "auto" or mode == "all":
                 # Construct string containing channels to be used
-                channels = ""
-                if self.get_red_checkbox():
-                    if self.get_green_checkbox():
-                        if self.get_blue_checkbox():
-                            channels = "red, green, and blue channels"
-                        else:
-                            channels = "red and green channels"
-                    else:
-                        if self.get_blue_checkbox():
-                            channels = "red and blue channels"
-                        else:
-                            channels = "red channel"
-                else:
-                    if self.get_green_checkbox():
-                        if self.get_blue_checkbox():
-                            channels = "green and blue channels"
-                        else:
-                            channels = "green channel"
-                    else:
-                        channels = "blue channel"
+                self.msgAuto()
 
-                # Construct output string
-                text = "Starting auto-correlation using " + channels
-                text += " and parameters\n[range = " + self.get_auto_range()
-                text += ", g(0) = " + self.get_auto_G0() +", w = "
-                text += self.get_auto_W() + ", gInf = " + self.get_auto_Ginf()
-                text += "],"
-                if self.get_auto_deltas_checkbox() == False:
-                    text += " do not"
-                text += " consider deltas, S.R. "
-                res = str(self.get_sample_resolution())
-                text += res + " x " + res + "."
-                self.message(text)
                 # Do auto-correlation by calling the backend
                 if self.get_red_checkbox():
                     result = self.correlate(self.redChannel)
+                    path = self.temp_dir + "/AC_R.png"
+                    scipy.misc.imsave(path, result[0])
+                    if mode == "auto":
+                        self.progress(33)
+                    else:
+                        self.progress(12)
                 if self.get_green_checkbox():
                     result = self.correlate(self.greenChannel)
+                    path = self.temp_dir + "/AC_G.png"
+                    scipy.misc.imsave(path, result[0])
+                    if mode == "auto":
+                        self.progress(66)
+                    else:
+                        self.progress(24)
                 if self.get_blue_checkbox():
                     result = self.correlate(self.blueChannel)
+                    path = self.temp_dir + "/AC_B.png"
+                    scipy.misc.imsave(path, result[0])
+                    if mode == "auto":
+                        self.progress(99)
+                    else:
+                        self.progress(36)
                    
+            if mode == "cross" or mode == "all":
+                # Construct string containing channels to be used
+                self.msgCross()
 
-            elif mode == "cross":
-                channels = ""
+                # Do cross-correlation by calling the backend
                 if self.get_red_green_checkbox():
-                    if self.get_red_blue_checkbox():
-                        if self.get_green_blue_checkbox():
-                            channels = "RG, RB, and GB channel pairs"
-                        else:
-                            channels = "RG and RB channel pairs"
+                    result = self.correlate(self.redChannel, self.greenChannel)
+                    path = self.temp_dir + "/XC_RG.png"
+                    scipy.misc.imsave(path, result[0])
+                    if mode == "cross":
+                        self.progress(33)
                     else:
-                        if self.get_green_blue_checkbox():
-                            channels = "RG and GB channel pairs"
-                        else:
-                            channels = "RG channel pair"
-                else:
-                    if self.get_red_blue_checkbox():
-                        if self.get_green_blue_checkbox():
-                            channels = "RB and GB channel pairs"
-                        else:
-                            channels = "RB channel pair"
+                        self.progress(48)
+                if self.get_red_blue_checkbox():
+                    result = self.correlate(self.redChannel, self.blueChannel)
+                    path = self.temp_dir + "/XC_RB.png"
+                    scipy.misc.imsave(path, result[0])
+                    if mode == "cross":
+                        self.progress(66)
                     else:
-                        channels = "GB channel pair"
+                        self.progress(60)
+                if self.get_green_blue_checkbox():
+                    result = self.correlate(self.greenChannel, self.blueChannel)
+                    path = self.temp_dir + "/XC_GB.png"
+                    scipy.misc.imsave(path, result[0])
+                    if mode == "cross":
+                        self.progress(99)
+                    else:
+                        self.progress(72)
 
-                text = "Starting cross-correlation using " + channels
-                text += " and parameters\n[Range = "
-                text += self.get_cross_range() + ", g(0) = "
-                text += self.get_cross_G0() + ", w = "
-                text += self.get_cross_W() + ", gInf = "
-                text += self.get_cross_Ginf() + "],"
-                if self.get_cross_deltas_checkbox() == False:
-                    text+= " do not"
-                text += " consider deltas, S.R. "
-                res = str(self.get_sample_resolution())
-                text += res + " x " + res + "."
-                # Do cross-correlation
-                self.message(text)
+            if mode == "triple" or mode == "all":
+                # Construct string containing channels to be used
+                self.msgTriple()
 
-            elif mode == "triple":
-                res = str(self.get_sample_resolution())
-                text = "Starting triple correlation with sample resolution "
-                text += res + " x " + res + "."
-                # Do triple correlation
-                self.message(text)
-
-            elif mode == "all":
-                text = "Running all possible correlations using parameters ["
-                text += "Range = " + self.get_all_range() + ", g(0) = "
-                text += self.get_all_G0() + ", w = " + self.get_all_W()
-                text += ", gInf = " + self.get_all_Ginf() + "],"
-                if self.get_all_deltas_checkbox() == False:
-                    text += " do not"
-                text += " consider deltas, using sample resolution "
-                res = str(self.get_sample_resolution())
-                text += res + " x " + res + "."
-                # Do all correlations
-                self.message(text)
-
-
+                # Do triple-correlation by calling the backend
+                self.correlate(self.redChannel, self.greenChannel, self.blueChannel)
+                self.progress(99)
+            if mode == "all":
+                # Construct string containing channels to be used
+                self.msgAll()
+            self.progress(100)
 
     # Stop button functionality
     def stop(self):
@@ -835,6 +601,196 @@ class StartQT4(QtGui.QMainWindow):
         else:
             return -1
 
+    # Validate interface input
+    def validate_input(self, mode):
+        validInput = True
+        # Make sure a file has been loaded
+        if self.rgbPath == "":
+            if self.redPath == "" or self.greenPath == "" or self.bluePath == "":
+                validInput = False
+                text = "Load either one RGB image, or three "
+                text += "monochrome images\nbefore starting the "
+                text += "correlation process."
+                self.message(text)
+
+        if mode == "auto":
+            # no channels selected
+            none_checked = True
+            if self.get_red_checkbox() == True:
+                none_checked = False
+            elif self.get_green_checkbox() == True:
+                none_checked = False
+            elif self.get_blue_checkbox() == True:
+                none_checked = False
+
+            if none_checked:
+                self.message("You must select at least one channel.")
+                validInput = False
+
+            # blank range
+            elif self.get_auto_range() == "":
+                self.message("Range parameter missing.")
+                validInput = False
+
+            # blank g(0)
+            elif self.get_auto_G0() == "":
+                self.message("g(0) parameter missing.")
+                validInput = False
+
+            # blank W
+            elif self.get_auto_W() == "":
+                self.message("W parameter missing.")
+                validInput = False
+
+            # blank gInf
+            elif self.get_auto_Ginf() == "":
+                self.message("gInf parameter missing.")
+                validInput = False
+
+            else:
+                # non-numeric range
+                try:
+                    float(self.get_auto_range())
+                except ValueError:
+                    validInput = False
+                    self.message("Range must be a number.")
+
+                # non-numeric g(0)
+                try:
+                    float(self.get_auto_G0())
+                except ValueError:
+                    validInput = False
+                    self.message("g(0) must be a number.")
+
+                # non-numeric W
+                try:
+                    float(self.get_auto_W())
+                except ValueError:
+                    validInput = False
+                    self.message("w must be a number.")
+
+                # non-numeric gInf
+                try:
+                    float(self.get_auto_Ginf())
+                except ValueError:
+                    validInput = False
+                    self.message("gInf must be a number.")
+
+        elif mode == "cross":
+            # no channels selected
+            none_checked = True
+            if self.get_red_green_checkbox() == True:
+                none_checked = False
+            elif self.get_red_blue_checkbox() == True:
+                none_checked = False
+            elif self.get_green_blue_checkbox() == True:
+                none_checked = False
+
+            if none_checked:
+                validInput = False
+                self.message("You must select at least one channel pair.")
+
+            # blank range
+            elif self.get_cross_range() == "":
+                validInput = False
+                self.message("Range parameter missing.")
+
+            # blank g(0)
+            elif self.get_cross_G0() == "":
+                validInput = False
+                self.message("g(0) parameter missing.")
+
+            # blank W
+            elif self.get_cross_W() == "":
+                validInput = False
+                self.message("W parameter missing.")
+
+            # blank gInf
+            elif self.get_cross_Ginf() == "":
+                validInput = False
+                self.message("Ginf parameter missing.")
+
+            else:
+                # non-numeric range
+                try:
+                    float(self.get_cross_range())
+                except ValueError:
+                    validInput = False
+                    self.message("Range must be a number.")
+
+                # non-numeric g(0)
+                try:
+                    float(self.get_cross_G0())
+                except ValueError:
+                    validInput = False
+                    self.message("g(0) must be a number.")
+
+                # non-numeric W
+                try:
+                    float(self.get_cross_W())
+                except ValueError:
+                    validInput = False
+                    self.message("W must be a number.")
+
+                # non-numeric gInf
+                try:
+                    float(self.get_cross_Ginf())
+                except ValueError:
+                    validInput = False
+                    self.message("gInf must be a number.")
+
+        elif mode == "all":
+            # blank range
+            if self.get_all_range() == "":
+                validInput = False
+                self.message("Range parameter missing.")
+
+            # blank g(0)
+            elif self.get_all_G0() == "":
+                validInput = False
+                self.message("g(0) parameter missing.")
+
+            # blank W
+            elif self.get_all_W() == "":
+                validInput = False
+                self.message("W parameter missing.")
+
+            # blank gInf
+            elif self.get_all_Ginf() == "":
+                validInput = False
+                self.message("gInf parameter missing.")
+
+            else:
+                # non-numeric range
+                try:
+                    float (self.get_all_range())
+                except ValueError:
+                    validInput = False
+                    self.message("Range must be a number.")
+
+                # non-numeric g(0)
+                try:
+                    float (self.get_all_G0())
+                except ValueError:
+                    validInput = False
+                    self.message("g(0) must be a number.")
+
+                # non-numeric W
+                try:
+                    float (self.get_all_W())
+                except ValueError:
+                    validInput = False
+                    self.message("W must be a number.")
+
+                # non-numeric gInf
+                try:
+                    float (self.get_all_Ginf())
+                except ValueError:
+                    validInput = False
+                    self.message("gInf must be a number.")
+
+        return validInput
+
     #####################################################
     # Correlation Functions                             #
     #####################################################
@@ -878,9 +834,111 @@ class StartQT4(QtGui.QMainWindow):
     def msgBadChannels(self):
         self.message("Image has too many channels. Please use a monochrome image.")
 
+    # Construct message to show user when autocorrelation is selected
+    def msgAuto(self):
+        channels = ""
+        if self.get_red_checkbox():
+            if self.get_green_checkbox():
+                if self.get_blue_checkbox():
+                    channels = "red, green, and blue channels"
+                else:
+                    channels = "red and green channels"
+            else:
+                if self.get_blue_checkbox():
+                    channels = "red and blue channels"
+                else:
+                    channels = "red channel"
+        else:
+            if self.get_green_checkbox():
+                if self.get_blue_checkbox():
+                    channels = "green and blue channels"
+                else:
+                    channels = "green channel"
+            else:
+                channels = "blue channel"
+
+        # Construct output string
+        text = "Starting auto-correlation using " + channels
+        text += " and parameters\n[range = " + self.get_auto_range()
+        text += ", g(0) = " + self.get_auto_G0() +", w = "
+        text += self.get_auto_W() + ", gInf = " + self.get_auto_Ginf()
+        text += "],"
+        if self.get_auto_deltas_checkbox() == False:
+            text += " do not"
+        text += " consider deltas, S.R. "
+        res = str(self.get_sample_resolution())
+        text += res + " x " + res + "."
+        self.message(text)
+
+    # Construct message to show user when cross-correlation is selected
+    def msgCross(self):
+        channels = ""
+        if self.get_red_green_checkbox():
+            if self.get_red_blue_checkbox():
+                if self.get_green_blue_checkbox():
+                    channels = "RG, RB, and GB channel pairs"
+                else:
+                    channels = "RG and RB channel pairs"
+            else:
+                if self.get_green_blue_checkbox():
+                    channels = "RG and GB channel pairs"
+                else:
+                    channels = "RG channel pair"
+        else:
+            if self.get_red_blue_checkbox():
+                if self.get_green_blue_checkbox():
+                    channels = "RB and GB channel pairs"
+                else:
+                    channels = "RB channel pair"
+            else:
+                channels = "GB channel pair"
+                
+        text = "Starting cross-correlation using " + channels
+        text += " and parameters\n[Range = "
+        text += self.get_cross_range() + ", g(0) = "
+        text += self.get_cross_G0() + ", w = "
+        text += self.get_cross_W() + ", gInf = "
+        text += self.get_cross_Ginf() + "],"
+        if self.get_cross_deltas_checkbox() == False:
+            text+= " do not"
+        text += " consider deltas, S.R. "
+        res = str(self.get_sample_resolution())
+        text += res + " x " + res + "."
+        self.message(text)
+
+    # Construct message to show user when triple-correlation is selected
+    def msgTriple(self):
+        res = str(self.get_sample_resolution())
+        text = "Starting triple correlation with sample resolution "
+        text += res + " x " + res + "."
+        # Do triple correlation
+        self.message(text)
+
+    # Constructive message to show user when all correlations are selected
+    def msgAll(self):
+        text = "Running all possible correlations using parameters ["
+        text += "Range = " + self.get_all_range() + ", g(0) = "
+        text += self.get_all_G0() + ", w = " + self.get_all_W()
+        text += ", gInf = " + self.get_all_Ginf() + "],"
+        if self.get_all_deltas_checkbox() == False:
+            text += " do not"
+            text += " consider deltas, using sample resolution "
+            res = str(self.get_sample_resolution())
+            text += res + " x " + res + "."
+        # Do all correlations
+        self.message(text)
+            
     #####################################################
     # Miscellaneous Functions                           #
     #####################################################
+
+    # Initialize the user interface
+    def initialize(self):
+        self.ui.imageRgb.setPixmap(QtGui.QPixmap("./rgb.png"))
+        self.ui.imageRed.setPixmap(QtGui.QPixmap("./r.png"))
+        self.ui.imageGreen.setPixmap(QtGui.QPixmap("./g.png"))
+        self.ui.imageBlue.setPixmap(QtGui.QPixmap("./b.png"))
+        print(self.ui.imageRgb.pixmap())
 
     # Construct an RGB Image from three separate channel images
     def constructRGB(self):
@@ -917,6 +975,15 @@ class StartQT4(QtGui.QMainWindow):
     def refresh_temp(self):
         self.remove_temp()
         self.create_temp()
+        if not os.path.isfile(self.rgbPath):
+            self.ui.imageRgb.clear()
+            self.rgbPath = ""
+        if not os.path.isfile(self.greenPath):
+            self.ui.imageGreen.clear()
+            self.greenPath = ""
+        if not os.path.isfile(self.bluePath):
+            self.ui.imageBlue.clear()
+            self.bluePath = ""
 
     # Creates the temporary directory if it does not exist.
     def create_temp(self):
@@ -945,6 +1012,10 @@ class StartQT4(QtGui.QMainWindow):
                 sum += pixel[x,y]
                 num += 1
         return sum / num
+
+    # Updates the progress bar
+    def progress(self, percent):
+        self.ui.progressBar.setValue(percent)
 
 def start():
     app = QtGui.QApplication(sys.argv)
