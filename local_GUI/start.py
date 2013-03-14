@@ -29,7 +29,7 @@ sys.path.append(ROOT_DIR)
 
 # Import backend modules
 import backend.bimloader as bimloader
-import backend.dual as dual
+#import backend.dual as dual
 
 class StartQT4(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -250,7 +250,7 @@ class StartQT4(QtGui.QMainWindow):
                 self.ui.imageRgb.clear()
                 self.rgbPath = ""
             if not os.path.isfile(self.redPath):
-                self.ui.redGreen.clear()
+                self.ui.imageGreen.clear()
                 self.greenPath = ""
             if not os.path.isfile(self.bluePath):
                 self.ui.imageBlue.clear()
@@ -583,9 +583,13 @@ class StartQT4(QtGui.QMainWindow):
                 res = str(self.get_sample_resolution())
                 text += res + " x " + res + "."
                 self.message(text)
+                print(self.get_auto_range())
+                print(self.get_auto_G0())
+                print(self.get_auto_W())
+                print(self.get_auto_Ginf())
                 # Do auto-correlation by calling the backend
-                if self.get_red_checkbox():
-                    result = dual.core(self.redChannel, None, self.get_auto_range(), [self.get_auto_G0(), self.get_auto_W(), self.get_auto_Ginf(), 0, 0], self.get_auto_deltas_checkbox())
+                #if self.get_red_checkbox():
+                #    result = dual.core(self.redChannel, None, self.get_auto_range(), [self.get_auto_G0(), self.get_auto_W(), self.get_auto_Ginf(), 0, 0], self.get_auto_deltas_checkbox())
 
             elif mode == "cross":
                 channels = ""
