@@ -46,7 +46,7 @@ def run_dual(job, params):
             a = pickle.loads(job.green)
             b = pickle.loads(job.blue)
 
-    initial_val = np.array([1,10,0,0,0], dtype=np.float64)
+    initial_val = np.array([params.g0, params.w, params.ginf, 0, 0], dtype=np.float64)
     (out, par, used_deltas) = dual.core(a, b, params.range_val, initial_val, params.use_deltas)
     fit = butils.gauss_2d_deltas(np.arange(params.range_val**2), *par).reshape(params.range_val, params.range_val)
     res_norm = np.sum((out-fit)**2)
@@ -62,9 +62,8 @@ def run_triple(job, params):
     (avg_g, sg) = triple.core_0(g)
     (avg_b, sb) = triple.core_0(b)
     avg_rgb = avg_r*avg_g*avg_b
-    limit = 32
-    part_rgb = triple.core_1(sr, sg, sb, avg_rgb, limit)
-    initial_val = np.array([50,2,0], dtype=np.float64)
+    part_rgb = triple.core_1(sr, sg, sb, avg_rgb, params.limit)
+    initial_val = np.array([params.g0, params.w, params.ginf], dtype=np.float64)
     (out, par) = triple.core_2(part_rgb, params.range_val, initial_val)
     fit = butils.guass_1d(np.arange(params.range_val), *par)
     par[1] = int(par[1]*(side/params.limit)*10)/10
