@@ -29,7 +29,7 @@ sys.path.append(ROOT_DIR)
 
 # Import backend modules
 import backend.bimloader as bimloader
-#import backend.dual as dual
+import backend.dual as dual
 
 class StartQT4(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -224,8 +224,6 @@ class StartQT4(QtGui.QMainWindow):
         try:
             self.greenChannel = bimloader.load_image_split(str(self.greenPath))
 
-            
-
         except bimloader.ImageFormatException:
             validImage = False
             self.msgBadFormat()
@@ -292,9 +290,6 @@ class StartQT4(QtGui.QMainWindow):
         # Call the backend to load the image as an array
         try:
             self.blueChannel = bimloader.load_image_split(str(self.bluePath))
-
-           
-
         except bimloader.ImageFormatException:
             validImage = False
             self.msgBadFormat()
@@ -583,13 +578,14 @@ class StartQT4(QtGui.QMainWindow):
                 res = str(self.get_sample_resolution())
                 text += res + " x " + res + "."
                 self.message(text)
-                print(self.get_auto_range())
-                print(self.get_auto_G0())
-                print(self.get_auto_W())
-                print(self.get_auto_Ginf())
                 # Do auto-correlation by calling the backend
-                #if self.get_red_checkbox():
-                #    result = dual.core(self.redChannel, None, self.get_auto_range(), [self.get_auto_G0(), self.get_auto_W(), self.get_auto_Ginf(), 0, 0], self.get_auto_deltas_checkbox())
+                if self.get_red_checkbox():
+                    result = self.correlate(self.redChannel)
+                if self.get_green_checkbox():
+                    result = self.correlate(self.greenChannel)
+                if self.get_blue_checkbox():
+                    result = self.correlate(self.blueChannel)
+                   
 
             elif mode == "cross":
                 channels = ""
@@ -654,7 +650,7 @@ class StartQT4(QtGui.QMainWindow):
         self.message("Stopping correlation.")
 
     ######################################################
-    # Functions to get the current state of the program  #
+    # Interface Input Functions                          #
     ######################################################
 
     # Returns 'input' or 'output' depending on current tab
@@ -840,6 +836,49 @@ class StartQT4(QtGui.QMainWindow):
             return -1
 
     #####################################################
+    # Correlation Functions                             #
+    #####################################################
+    
+    # Perform an autocorrelation by calling the backend on a given image array
+    def correlate(self, array1, array2 = None, array3 = None):
+        # auto-correlation
+        if array2 == None:  
+            range = float(self.get_auto_range())
+            g0 = float(self.get_auto_G0())
+            w = float(self.get_auto_W())
+            gInf = float(self.get_auto_Ginf())
+            deltas = bool(self.get_auto_deltas_checkbox())
+            return dual.core(array1, None, range, [g0, w, gInf, 0, 0], deltas)
+        # cross-correlation
+        elif array3 == None:
+            range = float(self.get_cross_range())
+            g0 = float(self.get_cross_G0())
+            w = float(self.get_cross_W())
+            gInf = float(self.get_cross_Ginf())
+            deltas = bool(self.get_cross_deltas_checkbox())
+            return dual.core(array1, array2, range, [g0, w, gInf, 0, 0], deltas)
+        # triple-correlation
+        else:
+            #TODO: write code here
+            return None
+        
+    #####################################################
+    # Message Box Functions                             #
+    #####################################################
+    
+    # Message Box functionality
+    def message(self, text):
+        self.ui.messageBox.setText(str(text))
+
+    # Informs the user that they have selected an invalid file format
+    def msgBadFormat(self):
+        self.message("Invalid file format. Please use a different type of file.")
+
+    # Informs the user that they have selected a non-monochrome image
+    def msgBadChannels(self):
+        self.message("Image has too many channels. Please use a monochrome image.")
+
+    #####################################################
     # Miscellaneous Functions                           #
     #####################################################
 
@@ -857,10 +896,14 @@ class StartQT4(QtGui.QMainWindow):
             # Code from http://stackoverflow.com/questions/10443295/
             #   combine-3-separate-numpy-arrays-to-an-rgb-image-in-python
             rgbArray = numpy.zeros((self.size, self.size, 3), 'uint8')
-            rgbArray[..., 0] = self.redChannel * 256
-            rgbArray[..., 1] = self.greenChannel * 256
-            rgbArray[..., 2] = self.blueChannel * 256
-            rgbImage = Image.fromarray(rgbArray)
+            try:
+                rgbArray[..., 0] = self.redChannel * 256
+                rgbArray[..., 1] = self.greenChannel * 256
+                rgbArray[..., 2] = self.blueChannel * 256
+                rgbImage = Image.fromarray(rgbArray)
+            except ValueError:
+                self.message("Warning: There was a problem creating the image array.")
+                self.stop()
 
             # Save the image to a file in the temporary directory
             self.rgbPath = self.temp_dir + "/rgb.png"
@@ -870,10 +913,6 @@ class StartQT4(QtGui.QMainWindow):
             # Load the image into the interface
             self.ui.imageRgb.setPixmap(QtGui.QPixmap(self.rgbPath))
             
-    # Message Box functionality
-    def message(self, text):
-        self.ui.messageBox.setText(str(text))
-
     # Refreshes the temporary directory by deleting and recreating it
     def refresh_temp(self):
         self.remove_temp()
@@ -894,14 +933,6 @@ class StartQT4(QtGui.QMainWindow):
         self.size = size
         sizeStr = str(size) + " x " + str(size)
         self.ui.imageSizeText.setText(sizeStr)
-
-    # Informs the user that they have selected an invalid file format
-    def msgBadFormat(self):
-        self.message("Invalid file format. Please use a different type of file.")
-
-    # Informs the user that they have selected a non-monochrome image
-    def msgBadChannels(self):
-        self.message("Image has too many channels. Please use a monochrome image.")
 
     # Calculates the average intensity per pixel given an image
     def aipp(self, path, dim):
