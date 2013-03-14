@@ -23,6 +23,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import pickle
 import image_reader
+import os
 
 
 def generate_file_path(instance, filename):
@@ -115,7 +116,29 @@ class Parameters(models.Model):
 class Results(models.Model):
     par = models.TextField()
     out = models.TextField()
+    fit = models.TextField()
+    fit_before_reshape = models.TextField()
     res_norm = models.TextField()
     used_deltas = models.TextField()
     params = models.ForeignKey(Parameters)
     job = models.ForeignKey(Job)
+
+
+def get_image_path(instance, filename):
+    return os.path.join('img', str(instance.category), filename)
+
+class DisplayImage(models.Model):
+    red = models.ImageField(upload_to=get_image_path)
+    green = models.ImageField(upload_to=get_image_path)
+    blue =  models.ImageField(upload_to=get_image_path)
+    mixed = models.ImageField(upload_to=get_image_path)
+
+    def save(self, *args, **kwargs):
+        if mixed == NONE:
+           red = NONE
+           green = NONE
+           blue = NONE
+        else:
+           mixed = NONE
+
+        super(Image, self).save(*args, **kwargs)

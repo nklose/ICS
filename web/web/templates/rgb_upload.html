@@ -1,32 +1,39 @@
+{% extends "generic.html" %}
+{% block script %}{{ block.super}}{% endblock script %}
+{% block content-main %}
 {% block rgbimg-settings  %}
-<h3>Settings for RGB</h3>
+<h3>Image Upload</h3>
 <div class="rgbimg-background">
+<div class="alert alert-info" id="userNotice"><strong>Note: </strong>Choose either to upload a single RGB image file or three files for each image channel</div>
  <ul class="nav nav-tabs">
    <li><a href="#singleRGB" data-toggle="tab">Single RGB Image</a></li>
    <li><a href="#threeRGB" data-toggle="tab">Three Channel Images</a></li>
  </ul>
  <div class="tab-content">
-   <div class="tab-pane active" id="singleRGB">
-   <p>Single Channel<p>
-      <a href="#myModal" role="button" class="btn" data-toggle="modal">Select Single Channel Image</a>
+   <div class="tab-pane active" id="singleRGB"><p>Single Channel<p>
+      <a href="#singleUploadModal" role="button" class="btn" data-toggle="modal">Upload a Single RGB Image</a>
    </div>
    <div class="tab-pane" id="threeRGB"><p>Three Channel RGB Image</p>
-   <a href="#myModal" role="button" class="btn" data-toggle="modal">Select Triple Channel Image</a>
+      <a href="#multiupload" role="button" class="btn" data-toggle="modal">Upload Three Channels</a>
  </div>
 </div>
 
 <!-- Modal -->
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="singleUploadModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Modal header</h3>
+    <h3 id="myModalLabel">Select an Image to Upload</h3>
+    <small>(.bmp .png .tif)</small>
   </div>
   <div class="modal-body">
-    <p>Select Image(s) From Directory Below:</p>
+    <form action="" method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>{% csrf_token %}
+{{ form.as_p }}
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-    <button class="btn btn-primary">Save changes</button>
+    <input class="btn btn-primary" type="submit" value="Upload"/>
+  </form>
   </div>
 </div>
 {% endblock %}
+{% endblock content-main %}

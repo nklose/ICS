@@ -20,6 +20,7 @@ the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
 from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponseServerError, HttpResponseForbidden, Http404, HttpResponse
 from icsform import RgbSettingsForm;
 import scipy.misc
 import icsform
@@ -44,7 +45,7 @@ def program(request):
           return HttpResponseRedirect('/proccess/') # redirect after post
     else:
         form = RgbSettingsForm()
-    temp = {"sec_title": "Program View Page", "copyrightdate": 2013, "form": form}
+    temp = {"sec_title": "Image Correlation Spectroscopy Program", "copyrightdate": 2013, "form": form}
     return render(request, 'icslayout.html', temp)
 
 
@@ -59,10 +60,7 @@ def home(request):
         - sec_ title: The title of the section
         - copyrightdate: The year of copyright.
     """
-    myForm = icsform.ImgCorrelateForm(request.POST, request.FILES)
-
-    temp = {"sec_title": "Welcome to the Homepage", "copyrightdate": 2013,
-            "form": myForm}
+    temp = {"sec_title": "Welcome to the Homepage", "copyrightdate": 2013,}
     return render(request, 'homepage.html', temp)
 
 
@@ -79,8 +77,42 @@ def sample_upload(request):
             image = None
     else:
         form = icsform.SampleImageForm()  # An unbound form
-        image = None
+        sciImg = None
 
     temp = {"sec_title": "upload", "copyrightdate": 2013,
             "form": form, "imgtype": str(sciImg)}
     return render(request, 'upload.html', temp)
+
+def rgb_upload(request):
+    if request.method == 'POST':  # If the form has been submitted...
+        form = icsform.SampleImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            # All validation rules pass
+            # Process the data in form.cleaned_data
+            image = form.cleaned_data['img']
+            # Change to scipy image:
+            sciImg = scipy.misc.fromimage(image)
+            return HttpResponseRedirect('/program/')
+        else:
+            image = None
+    else:
+        form = icsform.SampleImageForm()  # An unbound form
+        sciImg = None
+
+    temp = {"sec_title": "Image Upload", "copyrightdate": 2013,
+            "form": form, "imgtype": str(sciImg)}
+    return render(request, 'rgb_upload.html', temp)
+
+def results(request):
+    """ Renders a home  view.
+         Template: /web/web/templates/results.html
+
+         Request parameters (ie, parameters in the request object):
+         - None
+
+         Context parameters (ie, keys in the dictionary passed to the template):
+        - sec_ title: The title of the section
+        - copyrightdate: The year of copyright.
+    """
+    temp = {"sec_title": "Results", "copyrightdate": 2013,}
+    return render(request, 'results.html', temp)

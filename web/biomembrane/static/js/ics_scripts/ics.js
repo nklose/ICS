@@ -3,9 +3,12 @@
     $( "#sortable-img" ).disableSelection();
    });
 
+  var selected = null;
   $('a[data-toggle="tab"]').on('shown', function (e) {
-   e.target // activated tab
+   selected = e.target // activated tab
    e.relatedTarget // previous tab
+   $("#id_userSelected").val(selected.id);
+   $("#userNotice").val(selected.id).html(showSelected(selected.id) +" is Selected");
   });
 
   $('#start').button();
@@ -16,18 +19,26 @@
     // $(this).button('reset');
   });
 
-$(function() {
-    var select = $( "#id_resolutions" );
-    var slider = $( "<div id='slider'></div>" ).insertAfter( select ).slider({
-      min: 1,
-      max: 3,
-      range: "min",
-      value: select[ 0 ].selectedIndex + 1,
-      slide: function( event, ui ) {
-        select[ 0 ].selectedIndex = ui.value - 1;
-      }
-    });
-    $( "#id_resolutions" ).change(function() {
-      slider.slider( "value", this.selectedIndex + 1 );
-    });
-  });
+  function showSelected(value)
+  {
+    if (value == "id_auto")
+    {
+      return "<strong>Note</strong>: Auto Correlation";
+    }
+    else if (value == 'id_cross')
+    {
+      return "<strong>Note</strong>: Cross Correlation";
+    }
+    else if (value == 'id_triplecross')
+    {
+      return "<strong>Note</strong>: Triple Correlation";
+    }
+    else if (value == 'id_all')
+    {
+      return "<strong>Note</strong>: All Correlations";
+    }
+    else
+    {
+      return "<strong>Note</strong>: Please Select a Correlation Type";
+    }
+  }
