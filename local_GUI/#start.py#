@@ -37,13 +37,13 @@ class StartQT4(QtGui.QMainWindow):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
 
-        # Interface variables
+        # File path variables
         self.redPath = ""
         self.greenPath = ""
         self.bluePath = ""
         self.rgbPath = ""
 
-        # Image arrays
+        # Image numpy arrays
         self.redChannel = ""
         self.greenChannel = ""
         self.blueChannel = ""
