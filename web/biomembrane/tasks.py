@@ -18,10 +18,12 @@ framework for, or take part in the development of, anything that falls within
 the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
+
 from celery import task
 from models import Job, Parameters, Results
-from ics import dual, triple
-from ics import backend_utils as butils
+from backend import dual
+from backend import triple
+from backend import backend_utils as butils
 import numpy as np
 import pickle
 
