@@ -123,13 +123,6 @@ class StartQT4(QtGui.QMainWindow):
             self.redChannel = images[0]
             self.greenChannel = images[1]
             self.blueChannel = images[2]
-            
-            print("RED")
-            print(self.redChannel)
-            print("GREEN")
-            print(self.greenChannel)
-            print("BLUE")
-            print(self.blueChannel)
 
             # Save the image dimension
             self.update_size(self.redChannel.shape[1])
@@ -344,6 +337,10 @@ class StartQT4(QtGui.QMainWindow):
 
         # Continue if input is valid
         if validInput:
+
+            # Remove values and images from output tab, if necessary
+            self.clear_output_tab()
+
             # Update progress bar
             self.progress(5)
 
@@ -356,19 +353,13 @@ class StartQT4(QtGui.QMainWindow):
                 # Do auto-correlation by calling the backend
                 if self.get_red_checkbox():
                     result = self.correlate(self.redChannel)
-                    path = self.temp_dir + "/AC_R.png"
-                    scipy.misc.imsave(path, result[0])
                     self.progress(33)
                 if self.get_green_checkbox():
                     result = self.correlate(self.greenChannel)
-                    path = self.temp_dir + "/AC_G.png"
-                    scipy.misc.imsave(path, result[0])
                     self.progress(66)
                 if self.get_blue_checkbox():
                     result = self.correlate(self.blueChannel)
                     path = self.temp_dir + "/AC_B.png"
-                    scipy.misc.imsave(path, result[0])
-                    self.progress(99)
                 
             elif mode == "cross":
                 # Construct string containing channels to be used
@@ -377,18 +368,12 @@ class StartQT4(QtGui.QMainWindow):
                 # Do cross-correlation by calling the backend
                 if self.get_red_green_checkbox():
                     result = self.correlate(self.redChannel, self.greenChannel)
-                    path = self.temp_dir + "/XC_RG.png"
-                    scipy.misc.imsave(path, result[0])
                     self.progress(33)
                 if self.get_red_blue_checkbox():
                     result = self.correlate(self.redChannel, self.blueChannel)
-                    path = self.temp_dir + "/XC_RB.png"
-                    scipy.misc.imsave(path, result[0])
                     self.progress(66)
                 if self.get_green_blue_checkbox():
                     result = self.correlate(self.greenChannel, self.blueChannel)
-                    path = self.temp_dir + "/XC_GB.png"
-                    scipy.misc.imsave(path, result[0])
                     self.progress(99)
 
             elif mode == "triple":
@@ -401,7 +386,18 @@ class StartQT4(QtGui.QMainWindow):
             elif mode == "all":
                 # Construct string containing channels to be used
                 self.msgAll()
-                self.correlate_all(self.redChannel, self.greenChannel, self.blueChannel)
+                red = self.redChannel
+                green = self.greenChannel
+                blue = self.blueChannel
+                result = self.correlate_all(red, green, blue)
+                redAuto = result[0]
+                greenAuto = result[1]
+                blueAuto = result[2]
+                redGreenCross = result[3]
+                redBlueCross = result[4]
+                greenBlueCross = result[5]
+                triple = result[6]
+
             else:
                 self.message("Mode error.")
             self.progress(100)
@@ -1031,6 +1027,42 @@ class StartQT4(QtGui.QMainWindow):
             self.ui.imageBlue.clear()
             self.bluePath = ""
 
+    # Clears any images and parameters in the output tab from previous correlation.
+    def clear_output_tab(self):
+        # Clear autocorrelation images
+        self.ui.imageAutoRed.clear()
+        self.ui.imageAutoGreen.clear()
+        self.ui.imageAutoBlue.clear()
+
+        # Clear autocorrelation parameters
+        self.ui.autoResNormValue.clear()
+        self.ui.autoG0Value.clear()
+        self.ui.autoWValue.clear()
+        self.ui.autoGinfValue.clear()
+
+        # Clear cross-correlation images
+        self.ui.imageCrossRG.clear()
+        self.ui.imageCrossRB.clear()
+        self.ui.imageCrossGB.clear()
+    
+        # Clear cross-correlation parameters
+        self.ui.crossResNormValue.clear()
+        self.ui.crossG0Value.clear()
+        self.ui.crossWValue.clear()
+        self.ui.crossGinfValue.clear()
+
+        # Clear triple correlation images
+        self.ui.imageTripleFourier.clear()
+        self.ui.imageTripleCorrelation.clear()
+        self.ui.imageTripleFittingCurve.clear()
+
+        # Clear triple correlation parameters
+        self.ui.tripleResNormValue.clear()
+        self.ui.tripleRangeTextbox.clear()
+        self.ui.tripleWTextbox.clear()
+        self.ui.tripleG0Textbox.clear()
+        self.ui.tripleGinfTextbox.clear()
+        
 def start():
     app = QtGui.QApplication(sys.argv)
     myapp = StartQT4()
