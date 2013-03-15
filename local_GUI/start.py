@@ -372,7 +372,7 @@ class StartQT4(QtGui.QMainWindow):
                 if self.get_blue_checkbox():
                     result = self.correlate(self.blueChannel)
                     self.update_auto(result)
-                    self.progress(99)
+                    self.progress(100)
 
                 # Change to auto section of output tab
                 self.select_tab("output", "auto")
@@ -393,7 +393,7 @@ class StartQT4(QtGui.QMainWindow):
                 if self.get_green_blue_checkbox():
                     result = self.correlate(self.greenChannel, self.blueChannel)
                     self.update_cross(result)
-                    self.progress(99)
+                    self.progress(100)
 
                 # Change to cross section of output tab
                 self.select_tab("output", "cross")
@@ -404,6 +404,7 @@ class StartQT4(QtGui.QMainWindow):
 
                 # Change to triple section of output tab
                 self.select_tab("output", "triple")
+                self.progress(5)
 
                 # Show Fourier transform (red) surface plot
                 self.show_fourier()
@@ -423,14 +424,10 @@ class StartQT4(QtGui.QMainWindow):
                 redGreenCross = result[3]
                 redBlueCross = result[4]
                 greenBlueCross = result[5]
-                triple = result[6]
-
-                # Change to auto section of output tab
-                self.select_tab("output", "auto")
-
+                self.select_tab("output", "triple")
+                self.show_fourier()
             else:
                 self.message("Mode error.")
-            self.progress(100)
 
     # Stop button functionality
     def stop(self):
@@ -597,23 +594,23 @@ class StartQT4(QtGui.QMainWindow):
         return str(self.ui.allAutoCrossGinfTextbox.text())
 
     # Returns inputted limit for TC (Output Tab)
-    def get_TC_limit(self):
+    def get_triple_limit(self):
         return str(self.ui.startingPointInput.text())
 
     # Returns inputted range for TC (Output Tab)
-    def get_TC_range(self):
+    def get_triple_range(self):
         return str(self.ui.tripleRangeTextbox.text())
 
     # Returns inputted G(0) for TC (Output Tab)
-    def get_TC_G0(self):
+    def get_triple_G0(self):
         return str(self.ui.tripleG0Textbox.text())
 
     # Returns inputted W for TC (Output Tab)
-    def get_TC_W(self):
+    def get_triple_W(self):
         return str(self.ui.tripleWTextbox.text())
 
     # Returns inputted G(Inf) for TC (Output Tab)
-    def get_TC_Ginf(self):
+    def get_triple_Ginf(self):
         return str(self.ui.tripleGinfTextbox.text())
 
     ## Radio buttons
@@ -905,10 +902,6 @@ class StartQT4(QtGui.QMainWindow):
             gInf = float(self.get_cross_Ginf())
             deltas = bool(self.get_cross_deltas_checkbox())
             return dual.core(array1, array2, range, [g0, w, gInf, 0, 0], deltas)
-        # triple-correlation
-        else:
-            #TODO: write code here
-            return None
 
     # Perform all possible correlations
     def correlate_all(self, array1, array2, array3):
@@ -930,13 +923,13 @@ class StartQT4(QtGui.QMainWindow):
         self.progress(60)
         cross3 = dual.core(array2, array3, range, [g0, w, gInf, 0, 0], deltas)
         self.progress(72)
-        triple = None #TODO: write code here
         self.progress(84)
-        return (auto1, auto2, auto3, cross1, cross2, cross3, triple)
+        return (auto1, auto2, auto3, cross1, cross2, cross3)
 
     # Show Fourier transform (red) surface plot
     def show_fourier(self):
         print("hello")
+
 
     # Begin triple correlation process
     def triple_process(self):
@@ -947,19 +940,36 @@ class StartQT4(QtGui.QMainWindow):
 
     # Finish off triple correlation process
     def triple_complete(self):
-        range = float(self.get_triple_range())
-        g0 = float(self.get_triple_G0())
-        w = float(self.get_triple_W())
-        gInf = float(self.get_triple_Ginf())
-        deltas = self.get_triple_deltas_checkbox()
+        self.progress(10)
+        range = 0.0
+        g0 = 0.0
+        w = 0.0
+        gInf = 0.0
+        deltas = False
+        if self.get_triple_range() != "":
+            range = float(self.get_triple_range())
+            g0 = float(self.get_triple_G0())
+            w = float(self.get_triple_W())
+            gInf = float(self.get_triple_Ginf())
+            deltas = self.get_triple_deltas_checkbox()
+        else:
+            range = float(self.get_all_range())
+            g0 = float(self.get_all_G0())
+            w = float(self.get_all_W())
+            gInf = float(self.get_all_Ginf())
+            deltas = self.get_all_deltas_checkbox()
 
+        self.progress(25)
         # Do triple correlation
 
+        self.progress(75)
         # Show fitting curve
 
+        self.progress(95)
         # Show res. norm. and whether deltas were used
         
-        
+        self.progress(100)
+
     #####################################################
     # Message Box Functions                             #
     #####################################################
