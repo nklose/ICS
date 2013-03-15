@@ -21,8 +21,6 @@ signing of this agreement.
 """
 from django.db import models
 from django.contrib.auth.models import User
-import pickle
-import image_reader
 import os
 
 
@@ -75,36 +73,12 @@ class Job(models.Model):
         return unicode(self.number)
 
 
-class Image(models.Model):
-    RED, GREEN, BLUE, RGB = u'r', u'g', u'b', u'rgb'
-    IMAGE_TYPES = (
-        (RED, u'Red'),
-        (GREEN, u'Green'),
-        (BLUE, u'Blue'),
-        (RGB, u'Red/Green/Blue')
-    )
-
-    data = models.ImageField(upload_to=generate_file_path)
-    image_type = models.CharField(max_length=3, choices=IMAGE_TYPES)
+class Images(models.Model):
+    red = models.ImageField(upload_to=generate_file_path)
+    green = models.ImageField(upload_to=generate_file_path)
+    blue = models.ImageField(upload_to=generate_file_path)
+    rgb = models.ImageField(upload_to=generate_file_path)
     job = models.ForeignKey(Job)
-
-    def save(self, *args, **kwargs):
-        super(Image, self).save(*args, **kwargs)
-        if self.image_type == self.RED:
-            self.job.red = pickle.dumps(image_reader.get_channel(self.data.name))
-        elif self.image_type == self.GREEN:
-            self.job.green = pickle.dumps(image_reader.get_channel(self.data.name))
-        elif self.image_type == self.BLUE:
-            self.job.blue = pickle.dumps(image_reader.get_channel(self.data.name))
-        else:
-            r, g, b = image_reader.get_channels(self.data.name)
-            self.job.red = pickle.dumps(r)
-            self.job.green = pickle.dumps(g)
-            self.job.blue = pickle.dumps(b)
-        self.job.save()
-
-    def __unicode__(self):
-        return self.image_type
 
 
 class Parameters(models.Model):
@@ -140,13 +114,3 @@ class Results(models.Model):
     used_deltas = models.TextField()
     params = models.ForeignKey(Parameters)
     job = models.ForeignKey(Job)
-
-
-def get_image_path(instance, filename):
-    return os.path.join('img', str(instance.category), filename)
-
-class DisplayImage(models.Model):
-    red = models.ImageField(upload_to=get_image_path, null=True)
-    green = models.ImageField(upload_to=get_image_path, null=True)
-    blue =  models.ImageField(upload_to=get_image_path, null=True)
-    mixed = models.ImageField(upload_to=get_image_path, null=True)

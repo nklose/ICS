@@ -29,36 +29,8 @@ import PIL.Image
 import scipy.misc
 import numpy as np
 
-def open_image(filepath):
-    """ Opens the given image if loseless and send the data to scipy.
 
-    Arguments:
-        filepath: The path to the file to open
-        filepath type: string
-
-    Return Value:
-        The image opened in scipy.
-    """
-    image = PIL.Image.open(filepath)
-    return scipy.misc.fromimage(image)
-
-
-def get_channel(path, astype="d"):
-    """ Return the channel from a single image
-
-    Arguments:
-        path: Path to the image
-        path type: string
-        astype: The type to open the image as
-        astype type: string or Type
-
-    Return Value:
-        Image channel.
-    """
-    return open_image(path).astype(astype)
-
-
-def get_channels(filepath, astype="d"):
+def get_channels(image, astype="d"):
     """ Returns the RGB channels for a single image.
 
     Arguments:
@@ -70,7 +42,6 @@ def get_channels(filepath, astype="d"):
     Return Value:
         Tuple of RGB channels.
     """
-    image = open_image(filepath)
     r = image[:, :, 0].astype(astype)
     g = image[:, :, 1].astype(astype)
     b = image[:, :, 2].astype(astype)
