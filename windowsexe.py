@@ -17,16 +17,18 @@ import sys
 import numpy
 import scipy
 
+IMAGE_FOLDER = "Images"
+
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 LOCAL_GUI_PATH = os.path.join(ROOT_PATH, "local_GUI")
-IMAGES_PATH = os.path.join(ROOT_PATH, "Images")
+IMAGE_PATH = os.path.join(ROOT_PATH, IMAGE_FOLDER)
 MAIN_FILE = os.path.join(ROOT_PATH, "local_start.py")
 EXE_FILE = "ICS"
 ICON_FILE = os.path.join(ROOT_PATH, "icon.ico")
-LOCAL_IMAGES = [os.path.join(IMAGES_PATH, "r.png"),
-                os.path.join(IMAGES_PATH, "g.png"),
-                os.path.join(IMAGES_PATH, "b.png"),
-                os.path.join(IMAGES_PATH, "rgb.png")]
+LOCAL_IMAGES = [os.path.join(IMAGE_PATH, "r.png"),
+                os.path.join(IMAGE_PATH, "g.png"),
+                os.path.join(IMAGE_PATH, "b.png"),
+                os.path.join(IMAGE_PATH, "rgb.png")]
 
 AUTHOR = "CMPUT 401 - Biomembranes Team"
 VERSION = "1.0"
@@ -38,7 +40,8 @@ INCLUDES = ["sip"]
 EXCLUDES = []
 DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll"]
 
-DATA_FILES = [(IMAGES_PATH, LOCAL_IMAGES)]
+DATA_FILES = [(IMAGE_FOLDER, LOCAL_IMAGES)]
+
 OPTIONS = {
     'py2exe': {
         "dist_dir": "bin",

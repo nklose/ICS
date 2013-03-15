@@ -8,9 +8,11 @@ echo "Creating package"
 cxfreeze local_start.py --target-dir=$TARGET_DIR --target-name=$TARGET_NAME \
     --include-modules=$INCLUDE_MODULES
 
+mkdir $TARGET_DIR/Images
+
 echo "Copying images"
-for x in local_GUI/r.png local_GUI/g.png local_GUI/b.png local_GUI/rgb.png
+for x in Images/r.png Images/g.png Images/b.png Images/rgb.png
 do
-    cp $x $TARGET_DIR/
+    cp $x $TARGET_DIR/Images/
 done
 echo "Done creating package"
