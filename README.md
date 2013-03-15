@@ -57,6 +57,25 @@ A few items are required:
 
 Compliing Linux Executables
 ===========================
-1. Install cx-freeze: sudo apt-get install cx-freeze
-2. Run the makefile
-3. Distribute bin
+1. Install cx-freeze:
+
+    sudo apt-get install cx-freeze
+
+2. edit `/usr/lib/pymodules/python2.7/cx_Freeze/finder.py`, on line 232 change
+
+    path = parentModule.path
+
+to
+
+    path = parentModule.path or parentModule.file
+
+3. Find the mpl-data directory (for me was in `/usr/share/matplotlib/mpl-data`)
+4. Make a link to it in `/usr/lib/pymodules/python2.7/matplotlib/mpl-data`
+
+    sudo ln -s /usr/share/matplotlib/mpl-data /usr/lib/pymodules/python2.7/matplotlib/mpl-data
+
+5. Fix the broken font links, if any, in mpl-data/fonts/ttf (in my case,
+   `cmex10.ttf`, `cmmi10.ttf`, `cmr10.ttf`, and `cmsy10.ttf` were broken, had to
+    point them to my LyX installation)
+6. Run the makefile
+7. Distribute bin

@@ -72,23 +72,48 @@ def gauss_2d_deltas(x,g0,w,ginf,dx,dy):
 
 def load_library():
     """Loads the C library used to speed up the program
-    
+
     There are no arguments
-    
+
     Return values:
         lib: the library that was loaded
     """
     lib_dir = os.path.dirname(os.path.realpath(__file__))
     if (os.name != 'nt'):
-        lib_path = os.path.join(lib_dir,'libbackend.so')
+        lib_path = os.path.join(lib_dir, 'libbackend.so')
     else:
-        lib_path = os.path.join(lib_dir,'libbackend.dll')
+        lib_path = os.path.join(lib_dir, 'libbackend.dll')
+    lib_path = verify_path(lib_path)
     lib = ctypes.cdll.LoadLibrary(lib_path)
+
     lib.core.argtypes = [c_void_p,c_void_p,c_void_p,c_void_p,c_int,c_int]
     lib.init.argtypes = [c_int,c_void_p]
     lib.execute.argtypes = []
     lib.destroy.argtypes = []
     return lib
+
+
+def verify_path(path):
+    """ I have to explain myself here for this hack.
+
+        When cx_freeze compiles, it creates a huge ZIP file containing a bunch
+        of things. However, libbackend.so does not go in there. Even if I force
+        it to, the loader cannot load a so file inside the zip.  So
+        BUILD_CONSTANTS is created during the build. Inside I have a variable,
+        currently called HACKITY_HACK_HACK.  If this value exists, then I use it
+        and set the lib_path correctly further on. If it doesn't exist, I do
+        not.
+    """
+    try:
+        root_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+        if root_dir not in sys.path:
+            sys.path.append(root_dir)
+        from BUILD_CONSTANTS import HACKITY_HACK_HACK
+    except ImportError:
+        return path
+    if HACKITY_HACK_HACK:
+        return "backend.libbackend.so"
+    return path
 
 # a handle to the C library
 backend_lib = load_library()

@@ -96,7 +96,7 @@ ifeq ($(DLL_64), 1)
 	@cp $(VENDOR)/libiomp5md.dll_64 $(BIN)/libiomp5md.dll
 else
 	@# Linux specific stuff here
-	@./linuxexe.sh
+	@python linuxexe.py build
 endif
 endif
 	@# OS Independant stuff here
