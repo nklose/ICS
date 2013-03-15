@@ -27,7 +27,7 @@ signing of this agreement.
 """
 import PIL.Image
 import scipy.misc
-import numpy
+import numpy as np
 
 def open_image(filepath):
     """ Opens the given image if loseless and send the data to scipy.
@@ -78,11 +78,13 @@ def get_channels(filepath, astype="d"):
 
 
 def create_image(red, green, blue):
-    """ Create single image """
+    rgb = np.dstack((red, green, blue)) 
+    rgb_image = PIL.Image.fromarray(np.uint8(rgb))
+    return rgb_image
 
 
 def create_images(red, green, blue):
-    red_image = PIL.Image.fromarray(numpy.uint8(red))
-    green_image = PIL.Image.fromarray(numpy.uint8(green))
-    blue_image = PIL.Image.fromarray(numpy.uint8(blue))
+    red_image = PIL.Image.fromarray(np.uint8(red))
+    green_image = PIL.Image.fromarray(np.uint8(green))
+    blue_image = PIL.Image.fromarray(np.uint8(blue))
     return (red_image, green_image, blue_image)
