@@ -2186,36 +2186,6 @@
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
-      <widget class="QLineEdit" name="tripleGinfTextbox">
-       <property name="geometry">
-        <rect>
-         <x>870</x>
-         <y>50</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="tripleG0Textbox">
-       <property name="geometry">
-        <rect>
-         <x>870</x>
-         <y>10</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="tripleRangeTextbox">
-       <property name="geometry">
-        <rect>
-         <x>720</x>
-         <y>10</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
-       </property>
-      </widget>
       <widget class="QLabel" name="tripleRange">
        <property name="geometry">
         <rect>
@@ -2246,16 +2216,6 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="tripleWTextbox">
-       <property name="geometry">
-        <rect>
-         <x>720</x>
-         <y>50</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
        </property>
       </widget>
       <widget class="QLabel" name="imageTripleFourier">
@@ -2356,6 +2316,9 @@
         </property>
        </widget>
        <widget class="QRadioButton" name="resolution32">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>100</x>
@@ -2372,6 +2335,9 @@
         </property>
        </widget>
        <widget class="QRadioButton" name="resolution48">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>100</x>
@@ -2385,6 +2351,9 @@
         </property>
        </widget>
        <widget class="QRadioButton" name="resolution64">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>100</x>
@@ -2418,6 +2387,9 @@
        </property>
       </widget>
       <widget class="QPushButton" name="continueButton2">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>870</x>
@@ -2431,6 +2403,9 @@
        </property>
       </widget>
       <widget class="QPushButton" name="continueButton1">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>540</x>
@@ -2444,6 +2419,9 @@
        </property>
       </widget>
       <widget class="QCheckBox" name="tripleDeltasCheckbox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>680</x>
@@ -2454,6 +2432,58 @@
        </property>
        <property name="text">
         <string>Consider Deltas</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="tripleRangeTextbox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>720</x>
+         <y>10</y>
+         <width>81</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="tripleWTextbox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>720</x>
+         <y>50</y>
+         <width>81</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="tripleG0Textbox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>870</x>
+         <y>10</y>
+         <width>81</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="tripleGinfTextbox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>870</x>
+         <y>50</y>
+         <width>81</width>
+         <height>31</height>
+        </rect>
        </property>
       </widget>
      </widget>
