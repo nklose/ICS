@@ -25,8 +25,9 @@ framework for, or take part in the development of, anything that falls within
 the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
-import PIL
-import scipy
+import PIL.Image
+import scipy.misc
+import numpy
 
 def open_image(filepath):
     """ Opens the given image if loseless and send the data to scipy.
@@ -74,3 +75,14 @@ def get_channels(filepath, astype="d"):
     g = image[:, :, 1].astype(astype)
     b = image[:, :, 2].astype(astype)
     return (r, g, b)
+
+
+def create_image(red, green, blue):
+    """ Create single image """
+
+
+def create_images(red, green, blue):
+    red_image = PIL.Image.fromarray(numpy.uint8(red))
+    green_image = PIL.Image.fromarray(numpy.uint8(green))
+    blue_image = PIL.Image.fromarray(numpy.uint8(blue))
+    return (red_image, green_image, blue_image)

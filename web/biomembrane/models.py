@@ -102,7 +102,7 @@ class Parameters(models.Model):
     green = models.BooleanField()
     blue = models.BooleanField()
     range_val = models.FloatField()
-    g = models.FloatField()
+    g0 = models.FloatField()
     w = models.FloatField()
     ginf = models.FloatField()
     limit = models.FloatField()
@@ -128,17 +128,7 @@ def get_image_path(instance, filename):
     return os.path.join('img', str(instance.category), filename)
 
 class DisplayImage(models.Model):
-    red = models.ImageField(upload_to=get_image_path)
-    green = models.ImageField(upload_to=get_image_path)
-    blue =  models.ImageField(upload_to=get_image_path)
-    mixed = models.ImageField(upload_to=get_image_path)
-
-    def save(self, *args, **kwargs):
-        if mixed == NONE:
-           red = NONE
-           green = NONE
-           blue = NONE
-        else:
-           mixed = NONE
-
-        super(Image, self).save(*args, **kwargs)
+    red = models.ImageField(upload_to=get_image_path, null=True)
+    green = models.ImageField(upload_to=get_image_path, null=True)
+    blue =  models.ImageField(upload_to=get_image_path, null=True)
+    mixed = models.ImageField(upload_to=get_image_path, null=True)
