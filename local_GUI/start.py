@@ -338,6 +338,10 @@ class StartQT4(QtGui.QMainWindow):
 
     # Start button functionality
     def start(self):
+        # Disable start button and batch button and enable stop button
+        self.ui.startButton.setEnabled(False)
+        self.ui.stopButton.setEnabled(True)
+        self.ui.batchModeButton.setEnabled(False)
 
         # Find out which correlation to do
         mode = self.get_correlation_tab()
@@ -429,9 +433,23 @@ class StartQT4(QtGui.QMainWindow):
             else:
                 self.message("Mode error.")
 
+        # Disable stop button and re-enable start button and batch button
+        self.ui.startButton.setEnabled(True)
+        self.ui.batchModeButton.setEnabled(True)
+        self.ui.stopButton.setEnabled(False)
+
     # Stop button functionality
     def stop(self):
         self.message("Stopping correlation.")
+
+        # Reset progress bar
+        self.progress(0)
+
+        # Enable start button and batch mode button, and disable stop button
+        self.ui.startButton.setEnabled(True)
+        self.ui.stopButton.setEnabled(False)
+        self.ui.batchModeButton.setEnabled(True)
+        
 
     ######################################################
     # Interface Input Functions                          #
@@ -617,10 +635,10 @@ class StartQT4(QtGui.QMainWindow):
 
     # Returns sample resolution (32, 48, or 64)
     def get_sample_resolution(self):
-        if self.ui.resolution32.isChecked() != 0:
+        if self.ui.resolution16.isChecked() != 0:
+            return 16
+        elif self.ui.resolution32.isChecked() != 0:
             return 32
-        elif self.ui.resolution48.isChecked() != 0:
-            return 48
         elif self.ui.resolution64.isChecked() != 0:
             return 64
         else:
@@ -928,7 +946,13 @@ class StartQT4(QtGui.QMainWindow):
 
     # Show Fourier transform (red) surface plot
     def show_fourier(self):
-        print("hello")
+        # show plot
+
+        # enable sample resolution radio buttons and continue button 1
+        self.ui.resolution16.setEnabled(True)
+        self.ui.resolution32.setEnabled(True)
+        self.ui.resolution64.setEnabled(True)
+        self.ui.continueButton1.setEnabled(True)
 
 
     # Begin triple correlation process
@@ -936,10 +960,32 @@ class StartQT4(QtGui.QMainWindow):
         # Read sample resolution (limit)
         limit = self.get_sample_resolution()
 
+        # disable sample resolution radio buttons and continue button 1
+        self.ui.resolution16.setEnabled(False)
+        self.ui.resolution32.setEnabled(False)
+        self.ui.resolution64.setEnabled(False)
+        self.ui.continueButton1.setEnabled(False)
+
+        # Enable parameter inputs and continue button 2
+        self.ui.tripleRangeTextbox.setEnabled(True)
+        self.ui.tripleWTextbox.setEnabled(True)
+        self.ui.tripleG0Textbox.setEnabled(True)
+        self.ui.tripleGinfTextbox.setEnabled(True)
+        self.ui.tripleDeltasCheckbox.setEnabled(True)
+        self.ui.continueButton2.setEnabled(True)
+
         # Show triple-correlation surface plot
 
     # Finish off triple correlation process
     def triple_complete(self):
+        # disable parameter inputs and continue button 2
+        self.ui.tripleRangeTextbox.setEnabled(False)
+        self.ui.tripleWTextbox.setEnabled(False)
+        self.ui.tripleG0Textbox.setEnabled(False)
+        self.ui.tripleGinfTextbox.setEnabled(False)
+        self.ui.tripleDeltasCheckbox.setEnabled(False)
+        self.ui.continueButton2.setEnabled(False)
+
         self.progress(10)
         range = 0.0
         g0 = 0.0
