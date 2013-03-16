@@ -27,10 +27,28 @@ import os
 
 
 def generate_file_path(instance, filename):
-	""" Return something useful here """
+    # TODO: Depends on file extension
+    id = instance.job.batch.id
+    number = instance.job.number
+    image_type = instance.image_type
+    extension = filename.split('.')[-1]
+
+    if image_type == Image.RED:
+        new_filename = 'r.'
+    elif image_type == Image.GREEN:
+        new_filename = 'g.'
+    elif image_type == Image.BLUE:
+        new_filename = 'b.'
+    else:
+        new_filename = 'rgb.'
+
+    new_filename += extension
+    path = '/'.join([id, number, new_filename])
+    return path
 
 
 class Batch(models.Model):
+    id = models.AutoField(primary_key=True)
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User)
 
