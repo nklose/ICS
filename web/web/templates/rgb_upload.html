@@ -1,16 +1,16 @@
 {% extends "generic.html" %}
-{% block script %}{{ block.super}}{% endblock script %}
+{% block script %}{{ block.super}}<script type="text/javascript" src="{{ STATIC_URL }}js/ics_scripts/ics.js"></script>{% endblock script %}
 {% block content-main %}
 {% block rgbimg-settings  %}
 <h3>Image Upload</h3>
 <div class="rgbimg-background">
 <div class="alert alert-info" id="userNotice"><strong>Note: </strong>Choose either to upload a single RGB image file or three files for each image channel</div>
  <ul class="nav nav-tabs">
-   <li><a href="#singleRGB" data-toggle="tab">Single RGB Image</a></li>
-   <li><a href="#threeRGB" data-toggle="tab">Three Channel Images</a></li>
+   <li><a href="#singleRGB" data-toggle="tab" id="id_singleRGB">Single RGB Image</a></li>
+   <li><a href="#threeRGB" data-toggle="tab" id="id_threeRGB">Three Channel Images</a></li>
  </ul>
  <div class="tab-content">
-   <div class="tab-pane active" id="singleRGB"><p>Single Channel<p>
+   <div class="tab-pane" id="singleRGB"><p>Single Channel<p>
       <a href="#singleUploadModal" role="button" class="btn" data-toggle="modal">Upload a Single RGB Image</a>
    </div>
    <div class="tab-pane" id="threeRGB"><p>Three Channel RGB Image</p>
@@ -27,7 +27,8 @@
   </div>
   <div class="modal-body">
     <form action="" method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>{% csrf_token %}
-{{ form.as_p }}
+{{ form.mixedImg }}
+{{ form.uploadType.as_hidden}} 
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>

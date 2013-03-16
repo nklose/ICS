@@ -70,17 +70,41 @@ def sample_upload(request):
         if form.is_valid():
             # All validation rules pass
             # Process the data in form.cleaned_data
-            image = form.cleaned_data['img']
-            # Change to scipy image:
-            sciImg = scipy.misc.fromimage(image)
+
+            if form.isSingleUpload:
+                # single image uploaded by user
+                rgbImage = form.cleaned_data['mixedImg']
+                # Change to scipy image:
+                scirgbImg = scipy.misc.fromimage(image)
+
+            elif form.isMultipleUpload:
+                # three different images uploaded by user
+                redimg = form.cleaned_data['redImg']
+                blueImg = form.cleaned_data['blueImg']
+                greenImg = form.cleaned_data['greenImg']
+                # Change to scipy image:
+                sciredImg = scipy.misc.fromimage(redImg)
+                sciblueImg = scipy.misc.fromimage(blueImg)
+                scigreenImg = scipy.misc.fromimage(greenImg)
+
+            else:
+                # invalid missing information whether single or triple upload
+                rgbImage = None;
+                blueImg = None;
+                greenImg = None;
+                mixedImg = None;
+                
         else:
-            image = None
+                # form invalid
+                rgbImage = None;
+                blueImg = None;
+                greenImg = None;
+                mixedImg = None;
     else:
         form = icsform.SampleImageForm()  # An unbound form
-        sciImg = None
 
     temp = {"sec_title": "upload", "copyrightdate": 2013,
-            "form": form, "imgtype": str(sciImg)}
+            "form": form}
     return render(request, 'upload.html', temp)
 
 def rgb_upload(request):
@@ -89,9 +113,10 @@ def rgb_upload(request):
         if form.is_valid():
             # All validation rules pass
             # Process the data in form.cleaned_data
-            image = form.cleaned_data['img']
+            image = form.cleaned_data['mixedImg']
             # Change to scipy image:
             sciImg = scipy.misc.fromimage(image)
+            
             return HttpResponseRedirect('/program/')
         else:
             image = None

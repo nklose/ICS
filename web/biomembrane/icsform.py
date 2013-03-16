@@ -3,7 +3,26 @@ import formfields
 
 
 class SampleImageForm(forms.Form):
-    img = formfields.LosslessImageField()
+
+    redImg = formfields.LosslessImageField(required=False)
+    greenImg = formfields.LosslessImageField(required=False)
+    blueImg = formfields.LosslessImageField(required=False)
+    mixedImg = formfields.LosslessImageField(required=False)
+
+    uploadType = forms.CharField()
+    
+    def isSingleUpload(self):
+        if self.clean_uploadtype['singleRGB']:
+           return True
+        else:
+           return False
+
+    def isMultipleUpload(self):
+        if self.clean_uploadtype['threeRGB']:
+           return True
+        else:
+           return False
+        
 
 
 class RgbSettingsForm(forms.Form):
@@ -58,7 +77,23 @@ class RgbSettingsForm(forms.Form):
 
     resolutions = forms.ChoiceField(initial=3, choices=RESOLUTIONS)
 
-    def is_auto(self):
+    def _init_(self, *args, **kwargs):
+        super(RgbSettingsForm, self).__init__(*args, **kwargs) # Call to ModelForm constructor
+        self.fields['rangeAuto'].widget.attrs['cols'] = 6
+        self.fields['ginfAuto'].widget.attrs['cols'] = 6
+        self.fields['gzeroAuto'].widget.attrs['cols'] = 6
+        self.fields['wAuto'].widget.attrs['cols'] = 6
+        self.fields['rangeCross'].widget.attrs['cols'] = 6
+        self.fields['ginfCross'].widget.attrs['cols'] = 6
+        self.fields['gzeroCross'].widget.attrs['cols'] = 6
+        self.fields['wCross'].widget.attrs['cols'] = 6
+        self.fields['rangeTriple'].widget.attrs['cols'] = 6
+        self.fields['ginfTriple'].widget.attrs['cols'] = 6
+        self.fields['gzeroTriple'].widget.attrs['cols'] = 6
+        self.fields['wTriple'].widget.attrs['cols'] = 6
+
+
+    def isAuto(self):
         """ Look at cleaned data for some attribute that lets me know I should
         be using auto data.
 
@@ -66,12 +101,12 @@ class RgbSettingsForm(forms.Form):
         and parse and set the value of this input. OR, change it every time
         whatever you are using to determine the case changes.
         """
-        if self.value == "id_auto": 
+        if self.clean_userSelected['id_auto']:
             return True
         else:
             return False
 
-    def is_cross(self):
+    def isCross(self):
         """ Look at cleaned data for some attribute that lets me know I should
         be using cross data.
 
@@ -79,21 +114,20 @@ class RgbSettingsForm(forms.Form):
         and parse and set the value of this input. OR, change it every time
         whatever you are using to determine the case changes.
         """
-        if self.clean_values['id_cross']:
+        if self.clean_userSelected['id_cross']:
             return True
         else:
             return False
-   
-    def is_triple(self):
-        if self.clean_values['id_triple']:
+
+    def isTriple(self):
+        if self.clean_userSelected['id_triple']:
            return True
         else:
            return False
 
-    def is_all(self):
-        if self.clean_values['id_all']:
+    def isAll(self):
+        if self.clean_userSelected['id_all']:
            return True
         else:
            return False
-        return True
 
