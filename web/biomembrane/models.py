@@ -25,23 +25,9 @@ import os
 
 
 def generate_file_path(instance, filename):
-    # TODO: Depends on file extension
     id = instance.job.batch.id
     number = instance.job.number
-    image_type = instance.image_type
-    extension = filename.split('.')[-1]
-
-    if image_type == Image.RED:
-        new_filename = 'r.'
-    elif image_type == Image.GREEN:
-        new_filename = 'g.'
-    elif image_type == Image.BLUE:
-        new_filename = 'b.'
-    else:
-        new_filename = 'rgb.'
-
-    new_filename += extension
-    path = '/'.join([id, number, new_filename])
+    path = '/'.join([id, number, filename])
     return path
 
 
@@ -67,18 +53,14 @@ class Job(models.Model):
     red = models.TextField()
     green = models.TextField()
     blue = models.TextField()
+    red_image = models.ImageField(upload_to=generate_file_path)
+    green_image = models.ImageField(upload_to=generate_file_path)
+    blue_image = models.ImageField(upload_to=generate_file_path)
+    rgb_image = models.ImageField(upload_to=generate_file_path)
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
         return unicode(self.number)
-
-
-class Images(models.Model):
-    red = models.ImageField(upload_to=generate_file_path)
-    green = models.ImageField(upload_to=generate_file_path)
-    blue = models.ImageField(upload_to=generate_file_path)
-    rgb = models.ImageField(upload_to=generate_file_path)
-    job = models.ForeignKey(Job)
 
 
 class Parameters(models.Model):
