@@ -36,9 +36,11 @@ DESCRIPTION = "Image Correlation Spectroscopy"
 NAME = "ICS"
 
 PACKAGES = ["backend", "midend", "local_GUI"]
-INCLUDES = ["sip"]
+INCLUDES = ["sip", "scipy.linalg.cblas", "scipy.linalg.fblas",
+            "scipy.sparse.csgraph._validation", "ctypes",
+            "scipy.linalg.flapack", "scipy.linalg.clapack", "matplotlib"]
 EXCLUDES = []
-DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll"]
+DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll", "numpy.linalg.lapack_lite.pyd"]
 
 DATA_FILES = [(IMAGE_FOLDER, LOCAL_IMAGES)]
 
@@ -58,6 +60,7 @@ OPTIONS = {
     }
 }
 
+# Icon works only in windows xp
 WINDOWS = [{"dest_base": EXE_FILE, "script": MAIN_FILE,
             "icon_resources": [(0x004, ICON_FILE)]
             }]

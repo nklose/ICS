@@ -43,7 +43,7 @@ def validate_image(filepath):
     comp_type = image.attribute("CompressionType")
     if comp_type != '':
         raise ImageFormatException(filepath, comp_type)
-    return convertMGtoPIL(image)
+    #return convertMGtoPIL(image)
 
 
 def convertMGtoPIL(magickimage):

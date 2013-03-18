@@ -82,7 +82,7 @@ def load_library():
     if (os.name != 'nt'):
         lib_path = os.path.join(lib_dir, 'libbackend.so')
     else:
-        lib_path = os.path.join(lib_dir, 'libbackend.dll')
+        lib_path = 'libbackend.dll'
     lib_path = verify_path(lib_path)
     lib = ctypes.cdll.LoadLibrary(lib_path)
 
