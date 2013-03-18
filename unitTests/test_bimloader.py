@@ -1,4 +1,4 @@
-""" Tests the image_reader class. Requires the mock library, install via
+""" Tests the bimloader module. Requires the mock library, install via
 
 sudo pip install -U mock
 
