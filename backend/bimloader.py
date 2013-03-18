@@ -42,7 +42,7 @@ def validate_image(filepath):
     image = PythonMagick.Image(filepath)
     comp_type = image.attribute("CompressionType")
     if comp_type != '':
-        raise ImageFormatException(filepath, comp_type)
+        raise ImageFormatException(filepath)
     #return convertMGtoPIL(image)
 
 
