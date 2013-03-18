@@ -15,16 +15,18 @@ import py2exe
 import os
 import sys
 import numpy
+import scipy
 
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 LOCAL_GUI_PATH = os.path.join(ROOT_PATH, "local_GUI")
+IMAGES_PATH = os.path.join(ROOT_PATH, "Images")
 MAIN_FILE = os.path.join(ROOT_PATH, "local_start.py")
 EXE_FILE = "ICS"
 ICON_FILE = os.path.join(ROOT_PATH, "icon.ico")
-LOCAL_IMAGES = [os.path.join(LOCAL_GUI_PATH, "r.png"),
-                os.path.join(LOCAL_GUI_PATH, "g.png"),
-                os.path.join(LOCAL_GUI_PATH, "b.png"),
-                os.path.join(LOCAL_GUI_PATH, "rgb.png")]
+LOCAL_IMAGES = [os.path.join(IMAGES_PATH, "r.png"),
+                os.path.join(IMAGES_PATH, "g.png"),
+                os.path.join(IMAGES_PATH, "b.png"),
+                os.path.join(IMAGES_PATH, "rgb.png")]
 
 AUTHOR = "CMPUT 401 - Biomembranes Team"
 VERSION = "1.0"
@@ -36,7 +38,7 @@ INCLUDES = ["sip"]
 EXCLUDES = []
 DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll"]
 
-DATA_FILES = [('', LOCAL_IMAGES)]
+DATA_FILES = [(IMAGES_PATH, LOCAL_IMAGES)]
 OPTIONS = {
     'py2exe': {
         "dist_dir": "bin",
@@ -54,7 +56,7 @@ OPTIONS = {
 }
 
 WINDOWS = [{"dest_base": EXE_FILE, "script": MAIN_FILE,
-            "icon_resources": [(1, ICON_FILE)]
+            "icon_resources": [(0x004, ICON_FILE)]
             }]
 
 setup(

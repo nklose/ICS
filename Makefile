@@ -80,7 +80,7 @@ endif
 
 frontend:
 	@echo "=== Start: Compiling frontend ==="
-	# TODO
+	@echo "Front end is compiled as part of the final program."
 	@echo "=== End: Compiling frontend ==="
 
 $(EXECUTABLE): $(BIN) clean_backend frontend

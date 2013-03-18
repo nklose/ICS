@@ -45,12 +45,15 @@ A few items are required:
 1. Install python 2.7.3 (64-bit) to C:\Python27 (To use different paths,
    edit the Makefile).
 2. Install mingw (32-bit).
-3. Install scipy, numpy, pythonmagic and pyqt for 32 bit and 64-bit. Use premade
+3. Install scipy, numpy, pythonmagic, pil (use pillow) and pyqt for 64-bit. Use
+   premade packages available at: http://www.lfd.uci.edu/~gohlke/pythonlibs/
 4. Install the Visual Studio C++ Redistributable version here:
    http://www.microsoft.com/en-us/download/details.aspx?id=29 (included in repo)
 5. Launch the mingw 32-bit shell:
      a. To create the 32 bit version, call "make"
      b. To create the 64 bit version, call "make DLL_64=1"
+6. To make the icon work, install pywin32:
+   http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/
 
 Compliing Linux Executables
 ===========================
