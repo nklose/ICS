@@ -7,10 +7,6 @@ membranes" for Dr Nils O. Petersen.
 Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar
 Qadri, and James Wang under the 401 IP License.
 
-Installing in Windows
-=====================
-Run the vcredist_x86.exe and the provided setup.exe
-
 Required Packages
 =================
 A few packages are required for the program:
