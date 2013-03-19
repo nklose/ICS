@@ -1,6 +1,8 @@
  {% block rgbimg-display  %}
+<h5>Images</h5>
 <div class="rgbimg-background">
  <p>Reorder the images by dragging and dropping them.</p>
+ <div class="img-displayblock">
     <ul class="sortableImgList" id="sortable-img">
     {% for img in rgbimgs %}
      <li><span class="sortableImg"><img src="{{img.url}}" alt="{{img.name}}"/></span>{{img.type}}</li>
@@ -11,5 +13,6 @@
     <li><span class="sortableImg"><img src="{{ STATIC_URL }}img/no_img.png" alt="Image not loaded"/></span>Green</li>
     {% endfor %}
     </ul>
+ </div>
 </div>
 {% endblock rgbimg-display %}

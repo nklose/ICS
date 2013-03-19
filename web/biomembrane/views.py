@@ -21,7 +21,7 @@ signing of this agreement.
 """
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponseServerError, HttpResponseForbidden, Http404, HttpResponse
-from icsform import RgbSettingsForm;
+from icsform import RgbSettingsForm, BatchSettingsForm;
 import scipy.misc
 import icsform
 
@@ -141,3 +141,26 @@ def results(request):
     """
     temp = {"sec_title": "Results", "copyrightdate": 2013,}
     return render(request, 'results.html', temp)
+
+def batch(request):
+    """ Renders a home  view.
+         Template: /web/web/templates/results.html
+
+         Request parameters (ie, parameters in the request object):
+         - None
+
+         Context parameters (ie, keys in the dictionary passed to the template):
+        - sec_ title: The title of the section
+        - copyrightdate: The year of copyright.
+    """
+    if request.method == 'POST':  #form has been submitted
+        form = BatchSettingsForm(request.POST)
+        if form.is_valid():
+        # proccess the data in form.cleaned_data
+        # ...
+          return HttpResponseRedirect('/proccess/') # redirect after post
+    else:
+        form = BatchSettingsForm()
+
+    temp = {"sec_title": "Batch Mode", "copyrightdate": 2013, "form": form}
+    return render(request, 'batch.html', temp)

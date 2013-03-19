@@ -1,6 +1,48 @@
 {% extends "generic.html" %}
 {% block stylesheet %}{{ block.super }}{% endblock stylesheet %}
-{% block script %}{{ block.super}}{% endblock script %}
+{% block script %}{{ block.super}}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">{% endblock script %}
 {% block content-main %}
-<h1>Batch Jobs</h1>
+<h5>Batch Mode</h5>
+<form action ="#" name="batchform">
+  <div class="row-fluid">
+    <div class="span4">
+     <fieldset>
+     <legend>Batch Settings</legend>
+     <label>Batch Image Size:</label>{{ form.imageSize }}
+     <label>Start At Image #:</label>{{ form.firstImageIndex}}
+     <label>Stop At Image #:</label>{{ form.lastImageIndex }}
+     <label>File Name Format:</label>{{ form.filenameFormat }}
+     </fieldset>
+     <fieldset>
+     {{ form.considerDeltaForAuto }}Consider Deltas In Auto<br>
+     {{ form.considerDeltaForCross }}Consider Deltas In Cross<br>
+     </fieldset><br>
+    </div> <!-- span4 -->
+    <div class="span4">
+     <fieldset>
+      <legend>Auto/Cross Parameters</legend>
+      <label>Range</label>{{ form.rangeAutoCross }}
+      <label>gInf</label>{{ form.ginfAutoCross }}
+      <label>w</label>{{ form.wAutoCross }}
+      <label>gzero</label>{{ form.gzeroAutoCross }}
+     </fieldset>
+    </div> <!-- span5 -->
+    <div class="span4">
+      <fieldset>
+      <legend>Triple Correlation Parameters</legend>
+      <label>Range</label>{{ form.rangeTriple }}
+      <label>gInf</label>{{ form.ginfTriple }}
+      <label>w</label>{{ form.wTriple }}
+      <label>gzero</label>{{ form.gzeroTriple }}
+      </fieldset>
+    </div> <!-- span4 -->
+   </div> <!-- row -->
+<div class="rgbimg-background">
+ <div id="batchcontrols">
+  <button type="button" id="start" class="btn btn-primary" data-loading-text="Loading...">Start</button>
+  <button type="button" id="restart" class="btn btn-primary" data-loading-text="Restarting...">Stop</button>
+  <button type="button" id="batch" class="btn btn-primary" data-toggle="button">Single Mode</button>
+ </div>
+</div>
+</form>
 {% endblock content-main %}
