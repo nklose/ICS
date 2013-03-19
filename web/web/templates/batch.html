@@ -35,13 +35,16 @@
       <label>w</label>{{ form.wTriple }}
       <label>gzero</label>{{ form.gzeroTriple }}
       </fieldset>
+     <div id="imgSize">
+     <label for="id_resolutions">Set Image resolution to sample</label>
+      {{ form.resolutions }}
+     </div>
     </div> <!-- span4 -->
    </div> <!-- row -->
 <div class="rgbimg-background">
  <div id="batchcontrols">
-  <button type="button" id="start" class="btn btn-primary" data-loading-text="Loading...">Start</button>
-  <button type="button" id="restart" class="btn btn-primary" data-loading-text="Restarting...">Stop</button>
-  <button type="button" id="batch" class="btn btn-primary" data-toggle="button">Single Mode</button>
+  <button type="button" id="start" class="btn" data-loading-text="Loading...">Next</button>
+  <button type="button" id="batch" class="btn" data-toggle="button">Swtich to Single Mode</button>
  </div>
 </div>
 </form>
