@@ -42,7 +42,9 @@ INCLUDES = ["sip", "scipy.linalg.cblas", "scipy.linalg.fblas",
 EXCLUDES = []
 DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll", "numpy.linalg.lapack_lite.pyd"]
 
-DATA_FILES = [(IMAGE_FOLDER, LOCAL_IMAGES)]
+QT_ICON_DLL = r'C:\Python27\Lib\site-packages\PyQt4\plugins\imageformats\qico4.dll'
+DATA_FILES = [(IMAGE_FOLDER, LOCAL_IMAGES), ("", [ICON_FILE]),
+			  ('imageformats', [QT_ICON_DLL])]
 
 OPTIONS = {
     'py2exe': {
