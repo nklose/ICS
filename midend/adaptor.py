@@ -10,6 +10,7 @@ if root_dir not in sys.path:
 
 import backend.bimloader as bimloader
 import backend.dual as dual
+import backend.triple as triple
 import backend.backend_utils as butils
 
 ALL_COLORS = str.split('r:g:b:rg:rb:gb:rgb', ':')
@@ -120,3 +121,98 @@ def __run_dual(firstChannel, secondChannel, color, range_val, initial_val,
     return result.DualResult(par[0], par[1], par[2], par[3], par[4],
                              usedDeltas, resnorm, out, fit, color,
                              range_val, fit)
+
+
+def run_triple_mixed_image_part1(pilImage):
+    """Runs triple on the mixed image
+
+    Arguments:
+       pilImage: the PIL form of the image
+       pilImage type: PIL.Image
+
+    Return values:
+        A midened.result.TripleResult_part1
+    """
+    r, g, b = bimloader.load_image_pil_mixed(pilImage)
+    return __run_triple_1(r, g, b)
+
+
+def run_triple_split_image_part1(pilR, pilG, pilB):
+    """Runs triple on seperated images
+
+    Arguments:
+       pilR: the PIL form of the red channel
+       pilR type: PIL.Image
+
+       pilG: the PIL form of the green channel
+       pilG type: PIL.Image
+
+       pilB: the PIL form of the blue channel
+       pilB type: PIL.Image
+
+    Return values:
+        A midened.result.TripleResult_part1
+    """
+    r = bimloader.load_image_pil_split(pilR)
+    g = bimloader.load_image_pil_split(pilG)
+    b = bimloader.load_image_pil_split(pilB)
+    return __run_triple_1(r, g, b)
+
+
+def __run_triple_1(r, g, b):
+    side = np.shape(r)[0]
+    (avg_r, sr) = triple.core_0(r)
+    (avg_g, sg) = triple.core_0(g)
+    (avg_b, sb) = triple.core_0(b)
+    return result.TripleResult_part1(avg_r, avg_g, avg_b, sr, sg, sb, side)
+
+
+def run_triple_part2(firstResults, limit):
+    """Continues running triple with the given limit.
+
+    Arguments:
+       firstResults: the return value from running part 1 of triple
+       firstResults type: midened.result.TripleResult_part1
+
+       limit: the limit size to constrain data to.
+       limit type: int
+
+    Return values:
+        A midened.result.TripleResult_part2
+    """
+    avg_rgb = firstResults.avg_r * firstResults.avg_g * firstResults.avg_b
+    part_rgb = triple.core_1(firstResults.sr, firstResults.sg, firstResults.sb,
+                             avg_rgb, firstResults.lim)
+    return result.TripleResult_part2(firstResults.side, limit, part_rgb)
+
+
+def run_triple_part3(secondResults, range_val, g0, w, ginf):
+    """Continues running triple with the given limit.
+
+    Arguments:
+       secondResults: the return value from running part 2 of triple
+       secondResults type: midened.result.TripleResult_part2
+
+       range_val: the range value to use for the triple run
+       range_val type: int
+
+       g0: the initial g0 to use for all dual runs
+       g0 type: int
+
+       w:  the initial w to use for all dual runs
+       w type: int
+
+       ginf: the initial ginf to use for all dual runs
+       ginf type: int
+
+    Return values:
+        A midened.result.TripleResult_part3
+    """
+    initial_val = np.array([g0, w, ginf], dtype=np.float64)
+    (out, par) = triple.core_2(secondResults.part_rgb, range_val, initial_val)
+    fit = butils.gauss_1d(np.arange(range_val), *par)
+    par[1] = int(par[1] * (secondResults.side / secondResults.lim) * 10) / 10
+    resnorm = np.sum((out - fit) ** 2)
+    return result.TripleResult_part3(par[0], par[1], par[2], par[3], par[4],
+                                     False, resnorm, out, fit, ['rgb'],
+                                     range_val, fit)

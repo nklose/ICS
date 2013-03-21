@@ -7,6 +7,13 @@ import StringIO
 
 class BaseResult(object):
 
+    def plotToStringIO(self):
+        """ Plots the graph to a StringIO object and returns it.
+        """
+        raise NotImplementedError("All subclasses must implement plot")
+
+
+class DualResult(BaseResult):
     def __init__(self, g0, w, ginf, deltaX, deltaY, usedDeltas, resNorm,
                  outArray, fitArray, colors, rangeVal, gFit):
         self.g0 = g0
@@ -21,20 +28,50 @@ class BaseResult(object):
         self.colors = colors
         self.rangeVal = rangeVal
         self.gFit = gFit
+        super(DualResult, self).__init__()
 
-    def plotToStringIO(self):
-        """ Plots the graph to a StringIO object and returns it.
-        """
-        raise NotImplementedError("All subclasses must implement plot")
-
-
-class DualResult(BaseResult):
     def plotToStringIO(self):
         return plot(self.outArray, self.gFit, self.colors)
 
 
-class TripleResult(BaseResult):
-    pass
+class TripleResult_part1(BaseResult):
+    def __init__(self, avg_r, avg_g, avg_b, sr, sg, sb, side):
+        self.avg_r = avg_r
+        self.avg_g = avg_g
+        self.avg_b = avg_b
+        self.sr = sr
+        self.sg = sg
+        self.sb = sb
+        self.side = side
+        super(TripleResult_part1, self).__init__()
+
+    def plotToStringIO(self):
+        graphFile = StringIO.StringIO()
+        beforeSurfc = np.abs(self.sr)
+        # do surfc with beforeSurfc
+        graphFile.seek(0)
+        return graphFile
+
+
+class TripleResult_part2(BaseResult):
+
+    def __init__(self, side, lim, part_rgb):
+        self.side = side
+        self.lim = lim
+        self.part_rgb = part_rgb
+        super(TripleResult_part2, self).__init__()
+
+    def plotToStringIO(self):
+        graphFile = StringIO.StringIO()
+        beforeSurfc = self.part_rgb[0, :, :]
+        # do surfc
+        graphFile.seek(0)
+        return graphFile
+
+
+class TripleResult_part3(DualResult):
+    def plotToStringIO(self):
+        return plot(self.outArray, self.gFit, self.colors)
 
 
 def plot(gnew, gfit, color):
