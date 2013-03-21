@@ -37,6 +37,8 @@ class StartQT4(QtGui.QMainWindow):
         QtGui.QWidget.__init__(self, parent)
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
+        # Force theme
+        self.setStyle(QtGui.QStyleFactory.create("plastique"))
 
         # Interface variables
         self.redPath = ""
@@ -192,7 +194,7 @@ class StartQT4(QtGui.QMainWindow):
 
             # Remove any temporary images from the interface
             self.refresh_temp()
-            self.refresh_paths()
+            #self.refresh_paths()
 
             # Remember old size in case something bad happens
             oldSize = self.size
