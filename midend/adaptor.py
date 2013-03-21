@@ -111,9 +111,12 @@ def __run_dual(firstChannel, secondChannel, color, range_val, initial_val,
                consider_deltas):
     (out, par, usedDeltas) = dual.core(firstChannel, secondChannel, range_val,
                                        initial_val, consider_deltas)
-    fitBeforeReshape = butils.gauss_2d_deltas(np.arange(range_val ** 2), *par)
+    if usedDeltas:
+        fitBeforeReshape = butils.gauss_2d_deltas(np.arange(range_val ** 2), *par)
+    else:
+        fitBeforeReshape = butils.gauss_2d(np.arange(range_val ** 2), *par[:3])
     fit = fitBeforeReshape.reshape(range_val, range_val)
     resnorm = np.sum((out - fit) ** 2)
     return result.DualResult(par[0], par[1], par[2], par[3], par[4],
                              usedDeltas, resnorm, out, fit, color,
-                             range_val, fitBeforeReshape)
+                             range_val, fit)

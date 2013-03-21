@@ -41,13 +41,20 @@ def plot(gnew, gfit, color):
     graph_string = StringIO.StringIO()
     title = __gen_title(color, 'Y')
     range_val = np.shape(gnew)[0]
+
+    plot_fit = gfit[0:, 0]
+    plot_new = gnew[1:, 0]
+    fit_style = __gen_style('--', color)
+    new_style = __gen_style('o', color)
+
     pp.clf()
     pp.title(title)
-    pp.plot(np.arange(0, range_val), gfit[0:, 0], __gen_style('--', color),
-            np.arange(1, range_val), gnew[1:, 0], __gen_style('o', color),
+    pp.plot(np.arange(0, range_val), plot_fit, fit_style,
+            np.arange(1, range_val), plot_new, new_style,
             linewidth=2.0)
     pp.axis([0, range_val, 0, max(gfit[0, 0], gnew[1, 0])])
     pp.savefig(graph_string)
+    graph_string.seek(0)
     return graph_string
 
 
