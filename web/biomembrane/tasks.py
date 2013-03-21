@@ -49,7 +49,7 @@ def run_dual(job, params):
             b = pickle.loads(job.blue)
 
     initial_val = np.array([params.g0, params.w, params.ginf, 0, 0], dtype=np.float64)
-    (out, par, used_deltas) = dual.core(a, b, params.range_val, initial_val, params.use_deltas)
+    out, par, used_deltas = dual.core(a, b, params.range_val, initial_val, params.use_deltas)
     fit_before_reshape = butils.gauss_2d_deltas(np.arange(params.range_val**2), *par)
     fit = fit_before_reshape.reshape(params.range_val, params.range_val)
     res_norm = np.sum((out-fit)**2)
@@ -69,13 +69,46 @@ def run_triple(job, params):
     g = pickle.loads(job.green)
     b = pickle.loads(job.blue)
     side = np.shape(r)[0]
-    (avg_r, sr) = triple.core_0(r)
-    (avg_g, sg) = triple.core_0(g)
-    (avg_b, sb) = triple.core_0(b)
+    avg_r, sr = triple.core_0(r)
+    avg_g, sg = triple.core_0(g)
+    avg_b, sb = triple.core_0(b)
     avg_rgb = avg_r*avg_g*avg_b
     part_rgb = triple.core_1(sr, sg, sb, avg_rgb, params.limit)
     initial_val = np.array([params.g0, params.w, params.ginf], dtype=np.float64)
-    (out, par) = triple.core_2(part_rgb, params.range_val, initial_val)
+    out, par = triple.core_2(part_rgb, params.range_val, initial_val)
+    fit = butils.guass_1d(np.arange(params.range_val), *par)
+    par[1] = int(par[1]*(side/params.limit)*10)/10
+    res_norm = np.sum((out-fit)**2)
+
+    results = Results(job=job, params=params)
+    results.par = pickle.dumps(par)
+    results.out = pickle.dumps(out)
+    results.res_norm = pickle.dumps(res_norm)
+    results.fit = pickle.dumps(fit)
+    results.save()
+
+
+def run_triple1(job):
+    r = pickle.loads(job.red)
+    g = pickle.loads(job.green)
+    b = pickle.loads(job.blue)
+    avg_r, sr = triple.core_0(r)
+    avg_g, sg = triple.core_0(g)
+    avg_b, sb = triple.core_0(b)
+    return (avg_r, sr, avg_g, sg, avg_b, sb)
+
+
+def run_triple2(job, params, avg_r, sr, avg_g, sg, avg_b, sb):
+    avg_rgb = avg_r*avg_g*avg_b
+    part_rgb = triple.core_1(sr, sg, sb, avg_rgb, params.limit)
+    return part_rgb
+
+
+def run_triple3(job, params, part_rgb):
+    r = pickle.loads(job.red)
+    side = np.shape(r)[0]
+    initial_val = np.array([params.g0, params.w, params.ginf], dtype=np.float64)
+    out, par = triple.core_2(part_rgb, params.range_val, initial_val)
     fit = butils.guass_1d(np.arange(params.range_val), *par)
     par[1] = int(par[1]*(side/params.limit)*10)/10
     res_norm = np.sum((out-fit)**2)
@@ -89,7 +122,8 @@ def run_triple(job, params):
 
 
 @task()
-def run(job):
+def run_batch(job):
+    # TODO: Use actual batch interface
     job.state = Job.RUNNING
     job.save()
 
@@ -102,4 +136,3 @@ def run(job):
         
     job.state = Job.COMPLETE
     job.save()
-
