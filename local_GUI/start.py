@@ -39,7 +39,7 @@ class StartQT4(QtGui.QMainWindow):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         # Force theme
-        self.setStyle(QtGui.QStyleFactory.create("plastique"))
+        QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("Plastique"))
 
         # Interface variables
         self.redPath = ""
@@ -131,7 +131,7 @@ class StartQT4(QtGui.QMainWindow):
             self.message("Loaded image " + self.rgbPath)
             self.ui.rgbFile.setText(os.path.basename(self.rgbPath))
             self.ui.imageRgb.setPixmap(QtGui.QPixmap(self.rgbPath))
-            
+
             # Save the three channel arrays
             self.redChannel = images[0]
             self.greenChannel = images[1]
@@ -215,7 +215,7 @@ class StartQT4(QtGui.QMainWindow):
                 self.redChannel = ""
                 monochrome = False
                 self.update_size(oldSize)
-            
+
             if monochrome:
                 self.ui.redIntensityText.setText(str(redAvgInt))
 
@@ -229,7 +229,7 @@ class StartQT4(QtGui.QMainWindow):
 
         # Open the file loader to get the path of the desired image
         self.greenPath = str(QtGui.QFileDialog.getOpenFileName())
-        
+
         # Call the backend to load the image as an array
         try:
             self.greenChannel = bimloader.load_image_split(str(self.greenPath))
@@ -274,7 +274,7 @@ class StartQT4(QtGui.QMainWindow):
                 self.greenChannel = ""
                 monochrome = False
                 self.update_size(oldSize)
-            
+
             if monochrome:
                 self.ui.greenIntensityText.setText(str(greenAvgInt))
 
@@ -288,7 +288,7 @@ class StartQT4(QtGui.QMainWindow):
 
         # Open the file loader to get the path of the desired image
         self.bluePath = str(QtGui.QFileDialog.getOpenFileName())
-        
+
         # Call the backend to load the image as an array
         try:
             self.blueChannel = bimloader.load_image_split(str(self.bluePath))
@@ -331,7 +331,7 @@ class StartQT4(QtGui.QMainWindow):
                 self.bluePath = ""
                 monochrome = False
                 self.update_size(oldSize)
-            
+
             if monochrome:
                 self.ui.blueIntensityText.setText(str(blueAvgInt))
 
@@ -415,7 +415,7 @@ class StartQT4(QtGui.QMainWindow):
 
                 # Show Fourier transform (red) surface plot
                 self.show_fourier()
-                
+
                 # Triple correlation doesn't actually happen until user clicks Continue
 
             elif mode == "all":
@@ -452,7 +452,7 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.startButton.setEnabled(True)
         self.ui.stopButton.setEnabled(False)
         self.ui.batchModeButton.setEnabled(True)
-        
+
 
     ######################################################
     # Interface Input Functions                          #
@@ -840,7 +840,7 @@ class StartQT4(QtGui.QMainWindow):
     ######################################################
     # Interface Output Functions                         #
     ######################################################
-    
+
     # Set the Res. Norm. value on the auto tab
     def set_auto_resnorm(self, value):
         self.ui.autoResNormValue.setText(str(value))
@@ -856,7 +856,7 @@ class StartQT4(QtGui.QMainWindow):
     # Set the gInf value on the auto tab
     def set_auto_Ginf(self, value):
         self.ui.autoGinfValue.setText(str(value))
-    
+
     # Set the deltas checkbox on the auto tab
     def set_auto_deltas(self, value):
         self.ui.autoDeltasUsedCheckbox.setChecked(bool(value))
@@ -864,7 +864,7 @@ class StartQT4(QtGui.QMainWindow):
     # Set the Res. Norm. value on the cross tab
     def set_cross_resnorm(self, value):
         self.ui.crossResNormValue.setText(str(value))
-    
+
     # Set the g0 value on the cross tab
     def set_cross_G0(self, value):
         self.ui.crossG0Value.setText(str(value))
@@ -904,11 +904,11 @@ class StartQT4(QtGui.QMainWindow):
     #####################################################
     # Correlation Functions                             #
     #####################################################
-    
+
     # Perform a single correlation by calling the backend
     def correlate(self, array1, array2 = None, array3 = None):
         # auto-correlation
-        if array2 == None:  
+        if array2 == None:
             range = float(self.get_auto_range())
             g0 = float(self.get_auto_G0())
             w = float(self.get_auto_W())
@@ -931,7 +931,7 @@ class StartQT4(QtGui.QMainWindow):
         w = float(self.get_all_W())
         gInf = float(self.get_all_Ginf())
         deltas = self.get_all_deltas_checkbox()
-        
+
         auto1 = dual.core(array1, None, range, [g0, w, gInf, 0, 0], deltas)
         self.progress(12) # update progress bar
         auto2 = dual.core(array2, None, range, [g0, w, gInf, 0, 0], deltas)
@@ -1016,13 +1016,13 @@ class StartQT4(QtGui.QMainWindow):
 
         self.progress(95)
         # Show res. norm. and whether deltas were used
-        
+
         self.progress(100)
 
     #####################################################
     # Message Box Functions                             #
     #####################################################
-    
+
     # Message Box functionality
     def message(self, text):
         self.ui.messageBox.setText(str(text))
@@ -1093,7 +1093,7 @@ class StartQT4(QtGui.QMainWindow):
                     channels = "RB channel pair"
             else:
                 channels = "GB channel pair"
-                
+
         text = "Starting cross-correlation using " + channels
         text += " and parameters\n[Range = "
         text += self.get_cross_range() + ", g(0) = "
@@ -1128,7 +1128,7 @@ class StartQT4(QtGui.QMainWindow):
             text += res + " x " + res + "."
         # Do all correlations
         self.message(text)
-            
+
 
     #####################################################
     # Interface Update Functions                        #
@@ -1153,7 +1153,7 @@ class StartQT4(QtGui.QMainWindow):
         w = result[1][1]
         gInf = result[1][2]
         deltas = result[2]
-        
+
         self.set_cross_G0(g0)
         self.set_cross_W(w)
         self.set_cross_Ginf(gInf)
@@ -1200,7 +1200,7 @@ class StartQT4(QtGui.QMainWindow):
 
             # Save the image dimension
             self.update_size(self.redChannel.shape[1])
-            
+
             # Construct an image from the individual channels
             # Code from http://stackoverflow.com/questions/10443295/
             #   combine-3-separate-numpy-arrays-to-an-rgb-image-in-python
@@ -1218,10 +1218,10 @@ class StartQT4(QtGui.QMainWindow):
             self.rgbPath = self.temp_dir + "/rgb.png"
             self.refresh_temp()
             rgbImage.save(self.rgbPath)
-            
+
             # Load the image into the interface
             self.ui.imageRgb.setPixmap(QtGui.QPixmap(self.rgbPath))
-            
+
     # Refreshes the temporary directory by deleting and recreating it
     def refresh_temp(self):
         self.remove_temp()
@@ -1231,11 +1231,11 @@ class StartQT4(QtGui.QMainWindow):
     def create_temp(self):
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir)
-            
+
     # Removes the temporary directory if it exists.
     def remove_temp(self):
         if os.path.exists(self.temp_dir):
-            shutil.rmtree(self.temp_dir)     
+            shutil.rmtree(self.temp_dir)
 
     # Updates the size of the image internally and on the GUI label.
     def update_size(self, size):
@@ -1288,7 +1288,7 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.imageCrossRG.clear()
         self.ui.imageCrossRB.clear()
         self.ui.imageCrossGB.clear()
-    
+
         # Clear cross-correlation parameters
         self.ui.crossResNormValue.clear()
         self.ui.crossG0Value.clear()
@@ -1306,7 +1306,7 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleWTextbox.clear()
         self.ui.tripleG0Textbox.clear()
         self.ui.tripleGinfTextbox.clear()
-        
+
 def start():
     app = QtGui.QApplication(sys.argv)
     myapp = StartQT4()
