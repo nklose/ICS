@@ -62,7 +62,7 @@ OPTIONS = {
 
 # Icon works only in windows xp
 WINDOWS = [{"dest_base": EXE_FILE, "script": MAIN_FILE,
-            "icon_resources": [(0x004, ICON_FILE)]
+            "icon_resources": [(0, ICON_FILE)]
             }]
 
 setup(
