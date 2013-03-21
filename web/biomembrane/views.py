@@ -21,12 +21,13 @@ signing of this agreement.
 """
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponseServerError, HttpResponseForbidden, Http404, HttpResponse
+from pickle import dumps
 from icsform import RgbSettingsForm, BatchSettingsForm;
 import scipy.misc
+import StringIO
 import icsform
 import models
 import image
-from pickle import dumps
 
 def program(request):
 
@@ -117,47 +118,55 @@ def rgb_upload(request):
             # All validation rules pass
             print form.isSingleUpload()
             if form.isSingleUpload():
+                batch = models.Batch(user=None) # create a new batch
+                batch.save()
+
                 # Process the data in form.cleaned_data
                 image = form.cleaned_data['mixedImg']
-                imageReq = request_FILES['mixedImg']
                 # Change to scipy image:
                 sciImg = scipy.misc.fromimage(image)
-                
-                batch = models.Batch(user=None) # create a new batch
-                r,g,b = image.get_channels(sciImg) # generate the three channels
+                r, g, b = image.get_channels(sciImg) # generate the three channels
                 redImage, greenImage, blueImage = image.create_images(r,g,b) #create the images
                 
-                image.save(
-                           filename,
-                           ContentFile(image_data.read()),
-                           save=False)
-
-                singleJob = models.Job(state=models.Job.UPLOADING,
-                                       rgb_image=image,
-                                       red_image=None,
-                                       green_image=None,
-                                       blue_image=None,
+                singleJob = models.Job(batch=batch,
+                                       state=models.Job.UPLOADING,
                                        red=dumps(r),
                                        green=dumps(g),
-                                       blue=dumps(b),
-)
+                                       blue=dumps(b))
+                singleJob.red_image.save('r.png', StringIO.StringIO(redImage))
+                singleJob.green_image.save('g.png', StringIO.StringIO(greenImage))
+                singleJob.blue_image.save('b.png', StringIO.StringIO(blueImage))
+                singleJob.rgb_image.save('rgb.png', StringIO.StringIO(image))
                 singleJob.save()
+
                 return HttpResponseRedirect('/program/')
-
             elif form.isMultipleUpload():
-                 # Proccess the three image data in form.cleaned_data
-                 redImage = form.cleaned_data['redImg']
-                 greenImage = form.cleaned_data['greenImg']
-                 blueImage = form.cleaned_data['blueImg']
+                batch = models.Batch(user=None) # create a new batch
+                batch.save()
 
-                 singleJob = models.Job(state=models.Job.UPLOADING, 
-                                        red_image=redImage, 
-                                        green_image=greenImage, 
-                                        blue_image=blueImage)
-                 singleJob.save()
-                 return HttpResponseRedirect('/program/')
+                # Proccess the three image data in form.cleaned_data
+                redImage = form.cleaned_data['redImg']
+                greenImage = form.cleaned_data['greenImg']
+                blueImage = form.cleaned_data['blueImg']
+                r = scipy.misc.fromimage(redImage)
+                g = scipy.misc.fromimage(greenImage)
+                b = scipy.misc.fromimage(blueImage)
+                rgbImage = image.create_image(r, g, b)
+
+                singleJob = models.Job(batch=batch,
+                                       state=models.Job.UPLOADING, 
+                                       red=dumps(r),
+                                       green=dumps(g),
+                                       blue=dumps(b))
+                singleJob.red_image.save('r.png', StringIO.StringIO(redImage))
+                singleJob.green_image.save('g.png', StringIO.StringIO(greenImage))
+                singleJob.blue_image.save('b.png', StringIO.StringIO(blueImage))
+                singleJob.rgb_image.save('rgb.png', StringIO.StringIO(rgbImage))
+                singleJob.save()
+
+                return HttpResponseRedirect('/program/')
             else:
-                 image = None
+                image = None
         else:
             image = None
     else:

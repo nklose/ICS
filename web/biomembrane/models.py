@@ -80,7 +80,7 @@ class Parameters(models.Model):
     w = models.FloatField(null=True, blank=True)
     ginf = models.FloatField(null=True, blank=True)
     limit = models.FloatField(null=True, blank=True)
-    use_deltas = models.BooleanField(null=True, blank=True)
+    use_deltas = models.BooleanField(blank=True)
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
