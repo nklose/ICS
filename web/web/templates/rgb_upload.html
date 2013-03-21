@@ -27,12 +27,8 @@
   </div>
   <div class="modal-body">
     <form action="" method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>{% csrf_token %}
-    <div class="row-fluid">
-    <ul>
-    <li>{{ form.mixedImg }}</li>
-    </ul>
+     <div class="control-group"><label class="control-label">{{ form.mixedImg }}</label></div>
     {{ form.uploadType.as_hidden}}
-   </div> 
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -49,14 +45,10 @@
     <small>(.bmp .png .tif)</small>
   </div>
   <div class="modal-body">
-    <form action="" method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>{% csrf_token %}
-    <div class="row-fluid">
-    <ul>
-    <li>Red: {{ form.redImg }}</li>
-    <li>Green: {{ form.greenImg }}</li>
-    <li>Blue: {{ form.blueImg }}</li>
-    </ul>
-    </div>
+    <form action="" method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>{%     csrf_token %}
+    <div class="control-group"><label class="control-label">Red</label>{{ form.redImg }}</div>
+    <div class="control-group"><label class="control-label">Green</label>{{ form.greenImg }}</div>
+    <div class="control-group"><label class="control-label">Blue</label>{{ form.blueImg }}</div>
     {{ form.uploadType.as_hidden}} 
   </div>
   <div class="modal-footer">

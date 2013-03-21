@@ -140,7 +140,7 @@ class BatchSettingsForm(forms.Form):
     imageSize = forms.IntegerField();
     firstImageIndex = forms.IntegerField(); # name_min in batch
     lastImageIndex = forms.IntegerField(); #  name_max in batch
-    filenameFormat = forms.CharField(initial='rgb_{:03d}.bmp')
+    filenameFormat = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'rgb_{:03d}.bmp'}))
     considerDeltaForAuto = forms.BooleanField(initial=False)
     considerDeltaForCross = forms.BooleanField(initial=False)
      

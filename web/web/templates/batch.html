@@ -8,10 +8,10 @@
     <div class="span4">
      <fieldset>
      <legend>Batch Settings</legend>
-     <label>Batch Image Size:</label>{{ form.imageSize }}
-     <label>Start At Image #:</label>{{ form.firstImageIndex}}
-     <label>Stop At Image #:</label>{{ form.lastImageIndex }}
-     <label>File Name Format:</label>{{ form.filenameFormat }}
+     <label for="{{form.imageSize.auto_id}}">Batch Image Size:</label>{{ form.imageSize }}
+     <label for="{{form.firstImageIndex.auto_id}}">Start At Image #:</label>{{ form.firstImageIndex}}
+     <label for="{{form.lastImageIndex.auto_id}}">Stop At Image #:</label>{{ form.lastImageIndex }}
+     <label for="{{form.filenameFormat.auto_id}}">File Name Format:</label>{{ form.filenameFormat }}
      </fieldset>
      <fieldset>
      {{ form.considerDeltaForAuto }}Consider Deltas In Auto<br>
@@ -21,19 +21,19 @@
     <div class="span4">
      <fieldset>
       <legend>Auto/Cross Parameters</legend>
-      <label>Range</label>{{ form.rangeAutoCross }}
-      <label>gInf</label>{{ form.ginfAutoCross }}
-      <label>w</label>{{ form.wAutoCross }}
-      <label>gzero</label>{{ form.gzeroAutoCross }}
+      <label for="{{form.rangeAutoCross.auto_id}}">Range</label>{{ form.rangeAutoCross }}
+      <label for="{{form.ginfAutoCross.auto_id}}">gInf</label>{{ form.ginfAutoCross }}
+      <label for="{{form.wAutoCross.auto_id}}">w</label>{{ form.wAutoCross }}
+      <label for="{{form.gzeroAutoCross.auto_id}}">gzero</label>{{ form.gzeroAutoCross }}
      </fieldset>
     </div> <!-- span5 -->
     <div class="span4">
       <fieldset>
       <legend>Triple Correlation Parameters</legend>
-      <label>Range</label>{{ form.rangeTriple }}
-      <label>gInf</label>{{ form.ginfTriple }}
-      <label>w</label>{{ form.wTriple }}
-      <label>gzero</label>{{ form.gzeroTriple }}
+      <label for="{{form.rangeTriple.auto_id}}">Range</label>{{ form.rangeTriple }}
+      <label for="{{form.ginfTriple.auto_id}}">gInf</label>{{ form.ginfTriple }}
+      <label for="{{form.wTriple.auto_id}}">w</label>{{ form.wTriple }}
+      <label for="{{form.gzeroTriple.auto_id}}">gzero</label>{{ form.gzeroTriple }}
       </fieldset>
      <div id="imgSize">
      <label for="id_resolutions">Set Image resolution to sample</label>
@@ -43,8 +43,9 @@
    </div> <!-- row -->
 <div class="rgbimg-background">
  <div id="batchcontrols">
+  <div class="alert alert-info" id="userNotice"><strong>Note: </strong>When ready click <strong>Next</strong> to Proceed to Batch File Upload</div>
   <button type="button" id="start" class="btn" data-loading-text="Loading...">Next</button>
-  <button type="button" id="batch" class="btn" data-toggle="button">Swtich to Single Mode</button>
+  <button type="button" id="batch" class="btn" data-toggle="button" onclick="window.location='../rgb_upload'">Swtich to Single Mode</button>
  </div>
 </div>
 </form>

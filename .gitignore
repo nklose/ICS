@@ -7,3 +7,4 @@ output/*
 settings_local.py
 bin/*
 build/*
+*~

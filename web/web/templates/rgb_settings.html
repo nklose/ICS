@@ -13,46 +13,49 @@
 {% block tab-content %}
 <div class="tab-content">
  <div class="tab-pane" id="auto">
-  <div class="row-fluid">
    <div class="span4">
     <fieldset>
      <legend>Channels:</legend><br>
-     <label>Red</label>{{ form.red }}
-     <label>Blue</label>{{ form.blue }}
-     <label>Green</label>{{ form.green }}
+     {{ form.red.errors }}
+     <label for="{{form.red.auto_id}}" class="checkbox">{{ form.red }}Red</label>
+     {{ form.blue.errors }}
+     <label for="{{form.blue.auto_id}}"class="checkbox">{{ form.blue }}Blue</label>
+     {{ form.green.errors }}
+     <label for="{{form.green.auto_id}}"class="checkbox">{{ form.green }}Green</label>
      </fieldset>
     </div> <!-- span4 -->
     <div class="span4">
      <fieldset>
      <legend>Paramters:</legend>
-     <label>Range:</label>{{ form.rangeAuto }}
-     <label> g(0):</label>{{ form.gzeroAuto}}
-     <label>    w:</label>{{ form.wAuto }}
-     <label> ginf:</label>{{ form.ginfAuto }}
-     {{ form.deltaAuto }}Consider Deltas
+     <div class="control-group">{{ form.rangeAuto.errors }}<label for="{{form.rangeAuto.auto_id}}" class="control-label">Range:</label><div class="controls">{{ form.rangeAuto }}</div></div>
+     <div class="control-group">{{ form.gzeroAuto.errors }}<label for="{{form.gzeroAuto.auto_id}}" class="control-label"> g(0):</label><div class="controls">{{ form.gzeroAuto}}</div></div>
+     <div class="control-group">{{ form.wAuto.errors }}<label for="{{form.wAuto.auto_id}}" class="control-label">    w:</label><div class="controls">{{ form.wAuto }}</div></div>
+     <div class="control-group">{{ form.ginfAuto.errors }}<label for="{{form.ginfAuto.auto_id}}" class="control-label"> ginf:</label><div class="controls">{{ form.ginfAuto }}</div></div>
+     <div class="control-group">{{ form.deltaAuto.errors }}<label for="{{form.deltaAuto.auto_id}}" class="checkbox">{{ form.deltaAuto }}Consider Deltas</label></div>
      </fieldset>
     </div> <!-- span4 -->
-   </div> <!-- row -->
   </div> <!-- auto -->
 
  <div class="tab-pane" id="cross">
   <div class="row-fluid">
    <div class="span4">
+    <div class="control-group">
     <fieldset>
      <legend>Channels:</legend><br>
-     {{ form.redgreen }}<label>Red-Green</label>
-     {{ form.redblue }}<label>Red-Blue</label>
-     {{ form.greenblue }}<label>Green-Blue</label>
+     <div class="checkbox">{{ form.redgreen }}<label class="control-label">{{ form.redgreen }}Red-Green</label></div>
+     <div class="checkbox">{{ form.redblue }}<label class="control-label">{{ form.redblue }}Red-Blue</label></div>
+     <div class="checkbox">{{ form.greenblue }}<label class="control-label">{{ form.greenblue }}Green-Blue</label></div>
      </fieldset>
+     </div> <!-- control -->
     </div> <!-- span4 -->
-    <div class="span4">
+    <div class="row span4">
      <fieldset>
      <legend>Paramters:</legend>
-     <label>Range:</label>{{ form.rangeCross }}
-     <label> g(0):</label>{{ form.gzeroCross}}
-     <label>    w:</label>{{ form.wCross }}
-     <label> ginf:</label>{{ form.ginfCross }}
-     {{ form.deltaCross }}Consider Deltas
+     <div class="control-group">{{ form.rangeCross.errors }}<label for="{{form.rangeCross.auto_id}}" class="control-label">Range:</label>{{ form.rangeCross }}</div>
+     <div class="control-group">{{ form.gzeroCross.errors }}<label for="{{form.gzeroCross.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroCross}}</div>
+     <div class="control-group">{{ form.wCross.errors }}<label for="{{form.wCross.auto_id}}" class="control-label">    w:</label>{{ form.wCross }}</div>
+     <div class="control-group">{{ form.ginfCross.errors }}<label for="{{form.ginfCross.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfCross }}</div>
+     <div class="control-group">{{ form.deltaCross.errors }}<label for="{{form.deltaCross.auto_id}}" class="checkbox">{{ form.deltaAuto }}Consider Deltas</label></div>
      </fieldset>
     </div> <!-- span4 -->
     </div> <!-- row -->
@@ -72,11 +75,11 @@
     <div class="span4">
      <fieldset>
      <legend>Paramters:</legend>
-     <label>Range:</label>{{ form.rangeTripleAll }}
-     <label> g(0):</label>{{ form.gzeroTripleAll}}
-     <label>    w:</label>{{ form.wTripleAll }}
-     <label> ginf:</label>{{ form.ginfTripleAll }}
-     {{ form.deltaAll }}Consider Deltas
+     <div class="control-group">{{ form.rangeTripleAll.errors }}<label for="{{form.rangeTripleAll.auto_id}}" class="control-label">Range:</label>{{ form.rangeTripleAll }}</div>
+     <div class="control-group">{{ form.gzeroTripleAll.errors }}<label for="{{form.gzeroTripleAll.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroTripleAll}}</div>
+     <div class="control-group">{{ form.wTripleAll.errors }}<label for="{{form.wTripleAll.auto_id}}" class="control-label">    w:</label>{{ form.wTripleAll }}</div>
+     <div class="control-group">{{ form.ginfTripleAll.errors }}<label for="{{form.ginfTripleAll.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfTripleAll }}</div>
+     <div class="control-group">{{ form.deltaAll.errors }}<label for="{{form.deltaAll.auto_id}}" class="checkbox">{{ form.deltaAll }}Consider Deltas</label>
      </fieldset>
     </div> <!-- span4 -->
     </div> <!-- row -->
