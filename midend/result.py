@@ -5,6 +5,7 @@ import matplotlib.pyplot as pp
 import numpy as np
 import StringIO
 from matplotlib import cm
+import math
 
 class BaseResult(object):
 
@@ -28,11 +29,10 @@ class DualResult(BaseResult):
         self.fitArray = fitArray
         self.colors = colors
         self.rangeVal = rangeVal
-        self.gFit = gFit
         super(DualResult, self).__init__()
 
     def plotToStringIO(self):
-        return plot(self.outArray, self.gFit, self.colors)
+        return plot(self.outArray, self.fitArray, self.colors, self.ginf)
 
 
 class TripleResult_part1(BaseResult):
@@ -74,10 +74,11 @@ class TripleResult_part2(BaseResult):
 
 class TripleResult_part3(DualResult):
     def plotToStringIO(self):
-        return plot_1d(self.outArray, self.gFit, self.colors)
+        return plot_1d(self.outArray, self.fitArray, self.colors, self.ginf)
 
 
-def plot(gnew, gfit, color):
+def plot(gnew, gfit, color, ginf):
+    lower_bound = int(math.floor(ginf))
     graph_string = StringIO.StringIO()
     range_val = np.shape(gnew)[0]
 
@@ -86,13 +87,14 @@ def plot(gnew, gfit, color):
 
     __plot(plot_fit, plot_new, color, range_val)
 
-    pp.axis([0, range_val, 0, max(gfit[0, 0], gnew[1, 0])])
+    pp.axis([0, range_val, min(0, lower_bound), max(gfit[0, 0], gnew[1, 0])])
     pp.savefig(graph_string)
     graph_string.seek(0)
     return graph_string
 
 
-def plot_1d(gnew, gfit, color):
+def plot_1d(gnew, gfit, color, ginf):
+    lower_bound = int(math.floor(ginf))
     graph_string = StringIO.StringIO()
     range_val = np.shape(gnew)[0]
 
@@ -100,7 +102,7 @@ def plot_1d(gnew, gfit, color):
     plot_new = gnew[1:]
     __plot(plot_fit, plot_new, color, range_val)
 
-    pp.axis([0, range_val, 0, max(gfit[0], gnew[1])])
+    pp.axis([0, range_val, min(0, lower_bound), max(gfit[0], gnew[1])])
     pp.savefig(graph_string)
     graph_string.seek(0)
     return graph_string
