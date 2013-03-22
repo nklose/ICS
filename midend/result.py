@@ -1,23 +1,63 @@
 """ Module containing classes that are the result of using the backend.
 """
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as pp
 import numpy as np
-import StringIO
-from matplotlib import cm
-import math
+
+import graph
+
 
 class BaseResult(object):
+    """ Base class that contains functionality between all backend results.
+    """
 
     def plotToStringIO(self):
         """ Plots the graph to a StringIO object and returns it.
+
+        Return values:
+            graphString: a StringIO object representing the graph.
         """
         raise NotImplementedError("All subclasses must implement plot")
 
 
 class DualResult(BaseResult):
+    """ Represents the result of an auto or cross run.
+    """
+
     def __init__(self, g0, w, ginf, deltaX, deltaY, usedDeltas, resNorm,
-                 outArray, fitArray, colors, rangeVal, gFit):
+                 outArray, fitArray, color, rangeVal):
+        """ Arguments:
+                g0: The amplitude of the curve.
+                g0 type: float
+
+                w: The width of the curve.
+                w type: float
+
+                ginf: The flat part of the curve.
+                ginf type: float
+
+                deltaX: The x shift of the curve
+                deltaX type: float
+
+                deltaY: The y shift of the curve
+                deltaY type: float
+
+                usedDeltas: whether the delta values were used.
+                usedDeltas type: bool
+
+                resNorm: The residual norm of the curve.
+                resNorm type: float
+
+                outArray: The calculated result
+                outArray type: numpy.array
+
+                fitArray: The calculated fit points
+                fitArray type: numpy.array
+
+                color: The color of the result. eg "rg"
+                color type: string
+
+                rangeVal: The range of the curve.
+                rangeVal type: float
+        """
         self.g0 = g0
         self.w = w
         self.ginf = ginf
@@ -27,133 +67,104 @@ class DualResult(BaseResult):
         self.resNorm = resNorm
         self.outArray = outArray
         self.fitArray = fitArray
-        self.colors = colors
+        self.color = color
         self.rangeVal = rangeVal
         super(DualResult, self).__init__()
 
     def plotToStringIO(self):
-        return plot(self.outArray, self.fitArray, self.colors, self.ginf)
+        """ Plots the graph to a StringIO object and returns it.
+
+        Return values:
+            graphString: a StringIO object representing the graph.
+        """
+        return graph.plot(self.outArray, self.fitArray, self.color, self.ginf)
 
 
 class TripleResult_part1(BaseResult):
-    def __init__(self, avg_r, avg_g, avg_b, sr, sg, sb, side):
+    def __init__(self, avg_r, avg_g, avg_b, surfaceR, surfaceG, surfaceB, side):
+        """ Arguments:
+                avg_r: The average intensity of the red channel
+                avg_r type: float
+
+                avg_g: The average intensity of the green channel
+                avg_g type: float
+
+                avg_b: The average intensity of the blue channel
+                avg_b type: float
+
+                surfaceR: The red surface data
+                surfaceR type: numpy.array
+
+                surfaceG: The green surface data
+                surfaceG type: numpy.array
+
+                surfaceB: The blue surface data
+                surfaceB type: numpy.array
+
+                side: the length of a side of the image
+                side type: int
+        """
         self.avg_r = avg_r
         self.avg_g = avg_g
         self.avg_b = avg_b
-        self.sr = sr
-        self.sg = sg
-        self.sb = sb
+        self.surfaceR = surfaceR
+        self.surfaceG = surfaceG
+        self.surfaceB = surfaceB
         self.side = side
         super(TripleResult_part1, self).__init__()
 
     def plotToStringIO(self):
-        Z = np.abs(self.sr)
-        m, n = Z.shape
-        x = np.arange(n)
-        y = np.arange(m)
-        X, Y = np.meshgrid(x, y)
-        return surfacePlot(X, Y, Z, "r")
+        """ Plots the graph to a StringIO object and returns it.
+
+        Return values:
+            graphString: a StringIO object representing the graph.
+        """
+        zData = np.abs(self.surfaceR)
+        rows, columns = zData.shape
+        xArray = np.arange(columns)
+        yArray = np.arange(rows)
+        xData, yData = np.meshgrid(xArray, yArray)
+        return graph.surfacePlot(xData, yData, zData, "r")
 
 
 class TripleResult_part2(BaseResult):
 
     def __init__(self, side, lim, part_rgb):
+        """ Arguments:
+                side: The size of a side of the image
+                side type: int
+
+                lim: The limit of the graph to use.
+                lim type: int
+
+                part_rgb: The data at the end of the call.
+                part_rgb type: np.array
+        """
         self.side = side
         self.lim = lim
         self.part_rgb = part_rgb
         super(TripleResult_part2, self).__init__()
 
     def plotToStringIO(self):
-        Z = self.part_rgb[0, :, :]
-        m, n = Z.shape
-        x = np.arange(n)
-        y = np.arange(m)
-        X, Y = np.meshgrid(x, y)
-        return surfacePlot(X, Y, Z, "rgb")
+        """ Plots the graph to a StringIO object and returns it.
+
+        Return values:
+            graphString: a StringIO object representing the graph.
+        """
+        zData = self.part_rgb[0, :, :]
+        rows, columns = zData.shape
+        xArray = np.arange(columns)
+        yArray = np.arange(rows)
+        xData, yData = np.meshgrid(xArray, yArray)
+        return graph.surfacePlot(xData, yData, zData, "rgb")
 
 
 class TripleResult_part3(DualResult):
     def plotToStringIO(self):
-        return plot_1d(self.outArray, self.fitArray, self.colors, self.ginf)
+        """ Plots the graph to a StringIO object and returns it.
 
-
-def plot(gnew, gfit, color, ginf):
-    lower_bound = int(math.floor(ginf))
-    graph_string = StringIO.StringIO()
-    range_val = np.shape(gnew)[0]
-
-    plot_fit = gfit[0:, 0]
-    plot_new = gnew[1:, 0]
-
-    __plot(plot_fit, plot_new, color, range_val)
-
-    pp.axis([0, range_val, min(0, lower_bound), max(gfit[0, 0], gnew[1, 0])])
-    pp.savefig(graph_string)
-    graph_string.seek(0)
-    return graph_string
-
-
-def plot_1d(gnew, gfit, color, ginf):
-    lower_bound = int(math.floor(ginf))
-    graph_string = StringIO.StringIO()
-    range_val = np.shape(gnew)[0]
-
-    plot_fit = gfit[0:]
-    plot_new = gnew[1:]
-    __plot(plot_fit, plot_new, color, range_val)
-
-    pp.axis([0, range_val, min(0, lower_bound), max(gfit[0], gnew[1])])
-    pp.savefig(graph_string)
-    graph_string.seek(0)
-    return graph_string
-
-
-def __plot(plot_fit, plot_new, color, range_val):
-    title = __gen_title(color, 'Y')
-    fit_style = __gen_style('--', color)
-    new_style = __gen_style('o', color)
-
-    pp.clf()
-    pp.title(title)
-    pp.plot(np.arange(0, range_val), plot_fit, fit_style,
-            np.arange(1, range_val), plot_new, new_style,
-            linewidth=2.0)
-
-
-def __gen_title(color, axis):
-    """ Internal function for generating the graph title.
-    """
-    s = ''
-    if len(color) == 1: s += 'Autocorrelation '
-    if len(color) == 2: s += 'Crosscorrelation '
-    if len(color) == 3: s += 'Triple-correlation '
-    if 'r' in color: s += 'Red '
-    if 'g' in color: s += 'Green '
-    if 'b' in color: s += 'Blue '
-    return s + axis
-
-
-def __gen_style(style, color):
-    """ Internal function for generating the graph style.
-    """
-    if len(color) == 1: return style + color[0]
-    if 'r' and 'g' and 'b' in color:
-        return style + "k"
-    if 'r' and 'g' in color: return style + "y"
-    if 'r' and 'b' in color: return style + "m"
-    if 'g' and 'b' in color: return style + "c"
-
-
-def surfacePlot(xData, yData, zData, color):
-    graph_string = StringIO.StringIO()
-    title = __gen_title(color, 'Y')
-    pp.clf()
-    pp.title(title)
-
-    fig = pp.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot_surface(xData, yData, zData, cmap=cm.get_cmap("jet"),
-                    linewidth=0)
-    pp.savefig(graph_string)
-    graph_string.seek(0)
-    return graph_string
+        Return values:
+            graphString: a StringIO object representing the graph.
+        """
+        return graph.plot_1d(self.outArray, self.fitArray, self.color,
+                             self.ginf)
