@@ -14,6 +14,9 @@ import numpy as np
 import scipy.optimize
 import backend_utils as butils
 
+import warnings
+warnings.simplefilter('ignore', np.ComplexWarning)
+
 
 def core(image1, image2, range_val, initial_val, consider_deltas):
     """Computes the auto or cross correlation

@@ -47,9 +47,12 @@ class TripleResult_part1(BaseResult):
         super(TripleResult_part1, self).__init__()
 
     def plotToStringIO(self):
-        beforeSurfc = np.abs(self.sr)
-        return surfacePlot(beforeSurfc[0, :], beforeSurfc[1, :],
-                           beforeSurfc[2, :], "r")
+        Z = np.abs(self.sr)
+        m, n = Z.shape
+        x = np.arange(n)
+        y = np.arange(m)
+        X, Y = np.meshgrid(x, y)
+        return surfacePlot(X, Y, Z, "r")
 
 
 class TripleResult_part2(BaseResult):
@@ -61,9 +64,12 @@ class TripleResult_part2(BaseResult):
         super(TripleResult_part2, self).__init__()
 
     def plotToStringIO(self):
-        beforeSurfc = self.part_rgb[0, :, :]
-        return surfacePlot(beforeSurfc[0, :], beforeSurfc[1, :],
-                           beforeSurfc[2, :], "rgb")
+        Z = self.part_rgb[0, :, :]
+        m, n = Z.shape
+        x = np.arange(n)
+        y = np.arange(m)
+        X, Y = np.meshgrid(x, y)
+        return surfacePlot(X, Y, Z, "rgb")
 
 
 class TripleResult_part3(DualResult):
@@ -130,7 +136,7 @@ def __gen_style(style, color):
     """
     if len(color) == 1: return style + color[0]
     if 'r' and 'g' and 'b' in color:
-        return style + ""
+        return style + "k"
     if 'r' and 'g' in color: return style + "y"
     if 'r' and 'b' in color: return style + "m"
     if 'g' and 'b' in color: return style + "c"
@@ -144,7 +150,7 @@ def surfacePlot(xData, yData, zData, color):
 
     fig = pp.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.plot_surface(xData, yData, zData, cmap=cm.get_cmap("YlOrRed"),
+    ax.plot_surface(xData, yData, zData, cmap=cm.get_cmap("jet"),
                     linewidth=0)
     pp.savefig(graph_string)
     graph_string.seek(0)

@@ -21,6 +21,9 @@ import ctypes
 from ctypes import c_int
 from ctypes import c_void_p
 
+import warnings
+warnings.simplefilter('ignore', np.ComplexWarning)
+
 def core_0(c):
     """Computes the first part of the triple correlation for a single channel
 
@@ -54,14 +57,14 @@ def core_1(sr,sg,sb,avg_rgb,lim):
     side = np.shape(sr)[0]
     sb = np.conj(sb)/(side**2)
     data_rgb = np.zeros((lim,lim,lim,lim),dtype=np.complex128)
-    
+
     idata = data_rgb.ctypes.data_as(c_void_p)
     isr = sr.ctypes.data_as(c_void_p)
     isg = sg.ctypes.data_as(c_void_p)
     isb = sb.ctypes.data_as(c_void_p)
     iside = c_int(side)
     ilim = c_int(lim)
-    
+
     lib = butils.backend_lib
     lib.core(idata,isr,isg,isb,iside,ilim)
     data_rgb = np.fft.ifftn(np.fft.fftshift(data_rgb))
