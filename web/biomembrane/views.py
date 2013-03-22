@@ -67,50 +67,6 @@ def home(request):
     temp = {"sec_title": "Welcome to the Homepage", "copyrightdate": 2013,}
     return render(request, 'homepage.html', temp)
 
-
-def sample_upload(request):
-    if request.method == 'POST':  # If the form has been submitted...
-        form = icsform.SampleImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            # All validation rules pass
-            # Process the data in form.cleaned_data
-
-            if form.isSingleUpload:
-                # single image uploaded by user
-                rgbImage = form.cleaned_data['mixedImg']
-                # Change to scipy image:
-                scirgbImg = scipy.misc.fromimage(image)
-
-            elif form.isMultipleUpload:
-                # three different images uploaded by user
-                redimg = form.cleaned_data['redImg']
-                blueImg = form.cleaned_data['blueImg']
-                greenImg = form.cleaned_data['greenImg']
-                # Change to scipy image:
-                sciredImg = scipy.misc.fromimage(redImg)
-                sciblueImg = scipy.misc.fromimage(blueImg)
-                scigreenImg = scipy.misc.fromimage(greenImg)
-
-            else:
-                # invalid missing information whether single or triple upload
-                rgbImage = None;
-                blueImg = None;
-                greenImg = None;
-                mixedImg = None;
-                
-        else:
-                # form invalid
-                rgbImage = None;
-                blueImg = None;
-                greenImg = None;
-                mixedImg = None;
-    else:
-        form = icsform.SampleImageForm()  # An unbound form
-
-    temp = {"sec_title": "upload", "copyrightdate": 2013,
-            "form": form}
-    return render(request, 'upload.html', temp)
-
 def rgb_upload(request):
     if request.method == 'POST':  # If the form has been submitted...
         form = icsform.SampleImageForm(request.POST, request.FILES)
@@ -122,21 +78,26 @@ def rgb_upload(request):
                 batch.save()
 
                 # Process the data in form.cleaned_data
-                image = form.cleaned_data['mixedImg']
+                rgbImage = form.cleaned_data['mixedImg']
                 # Change to scipy image:
-                sciImg = scipy.misc.fromimage(image)
-                r, g, b = image_utils.get_channels(sciImg) # generate the three channels
-                redImage, greenImage, blueImage = image_utils.create_images(r,g,b) #create the images
+                rgb = scipy.misc.fromimage(rgbImage)
+                r, g, b = image_utils.get_channels(rgb) # generate the three channels
+                redImage, greenImage, blueImage = image_utils.create_images(r, g, b) #create the images
                 
                 singleJob = models.Job(batch=batch,
                                        state=models.Job.UPLOADING,
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                singleJob.red_image.save('r.png', StringIO.StringIO(redImage))
-                singleJob.green_image.save('g.png', StringIO.StringIO(greenImage))
-                singleJob.blue_image.save('b.png', StringIO.StringIO(blueImage))
-                singleJob.rgb_image.save('rgb.png', StringIO.StringIO(image))
+                io = StringIO.StringIO()
+                redImage.save(io)
+                singleJob.red_image.save('r.png', io)
+                greenImage.save(io)
+                singleJob.green_image.save('g.png', io)
+                blueImage.save(io)
+                singleJob.blue_image.save('b.png', io)
+                rgbImage.save(io)
+                singleJob.rgb_image.save('rgb.png', io)
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
@@ -158,10 +119,15 @@ def rgb_upload(request):
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                singleJob.red_image.save('r.png', StringIO.StringIO(redImage))
-                singleJob.green_image.save('g.png', StringIO.StringIO(greenImage))
-                singleJob.blue_image.save('b.png', StringIO.StringIO(blueImage))
-                singleJob.rgb_image.save('rgb.png', StringIO.StringIO(rgbImage))
+                io = StringIO.StringIO()
+                redImage.save(io)
+                singleJob.red_image.save('r.png', io)
+                greenImage.save(io)
+                singleJob.green_image.save('g.png', io)
+                blueImage.save(io)
+                singleJob.blue_image.save('b.png', io)
+                rgbImage.save(io)
+                singleJob.rgb_image.save('rgb.png', io)
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
