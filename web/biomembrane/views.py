@@ -27,7 +27,7 @@ import scipy.misc
 import StringIO
 import icsform
 import models
-import image
+import image_utils
 
 def program(request):
 
@@ -125,18 +125,18 @@ def rgb_upload(request):
                 image = form.cleaned_data['mixedImg']
                 # Change to scipy image:
                 sciImg = scipy.misc.fromimage(image)
-                r, g, b = image.get_channels(sciImg) # generate the three channels
-                redImage, greenImage, blueImage = image.create_images(r,g,b) #create the images
+                r, g, b = image_utils.get_channels(sciImg) # generate the three channels
+                redImage, greenImage, blueImage = image_utils.create_images(r,g,b) #create the images
                 
                 singleJob = models.Job(batch=batch,
                                        state=models.Job.UPLOADING,
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                singleJob.red_image.save('r.png', StringIO.StringIO(redImage))
-                singleJob.green_image.save('g.png', StringIO.StringIO(greenImage))
-                singleJob.blue_image.save('b.png', StringIO.StringIO(blueImage))
-                singleJob.rgb_image.save('rgb.png', StringIO.StringIO(image))
+                singleJob.red_image_utils.save('r.png', StringIO.StringIO(redImage))
+                singleJob.green_image_utils.save('g.png', StringIO.StringIO(greenImage))
+                singleJob.blue_image_utils.save('b.png', StringIO.StringIO(blueImage))
+                singleJob.rgb_image_utils.save('rgb.png', StringIO.StringIO(image))
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
@@ -151,17 +151,17 @@ def rgb_upload(request):
                 r = scipy.misc.fromimage(redImage)
                 g = scipy.misc.fromimage(greenImage)
                 b = scipy.misc.fromimage(blueImage)
-                rgbImage = image.create_image(r, g, b)
+                rgbImage = image_utils.create_image(r, g, b)
 
                 singleJob = models.Job(batch=batch,
                                        state=models.Job.UPLOADING, 
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                singleJob.red_image.save('r.png', StringIO.StringIO(redImage))
-                singleJob.green_image.save('g.png', StringIO.StringIO(greenImage))
-                singleJob.blue_image.save('b.png', StringIO.StringIO(blueImage))
-                singleJob.rgb_image.save('rgb.png', StringIO.StringIO(rgbImage))
+                singleJob.red_image_utils.save('r.png', StringIO.StringIO(redImage))
+                singleJob.green_image_utils.save('g.png', StringIO.StringIO(greenImage))
+                singleJob.blue_image_utils.save('b.png', StringIO.StringIO(blueImage))
+                singleJob.rgb_image_utils.save('rgb.png', StringIO.StringIO(rgbImage))
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
