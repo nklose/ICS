@@ -392,6 +392,7 @@ def saveResultsFile(filepath, resultList, filename="results.txt"):
             ValueError: if an entry in resultList is invalid.
     """
     results = np.empty((len(resultList), 7))
+    np.ndarray.fill(results, np.nan)
     header = str.format('{:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s}',
                         'g(0)', 'w', 'ginf', 'dx', 'dy', 'used', 'norm')
     for index, result in enumerate(resultList):
@@ -409,4 +410,4 @@ def saveResultsFile(filepath, resultList, filename="results.txt"):
     finalPath = os.path.join(filepath, filename)
     with open(finalPath, "w") as resultsFile:
         resultsFile.write(header + '\n')
-        np.savetxt(finalPath, results, fmt='%9.5f')
+        np.savetxt(resultsFile, results, fmt='%9.5f')
