@@ -25,8 +25,8 @@ import os
 
 
 def generate_file_path(instance, filename):
-    id = instance.job.batch.id
-    number = instance.job.number
+    id = instance.batch.id
+    number = instance.number
     path = '/'.join([id, number, filename])
     return path
 
