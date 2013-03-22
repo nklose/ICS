@@ -24,6 +24,9 @@ from django.http import HttpResponseRedirect, HttpResponseServerError, HttpRespo
 from icsform import RgbSettingsForm, BatchSettingsForm;
 import scipy.misc
 import icsform
+import models
+import image
+from pickle import dumps
 
 def program(request):
 
@@ -112,20 +115,57 @@ def rgb_upload(request):
         form = icsform.SampleImageForm(request.POST, request.FILES)
         if form.is_valid():
             # All validation rules pass
-            # Process the data in form.cleaned_data
-            image = form.cleaned_data['mixedImg']
-            # Change to scipy image:
-            sciImg = scipy.misc.fromimage(image)
-            
-            return HttpResponseRedirect('/program/')
+            print form.isSingleUpload()
+            if form.isSingleUpload():
+                # Process the data in form.cleaned_data
+                image = form.cleaned_data['mixedImg']
+                imageReq = request_FILES['mixedImg']
+                # Change to scipy image:
+                sciImg = scipy.misc.fromimage(image)
+                
+                batch = models.Batch(user=None) # create a new batch
+                r,g,b = image.get_channels(sciImg) # generate the three channels
+                redImage, greenImage, blueImage = image.create_images(r,g,b) #create the images
+                
+                image.save(
+                           filename,
+                           ContentFile(image_data.read()),
+                           save=False)
+
+                singleJob = models.Job(state=models.Job.UPLOADING,
+                                       rgb_image=image,
+                                       red_image=None,
+                                       green_image=None,
+                                       blue_image=None,
+                                       red=dumps(r),
+                                       green=dumps(g),
+                                       blue=dumps(b),
+)
+                singleJob.save()
+                return HttpResponseRedirect('/program/')
+
+            elif form.isMultipleUpload():
+                 # Proccess the three image data in form.cleaned_data
+                 redImage = form.cleaned_data['redImg']
+                 greenImage = form.cleaned_data['greenImg']
+                 blueImage = form.cleaned_data['blueImg']
+
+                 singleJob = models.Job(state=models.Job.UPLOADING, 
+                                        red_image=redImage, 
+                                        green_image=greenImage, 
+                                        blue_image=blueImage)
+                 singleJob.save()
+                 return HttpResponseRedirect('/program/')
+            else:
+                 image = None
         else:
             image = None
     else:
         form = icsform.SampleImageForm()  # An unbound form
-        sciImg = None
+        #sciImg = None
 
     temp = {"sec_title": "Image Upload", "copyrightdate": 2013,
-            "form": form, "imgtype": str(sciImg)}
+            "form": form}
     return render(request, 'rgb_upload.html', temp)
 
 def results(request):

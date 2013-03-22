@@ -12,13 +12,13 @@ class SampleImageForm(forms.Form):
     uploadType = forms.CharField()
     
     def isSingleUpload(self):
-        if self.clean_uploadtype['singleRGB']:
+        if self.cleaned_data['uploadType'] == 'id_singleRGB':
            return True
         else:
            return False
 
     def isMultipleUpload(self):
-        if self.clean_uploadtype['threeRGB']:
+        if self.cleaned_data['uploadType'] == 'id_threeRGB':
            return True
         else:
            return False
@@ -73,13 +73,24 @@ class RgbSettingsForm(forms.Form):
     ginfTripleAll = forms.FloatField(required=False)
 
 
+    SIXTEEN, THIRTYTWO, SIXTYFOUR = u'16x16', u'32x32', u'64x64'
     RESOLUTIONS  = (     # set options for the user to specify sample for triple correlation
-        (1, '16x16'),
-        (2, '32x32'),
-        (3, '64x64'),
+        (SIXTEEN, u'16x16'),
+        (THIRTYTWO, u'32x32'),
+        (SIXTYFOUR, u'64x64'),
     )
 
-    resolutions = forms.ChoiceField(initial=3, choices=RESOLUTIONS)
+    resolutions = forms.ChoiceField(initial=SIXTYFOUR, choices=RESOLUTIONS)
+
+    def selectedResolution(self):
+       if self.cleaned_data['resolutions'] == SIXTEEN:
+          return 16
+       elif self.cleaned_data['resolutions'] == THIRTYTWO:
+          return 32
+       elif self.cleaned_data['resolutions'] == SIXTYFOUR:
+          return 64
+       else:
+          return None;
 
     def _init_(self, *args, **kwargs):
         super(RgbSettingsForm, self).__init__(*args, **kwargs) # Call to ModelForm constructor
@@ -105,7 +116,7 @@ class RgbSettingsForm(forms.Form):
         and parse and set the value of this input. OR, change it every time
         whatever you are using to determine the case changes.
         """
-        if self.clean_userSelected['id_auto']:
+        if self.cleaned_data['userSelected'] == 'id_auto':
             return True
         else:
             return False
@@ -118,19 +129,19 @@ class RgbSettingsForm(forms.Form):
         and parse and set the value of this input. OR, change it every time
         whatever you are using to determine the case changes.
         """
-        if self.clean_userSelected['id_cross']:
+        if self.cleaned_data['userSelected'] == 'id_cross':
             return True
         else:
             return False
 
     def isTriple(self):
-        if self.clean_userSelected['id_triple']:
+        if self.cleaned_data['userSelected'] == 'id_triple':
            return True
         else:
            return False
 
     def isAll(self):
-        if self.clean_userSelected['id_all']:
+        if self.cleaned_data['userSelected'] == 'id_all':
            return True
         else:
            return False
@@ -154,10 +165,21 @@ class BatchSettingsForm(forms.Form):
     wTriple = forms.FloatField(initial=0)
     ginfTriple = forms.FloatField(initial=0)
 
+    SIXTEEN, THIRTYTWO, SIXTYFOUR = u'16x16', u'32x32', u'64x64'
     RESOLUTIONS  = (     # set options for the user to specify sample for triple correlation
-       (1, '16x16'),
-       (2, '32x32'),
-       (3, '64x64'),
+        (SIXTEEN, u'16x16'),
+        (THIRTYTWO, u'32x32'),
+        (SIXTYFOUR, u'64x64'),
     )
 
-    resolutions = forms.ChoiceField(initial=3, choices=RESOLUTIONS)
+    resolutions = forms.ChoiceField(initial=SIXTYFOUR, choices=RESOLUTIONS)
+
+    def selectedResolution(self):
+       if self.cleaned_data['resolutions'] == SIXTEEN:
+          return 16
+       elif self.cleaned_data['resolutions'] == THIRTYTWO:
+          return 32
+       elif self.cleaned_data['resolutions'] == SIXTYFOUR:
+          return 64
+       else:
+          return None;
