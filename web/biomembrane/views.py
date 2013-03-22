@@ -133,10 +133,10 @@ def rgb_upload(request):
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                singleJob.red_image_utils.save('r.png', StringIO.StringIO(redImage))
-                singleJob.green_image_utils.save('g.png', StringIO.StringIO(greenImage))
-                singleJob.blue_image_utils.save('b.png', StringIO.StringIO(blueImage))
-                singleJob.rgb_image_utils.save('rgb.png', StringIO.StringIO(image))
+                singleJob.red_image.save('r.png', StringIO.StringIO(redImage))
+                singleJob.green_image.save('g.png', StringIO.StringIO(greenImage))
+                singleJob.blue_image.save('b.png', StringIO.StringIO(blueImage))
+                singleJob.rgb_image.save('rgb.png', StringIO.StringIO(image))
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
@@ -158,10 +158,10 @@ def rgb_upload(request):
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                singleJob.red_image_utils.save('r.png', StringIO.StringIO(redImage))
-                singleJob.green_image_utils.save('g.png', StringIO.StringIO(greenImage))
-                singleJob.blue_image_utils.save('b.png', StringIO.StringIO(blueImage))
-                singleJob.rgb_image_utils.save('rgb.png', StringIO.StringIO(rgbImage))
+                singleJob.red_image.save('r.png', StringIO.StringIO(redImage))
+                singleJob.green_image.save('g.png', StringIO.StringIO(greenImage))
+                singleJob.blue_image.save('b.png', StringIO.StringIO(blueImage))
+                singleJob.rgb_image.save('rgb.png', StringIO.StringIO(rgbImage))
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
