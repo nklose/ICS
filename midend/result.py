@@ -1,9 +1,10 @@
 """ Module containing classes that are the result of using the backend.
 """
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as pp
 import numpy as np
 import StringIO
-
+from matplotlib import cm
 
 class BaseResult(object):
 
@@ -46,11 +47,9 @@ class TripleResult_part1(BaseResult):
         super(TripleResult_part1, self).__init__()
 
     def plotToStringIO(self):
-        graphFile = StringIO.StringIO()
         beforeSurfc = np.abs(self.sr)
-        # do surfc with beforeSurfc
-        graphFile.seek(0)
-        return graphFile
+        return surfacePlot(beforeSurfc[0, :], beforeSurfc[1, :],
+                           beforeSurfc[2, :], "r")
 
 
 class TripleResult_part2(BaseResult):
@@ -62,25 +61,47 @@ class TripleResult_part2(BaseResult):
         super(TripleResult_part2, self).__init__()
 
     def plotToStringIO(self):
-        graphFile = StringIO.StringIO()
         beforeSurfc = self.part_rgb[0, :, :]
-        # do surfc
-        graphFile.seek(0)
-        return graphFile
+        return surfacePlot(beforeSurfc[0, :], beforeSurfc[1, :],
+                           beforeSurfc[2, :], "rgb")
 
 
 class TripleResult_part3(DualResult):
     def plotToStringIO(self):
-        return plot(self.outArray, self.gFit, self.colors)
+        return plot_1d(self.outArray, self.gFit, self.colors)
 
 
 def plot(gnew, gfit, color):
     graph_string = StringIO.StringIO()
-    title = __gen_title(color, 'Y')
     range_val = np.shape(gnew)[0]
 
     plot_fit = gfit[0:, 0]
     plot_new = gnew[1:, 0]
+
+    __plot(plot_fit, plot_new, color, range_val)
+
+    pp.axis([0, range_val, 0, max(gfit[0, 0], gnew[1, 0])])
+    pp.savefig(graph_string)
+    graph_string.seek(0)
+    return graph_string
+
+
+def plot_1d(gnew, gfit, color):
+    graph_string = StringIO.StringIO()
+    range_val = np.shape(gnew)[0]
+
+    plot_fit = gfit[0:]
+    plot_new = gnew[1:]
+    __plot(plot_fit, plot_new, color, range_val)
+
+    pp.axis([0, range_val, 0, max(gfit[0], gnew[1])])
+    pp.savefig(graph_string)
+    graph_string.seek(0)
+    return graph_string
+
+
+def __plot(plot_fit, plot_new, color, range_val):
+    title = __gen_title(color, 'Y')
     fit_style = __gen_style('--', color)
     new_style = __gen_style('o', color)
 
@@ -89,10 +110,6 @@ def plot(gnew, gfit, color):
     pp.plot(np.arange(0, range_val), plot_fit, fit_style,
             np.arange(1, range_val), plot_new, new_style,
             linewidth=2.0)
-    pp.axis([0, range_val, 0, max(gfit[0, 0], gnew[1, 0])])
-    pp.savefig(graph_string)
-    graph_string.seek(0)
-    return graph_string
 
 
 def __gen_title(color, axis):
@@ -112,7 +129,23 @@ def __gen_style(style, color):
     """ Internal function for generating the graph style.
     """
     if len(color) == 1: return style + color[0]
-    if 'r' and 'g' and 'b' in color: return style + ""
+    if 'r' and 'g' and 'b' in color:
+        return style + ""
     if 'r' and 'g' in color: return style + "y"
     if 'r' and 'b' in color: return style + "m"
     if 'g' and 'b' in color: return style + "c"
+
+
+def surfacePlot(xData, yData, zData, color):
+    graph_string = StringIO.StringIO()
+    title = __gen_title(color, 'Y')
+    pp.clf()
+    pp.title(title)
+
+    fig = pp.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_surface(xData, yData, zData, cmap=cm.get_cmap("YlOrRed"),
+                    linewidth=0)
+    pp.savefig(graph_string)
+    graph_string.seek(0)
+    return graph_string

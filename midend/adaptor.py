@@ -182,7 +182,7 @@ def run_triple_part2(firstResults, limit):
     """
     avg_rgb = firstResults.avg_r * firstResults.avg_g * firstResults.avg_b
     part_rgb = triple.core_1(firstResults.sr, firstResults.sg, firstResults.sb,
-                             avg_rgb, firstResults.lim)
+                             avg_rgb, limit)
     return result.TripleResult_part2(firstResults.side, limit, part_rgb)
 
 
@@ -213,6 +213,6 @@ def run_triple_part3(secondResults, range_val, g0, w, ginf):
     fit = butils.gauss_1d(np.arange(range_val), *par)
     par[1] = int(par[1] * (secondResults.side / secondResults.lim) * 10) / 10
     resnorm = np.sum((out - fit) ** 2)
-    return result.TripleResult_part3(par[0], par[1], par[2], par[3], par[4],
-                                     False, resnorm, out, fit, ['rgb'],
+    return result.TripleResult_part3(par[0], par[1], par[2], 0, 0,
+                                     False, resnorm, out, fit, 'rgb',
                                      range_val, fit)
