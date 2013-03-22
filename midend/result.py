@@ -1,8 +1,14 @@
 """ Module containing classes that are the result of using the backend.
 """
 import numpy as np
+import os
 
 import graph
+
+
+class NoSaveDataException(Exception):
+    """ Exception for when there is nothing to be saved by a result. """
+    pass
 
 
 class BaseResult(object):
@@ -15,7 +21,45 @@ class BaseResult(object):
         Return values:
             graphString: a StringIO object representing the graph.
         """
-        raise NotImplementedError("All subclasses must implement plot")
+        raise NotImplementedError("All subclasses must implement "
+                                  "plotToStringIo")
+
+    def saveData(self, filepath, dataName=None, fitName=None):
+        """ Saves the data described by the result object to file
+
+        Arguments:
+            filepath: the directory to save the data to.
+            filepath type: string
+
+            dataName: the name to save the data to, default depends on class.
+            dataName type: string
+
+            fitName: the name to save the fit to, default depends on class.
+            fitName type: string
+
+        Raises:
+            NoSaveDataException: If the result type does not have any data to
+                                 save.
+        """
+        raise NotImplementedError("All subclasses must implement "
+                                  "saveData")
+
+    def saveDataFileLike(self, dataFileLike, fitFileLike):
+        """ Saves the data described by the result object to file
+
+        Arguments:
+            dataFileLike: the directory to save the data to.
+            dataFileLike type: string
+
+            fitFileLike: the directory to save the fit data to.
+            fitFileLike type: string
+
+        Raises:
+            NoSaveDataException: If the result type does not have any data to
+                                 save.
+        """
+        raise NotImplementedError("All subclasses must implement "
+                                  "saveDataFileLike")
 
 
 class DualResult(BaseResult):
@@ -79,6 +123,50 @@ class DualResult(BaseResult):
         """
         return graph.plot(self.outArray, self.fitArray, self.color, self.ginf)
 
+    def saveData(self, filepath, dataName=None, fitName=None):
+        """ Saves the data described by the result object to file
+
+        Arguments:
+            filepath: the directory to save the data to.
+            filepath type: string
+
+            dataName: the name to save the data to, default is based on color.
+            dataName type: string
+
+            fitName: the name to save the fit to, default is based on color.
+            fitName type: string
+
+        Raises:
+            NoSaveDataException: If the result type does not have any data to
+                                 save.
+        """
+        if len(self.color) == 1: code = 'AC'
+        if len(self.color) == 2: code = 'XC'
+        if dataName is None:
+            dataName = code + self.color + '.txt'
+        if fitName is None:
+            fitName = code + self.color + 'Fit.txt'
+        dataPath = os.path.join(filepath, dataName)
+        fitPath = os.path.join(filepath, fitName)
+        self.saveDataFileLike(dataPath, fitPath)
+
+    def saveDataFileLike(self, dataFileLike, fitFileLike):
+        """ Saves the data described by the result object to file
+
+        Arguments:
+            dataFileLike: the directory to save the data to.
+            dataFileLike type: string
+
+            fitFileLike: the directory to save the fit data to.
+            fitFileLike type: string
+
+        Raises:
+            NoSaveDataException: If the result type does not have any data to
+                                 save.
+        """
+        np.savetxt(dataFileLike, self.outArray, fmt='%9.5f')
+        np.savetxt(fitFileLike, self.fitArray, fmt='%9.5f')
+
 
 class TripleResult_part1(BaseResult):
     def __init__(self, avg_r, avg_g, avg_b, surfaceR, surfaceG, surfaceB, side):
@@ -126,6 +214,43 @@ class TripleResult_part1(BaseResult):
         xData, yData = np.meshgrid(xArray, yArray)
         return graph.surfacePlot(xData, yData, zData, "r")
 
+    def saveData(self, filepath, dataName=None, fitName=None):
+        """ Saves the data described by the result object to file
+
+        Arguments:
+            filepath: the directory to save the data to.
+            filepath type: string
+
+            dataName: the name to save the data to.
+            dataName type: string
+
+            fitName: the name to save the fit to.
+            fitName type: string
+
+        Raises:
+            NoSaveDataException: If the result type does not have any data to
+                                 save.
+        """
+        raise NoSaveDataException("The triple correlation must be finished "
+                                  "before it can be saved")
+
+    def saveDataFileLike(self, dataFileLike, fitFileLike):
+        """ Saves the data described by the result object to file
+
+        Arguments:
+            dataFileLike: the directory to save the data to.
+            dataFileLike type: string
+
+            fitFileLike: the directory to save the fit data to.
+            fitFileLike type: string
+
+        Raises:
+            NoSaveDataException: If the result type does not have any data to
+                                 save.
+        """
+        raise NoSaveDataException("The triple correlation must be finished "
+                                  "before it can be saved")
+
 
 class TripleResult_part2(BaseResult):
 
@@ -158,6 +283,43 @@ class TripleResult_part2(BaseResult):
         xData, yData = np.meshgrid(xArray, yArray)
         return graph.surfacePlot(xData, yData, zData, "rgb")
 
+    def saveData(self, filepath, dataName=None, fitName=None):
+        """ Saves the data described by the result object to file
+
+        Arguments:
+            filepath: the directory to save the data to.
+            filepath type: string
+
+            dataName: the name to save the data to.
+            dataName type: string
+
+            fitName: the name to save the fit to.
+            fitName type: string
+
+        Raises:
+            NoSaveDataException: If the result type does not have any data to
+                                 save.
+        """
+        raise NoSaveDataException("The triple correlation must be finished "
+                                  "before it can be saved")
+
+    def saveDataFileLike(self, dataFileLike, fitFileLike):
+        """ Saves the data described by the result object to file
+
+        Arguments:
+            dataFileLike: the directory to save the data to.
+            dataFileLike type: string
+
+            fitFileLike: the directory to save the fit data to.
+            fitFileLike type: string
+
+        Raises:
+            NoSaveDataException: If the result type does not have any data to
+                                 save.
+        """
+        raise NoSaveDataException("The triple correlation must be finished "
+                                  "before it can be saved")
+
 
 class TripleResult_part3(DualResult):
     def plotToStringIO(self):
@@ -168,3 +330,83 @@ class TripleResult_part3(DualResult):
         """
         return graph.plot_1d(self.outArray, self.fitArray, self.color,
                              self.ginf)
+
+    def saveData(self, filepath, dataName=None, fitName=None):
+        """ Saves the data described by the result object to file
+
+        Arguments:
+            filepath: the directory to save the data to.
+            filepath type: string
+
+            dataName: the name to save the data to, default is TripleCrgb.txt.
+            dataName type: string
+
+            fitName: the name to save the fit to, default is TripleCrgbFit.txt.
+            fitName type: string
+
+        Raises:
+            NoSaveDataException: If the result type does not have any data to
+                                 save.
+        """
+        if dataName is None:
+            dataName = "TripleCrgb.txt"
+        if fitName is None:
+            fitName = "TripleCrgbFit.txt"
+        dataPath = os.path.join(filepath, dataName)
+        fitPath = os.path.join(filepath, fitName)
+        self.saveDataFileLike(dataPath, fitPath)
+
+    def saveDataFileLike(self, dataFileLike, fitFileLike):
+        """ Saves the data described by the result object to file
+
+        Arguments:
+            dataFileLike: the directory to save the data to.
+            dataFileLike type: string
+
+            fitFileLike: the directory to save the fit data to.
+            fitFileLike type: string
+
+        Raises:
+            NoSaveDataException: If the result type does not have any data to
+                                 save.
+        """
+        np.savetxt(dataFileLike, self.outArray, fmt='%9.5f', delimiter='\n')
+        np.savetxt(fitFileLike, self.fitArray, fmt='%9.5f', delimiter='\n')
+
+
+def saveResultsFile(filepath, resultList, filename="results.txt"):
+    """ Saves the result file summarizing all entries in resultList.
+
+        Arguments:
+            filepath: the filepath to save results.txt to.
+            filepath type: string
+
+            resultList: the list of DualResult and TripleResult_part3 objects.
+            resultList type: list
+
+            filename: the name of the file to save data in. Defaults to
+                      results.txt
+            filename type: string
+
+        Raises:
+            ValueError: if an entry in resultList is invalid.
+    """
+    results = np.empty((len(resultList), 7))
+    header = str.format('{:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s} {:>9s}',
+                        'g(0)', 'w', 'ginf', 'dx', 'dy', 'used', 'norm')
+    for index, result in enumerate(resultList):
+        if not isinstance(result, DualResult):
+            # Triple is subclassed by dual.
+            raise ValueError("Invalid result type for final results: %s" %
+                             type(result))
+        results[index, 0] = result.g0
+        results[index, 1] = result.w
+        results[index, 2] = result.ginf
+        results[index, 3] = result.deltaX
+        results[index, 4] = result.deltaY
+        results[index, 5] = result.usedDeltas
+        results[index, 6] = result.resNorm
+    finalPath = os.path.join(filepath, filename)
+    with open(finalPath, "w") as resultsFile:
+        resultsFile.write(header + '\n')
+        np.savetxt(finalPath, results, fmt='%9.5f')

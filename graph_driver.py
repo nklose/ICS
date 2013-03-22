@@ -1,6 +1,9 @@
 import PIL.Image as Image
+import os
+import shutil
 
 import midend.adaptor as adaptor
+import midend.result as result
 
 
 def generate():
@@ -18,6 +21,7 @@ def generate():
                                                ginf, range_val, consider_deltas)
     generate_graphs(resultLists)
     # Should now be a graph0.png, graph1.png, graph2.png
+    return resultLists
 
 
 def generate_graphs(resultList, name_format="graph%d.png"):
@@ -44,7 +48,27 @@ def generateTriple():
     generate_graphs([secondResult], name_format="triplegraph_2_%d.png")
     finalResult = adaptor.run_triple_part3(secondResult, range_val, g0, w, ginf)
     generate_graphs([finalResult], name_format="triplegraph_3_%d.png")
+    return finalResult
+
+
+def saveAllFiles(results):
+    outputPath = "output/"
+    # save results.txt, filename is usually "results.txt", just making the
+    # argument obvious
+    shutil.rmtree(outputPath)
+    os.mkdir(outputPath)
+    result.saveResultsFile(outputPath, results, filename="results.txt")
+    # result.saveResultsFile(outputPath, results) is equivalent
+    # Save other files
+    for res in results:
+        #Save data, setting names to their default values
+        res.saveData(outputPath, dataName=None, fitName=None)
+        # res.saveData(outputPath) is equivalent
+        # can also save to a file like object:
+        # res.saveDataFileLike(dataFileLike, fitFileLike)
+
 
 if __name__ == "__main__":
-    generate()
-    generateTriple()
+    outputs = generate()
+    outputs.append(generateTriple())
+    saveAllFiles(outputs)
