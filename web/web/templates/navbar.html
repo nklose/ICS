@@ -17,7 +17,7 @@
        <li><a href="{% url batchmode %}">Batch Mode</a></li>
        <li><a href="#">Documentation</a></li>
        </ul>
-       <ul class="nav pull-right">
+       <ul class="nav-collapse collapse nav pull-right">
         {% if user.is_active %}
          <li><a>You are logged in as: {{ user.username }}</a></li>
          <li><a href="/accounts/logout">Logout</a></li>
