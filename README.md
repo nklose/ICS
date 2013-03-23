@@ -23,8 +23,10 @@ A few packages are required for the program:
 5. pythonmagick (Ubuntu package: python-pythonmagick). pythonmagick Copyright
 1999-2011 ImageMagick Studio LLC, a non-profit organization dedicated to making
 software imaging solutions freely available.
-
-6. PyQT. PyQT is Copyright (c) 2013, Riverbank Computing Limited.
+6. wand (sudo apt-get install libmagickwand-dev, sudo pip install Wand)
+Copyright 2013 Hong Minhee, http://dahlia.kr/ <minhee@dahlia.kr> under the MIT
+License.
+7. PyQT. PyQT is Copyright (c) 2013, Riverbank Computing Limited.
    Riverbank Computing Limited is a company registered in England and Wales
    with company number 4314904.
 

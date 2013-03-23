@@ -12,8 +12,8 @@ from __future__ import division
 import numpy as np
 import scipy.misc
 import PythonMagick
+import wand.image
 from PIL import Image
-import sys
 
 
 class ImageFormatException(Exception):
@@ -26,12 +26,15 @@ class ImageFormatException(Exception):
         super(ImageFormatException, self).__init__(msg)
 
 
-def validate_image(filepath):
+def validate_image(filepath, mixed):
     """ Checks if the image file is valid (Lossless / uncompressed).
 
     Arguments:
         filepath: The path to the file to open
         filepath type: string
+
+        mixed: Whether the image is a "mixed" image or not.
+        mixed type: boolean
 
     Return Value:
         The image opened in PIL.
@@ -41,26 +44,37 @@ def validate_image(filepath):
     """
     image = PythonMagick.Image(filepath)
     comp_type = image.attribute("CompressionType")
-    if comp_type != '':
+    img_format = image.format()
+    jpeg_format = 'Joint Photographic Experts Group JFIF format'
+    if comp_type != '' or img_format == jpeg_format:
         raise ImageFormatException(filepath)
-    #return convertMGtoPIL(image)
+    return convertWandtoScipy(wand.image.Image(filename=filepath), mixed)
 
 
-def convertMGtoPIL(magickimage):
-    """ From http://www.imagemagick.org/download/python/README.txt
+def convertWandtoScipy(wandImage, mixed):
+    """ Convert a Wand image to a scipy image
+
+    Arguments:
+        wandImage: The file in wand.
+        wandImage type: wand.image.Image
+
+        mixed: Whether the image is a "mixed" image or not.
+        mixed type: boolean
+
+    Return Value:
+        The image opened in PIL.
     """
-    # make copy
-    img = PythonMagick.Image(magickimage)
-    # this takes 0.04 sec. for 640x480 image
-    img.depth = 8
-    img.magick = "RGB"
-    blob = PythonMagick.Blob()
-    img.write(blob, "RGB")
-    data = PythonMagick.get_blob_data(blob)
-    w, h = img.columns(), img.rows()
-    # convert string array to an RGB Pil image
-    pilimage = Image.fromstring('RGB', (w, h), data)
-    return pilimage
+    img = wand.image.Image(wandImage)
+    conv_wand = "RGB"
+    conv_pil = "RGB"
+    data = img.make_blob(conv_wand)
+    pilimage = Image.fromstring(conv_pil, img.size, data)
+    if mixed:
+        array = scipy.misc.fromimage(pilimage)
+    if not mixed:
+        pilimage = pilimage.convert("L")
+        array = scipy.misc.fromimage(pilimage)
+    return array
 
 
 def load_image_mixed(fpath):
@@ -77,8 +91,7 @@ def load_image_mixed(fpath):
     Exceptions:
         ImageFormatException
     """
-    validate_image(fpath)
-    raw_image = scipy.misc.imread(fpath)
+    raw_image = validate_image(fpath, True)
     r = raw_image[:, :, 0].astype(np.float)
     g = raw_image[:, :, 1].astype(np.float)
     b = raw_image[:, :, 2].astype(np.float)
@@ -116,9 +129,8 @@ def load_image_split(fpath):
     Exceptions:
         ImageFormatException
     """
-    validate_image(fpath)
-    image = scipy.misc.imread(fpath)
-    channel = image.astype(np.float)
+    raw_channel = validate_image(fpath, False)
+    channel = raw_channel.astype(np.float)
     return channel
 
 
@@ -147,8 +159,7 @@ def load_image_mixed_batch(image, fpath):
     Exceptions:
         ImageFormatException
     """
-    validate_image(fpath)
-    raw_image = scipy.misc.imread(fpath)
+    raw_image = validate_image(fpath, True)
     image[0, :, :] = raw_image[:, :, 0].astype(np.float)
     image[1, :, :] = raw_image[:, :, 1].astype(np.float)
     image[2, :, :] = raw_image[:, :, 2].astype(np.float)
@@ -164,6 +175,5 @@ def load_image_split_batch(image, fpath):
     Exceptions:
         ImageFormatException
     """
-    validate_image(fpath)
-    raw_channel = scipy.misc.imread(fpath)
+    raw_channel = validate_image(fpath, False)
     image[:, :] = raw_channel.astype(np.float)
