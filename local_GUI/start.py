@@ -1334,6 +1334,7 @@ class StartQT4(QtGui.QMainWindow):
     # Construct an RGB Image from three separate channel images
     def constructRGB(self):
         if self.redPath != "" and self.greenPath != "" and self.bluePath != "":
+            print('hello')
 
     # Refreshes the temporary directory by deleting and recreating it
     def refresh_temp(self):
