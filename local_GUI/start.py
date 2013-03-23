@@ -68,6 +68,9 @@ class StartQT4(QtGui.QMainWindow):
         # Size of the images in pixels (e.g. 64 would mean a 64x64 image)
         self.size = 0
 
+        # Result of most recent triple correlation part, used for next part
+        self.tripleResult = None
+
         #######################################################
         # Interface Object Connections                        #
         #######################################################
@@ -1061,9 +1064,13 @@ class StartQT4(QtGui.QMainWindow):
             print("No image loaded.")
             return 0
 
-    # Show Fourier transform (red) surface plot
+    # Show Fourier transform (red) surface plot (part 1)
     def show_fourier(self):
+        result = None
+
+        # define a path to save the image
         path = os.path.join(self.temp_dir, "triple_1.png")
+
         if self.get_num_images() == 1:
             # convert the RGB image to a PIL image
             pilImage = PIL.Image.open(self.rgbPath)
@@ -1090,6 +1097,9 @@ class StartQT4(QtGui.QMainWindow):
         # show the graph
         self.ui.imageTripleFourier.setPixmap(QtGui.QPixmap(path))
 
+        # save result for next part
+        self.tripleResult = result
+
         # enable sample resolution radio buttons and continue button 1
         self.ui.resolution16.setEnabled(True)
         self.ui.resolution32.setEnabled(True)
@@ -1097,10 +1107,31 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.continueButton1.setEnabled(True)
 
 
-    # Begin triple correlation process
+    # Begin triple correlation process (part 2)
     def triple_process(self):
-        # Read sample resolution (limit)
+        result = None
+
+        # define a path to save the image
+        path = os.path.join(self.temp_dir, "triple_2.png")
+
+         # Read sample resolution (limit)
         limit = self.get_sample_resolution()
+
+        # call the midend to get the result object
+        result = midend.adaptor.run_triple_part2(self.tripleResult, limit)
+
+        # save result for next part
+        self.tripleResult = result
+
+        # create the graph
+        fileLike = result.plotToStringIO()
+        outFile = open(path, "w")
+        for line in fileLike.readlines():
+            outFile.write(line)
+        outFile.close()
+        
+        # display the graph
+        self.ui.imageTripleCorrelation.setPixmap(QtGui.QPixmap(path))
 
         # disable sample resolution radio buttons and continue button 1
         self.ui.resolution16.setEnabled(False)
@@ -1116,9 +1147,7 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleDeltasCheckbox.setEnabled(True)
         self.ui.continueButton2.setEnabled(True)
 
-        # Show triple-correlation surface plot
-
-    # Finish off triple correlation process
+    # Finish off triple correlation process (part 3)
     def triple_complete(self):
         # disable parameter inputs and continue button 2
         self.ui.tripleRangeTextbox.setEnabled(False)
