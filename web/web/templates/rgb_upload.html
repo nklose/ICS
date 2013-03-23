@@ -5,6 +5,13 @@
 <h3>Image Upload</h3>
 <div class="rgbimg-background">
 <div class="alert alert-info" id="userNotice"><strong>Note: </strong>Choose either to upload a single RGB image file or three files for each image channel</div>
+<div class="alert alert-error">
+{{ form.redBlue.errors }}
+{{ form.redImg.errors }}
+{{ form.greenImg.errors }}
+{{ form.blueImg.errors }}
+{{ form.mixedImg.errors }}
+</div>
  <ul class="nav nav-tabs">
    <li><a href="#singleRGB" data-toggle="tab" id="id_singleRGB">Single RGB Image</a></li>
    <li><a href="#threeRGB" data-toggle="tab" id="id_threeRGB">Three Channel Images</a></li>
@@ -27,7 +34,7 @@
   </div>
   <div class="modal-body">
     <form action="" method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>{% csrf_token %}
-     <div class="control-group">{{ form.mixedImg.errors }}<label class="control-label">{{ form.mixedImg }}</label></div>
+     <div class="control-group"><label class="control-label">{{ form.mixedImg }}</label></div>
     {{ form.uploadType.as_hidden}}
   </div>
   <div class="modal-footer">
@@ -46,9 +53,9 @@
   </div>
   <div class="modal-body">
     <form action="" method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>{%     csrf_token %}
-    <div class="control-group">{{ form.redImg.errors }}<label class="control-label">Red</label>{{ form.redImg }}</div>
-    <div class="control-group">{{ form.greenImg.errors }}<label class="control-label">Green</label>{{ form.greenImg }}</div>
-    <div class="control-group">{{ form.blueImg.errors }}<label class="control-label">Blue</label>{{ form.blueImg }}</div>
+    <div class="control-group"><label class="control-label">Red</label>{{ form.redImg }}</div>
+    <div class="control-group"><label class="control-label">Green</label>{{ form.greenImg }}</div>
+    <div class="control-group"><label class="control-label">Blue</label>{{ form.blueImg }}</div>
     {{ form.uploadType.as_hidden}} 
   </div>
   <div class="modal-footer">
