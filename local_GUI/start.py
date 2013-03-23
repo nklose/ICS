@@ -374,17 +374,7 @@ class StartQT4(QtGui.QMainWindow):
                 self.crossCorrelation()
 
             elif mode == "triple":
-                # Construct string containing channels to be used
-                self.msgTriple()
-
-                # Change to triple section of output tab
-                self.select_tab("output", "triple")
-                self.progress(5)
-
-                # Show Fourier transform (red) surface plot
-                self.show_fourier()
-
-                # Triple correlation doesn't actually happen until user clicks Continue
+                self.tripleCorrelation()
 
             elif mode == "all":
                 # Construct string containing channels to be used
@@ -1047,6 +1037,17 @@ class StartQT4(QtGui.QMainWindow):
         # Change to auto section of output tab
         self.select_tab("output", "cross")
 
+    # Performs a triple correlation.
+    def tripleCorrelation(self):
+        # Construct string containing channels to be used
+        self.msgTriple()
+
+        # Change to triple section of output tab
+        self.select_tab("output", "triple")
+
+        # Show Fourier transform (red) surface plot
+        self.show_fourier()
+
     # Returns the number of images to use (0, 1, or 3). 0 means
     # the user hasn't yet loaded all required channels, 1 means
     # the user has loaded one RGB image, and 3 means the user
@@ -1062,7 +1063,32 @@ class StartQT4(QtGui.QMainWindow):
 
     # Show Fourier transform (red) surface plot
     def show_fourier(self):
-        # show plot
+        path = os.path.join(self.temp_dir, "triple_1.png")
+        if self.get_num_images() == 1:
+            # convert the RGB image to a PIL image
+            pilImage = PIL.Image.open(self.rgbPath)
+
+            # call the midend to get the result object
+            result = midend.adaptor.run_triple_mixed_image_part1(pilImage)
+
+        elif self.get_num_images() == 3:
+            # convert images to PIL images
+            pilR = PIL.Image.open(self.redPath)
+            pilG = PIL.Image.open(self.greenPath)
+            pilB = PIL.Image.open(self.bluePath)
+            
+            # call the midend to get the result object
+            result = midend.adaptor.run_triple_split_image_part1(pilR, pilG, pilB)
+
+        # create the graph
+        fileLike = result.plotToStringIO()
+        outFile = open(path, "w")
+        for line in fileLike.readlines():
+            outFile.write(line)
+        outFile.close()
+
+        # show the graph
+        self.ui.imageTripleFourier.setPixmap(QtGui.QPixmap(path))
 
         # enable sample resolution radio buttons and continue button 1
         self.ui.resolution16.setEnabled(True)
@@ -1279,33 +1305,6 @@ class StartQT4(QtGui.QMainWindow):
     # Construct an RGB Image from three separate channel images
     def constructRGB(self):
         if self.redPath != "" and self.greenPath != "" and self.bluePath != "":
-
-            # Make a list of file paths
-            imagePaths = [str(self.redPath), str(self.greenPath), str(self.bluePath)]
-
-            # Save the image dimension
-            self.update_size(self.redChannel.shape[1])
-
-            # Construct an image from the individual channels
-            # Code from http://stackoverflow.com/questions/10443295/
-            #   combine-3-separate-numpy-arrays-to-an-rgb-image-in-python
-            rgbArray = numpy.zeros((self.size, self.size, 3), 'uint8')
-            try:
-                rgbArray[..., 0] = self.redChannel * 256
-                rgbArray[..., 1] = self.greenChannel * 256
-                rgbArray[..., 2] = self.blueChannel * 256
-                rgbImage = Image.fromarray(rgbArray)
-            except ValueError:
-                self.message("Warning: There was a problem creating the image array.")
-                self.stop()
-
-            # Save the image to a file in the temporary directory
-            path = os.path.join(self.temp_dir, "rgb.png")
-            self.refresh_temp()
-            rgbImage.save(path)
-
-            # Load the image into the interface
-            self.ui.imageRgb.setPixmap(QtGui.QPixmap(path))
 
     # Refreshes the temporary directory by deleting and recreating it
     def refresh_temp(self):
