@@ -3,7 +3,9 @@
 {% block script %}{{ block.super}}{% endblock script %}
 {% block content-main %}
 <h1>Welcome to the homepage</h1>
-<p>To use the services please <a href="/accounts/login/">Login</a>.
+{% if not user.is_active %}
+<p>To use the services please <a href="{% url auth_login %}">Login</a>.</p>
+{% endif %}
 <p>Download the  desktop application below</p>
 <a href="{{ STATIC_URL }}ics-win32-x86-setup-beta1.exe">Download Beta 1 - ics-win32-x86-setup-beta1.exe - 32.0 MB</a>
 {% endblock content-main %}

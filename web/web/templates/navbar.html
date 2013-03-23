@@ -23,9 +23,9 @@
           <li><a href="/admin/">Admin</a></li> 
           {% endif %}
          <li><a>You are logged in as: {{ user.username }}</a></li>
-         <li><a href="/accounts/logout">Logout</a></li>
+         <li><a href="{% url auth_logout %}">Logout</a></li>
         {% else %}
-         <li><a href="/accounts/login">Register / Login</a></li>
+         <li><a href="{% url auth_login %}">Register / Login</a></li>
         {% endif %}
       </ul>
       <!-- Everything you want hidden at 940px or less, place within here -->

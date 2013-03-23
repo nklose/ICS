@@ -16,11 +16,12 @@
 <dt><label for="id_password">Password:</label>{% if form.password.errors %} <span class="error">{{ form.password.errors|join:", " }}</span>{% endif %}</dt>
 <dd>{{ form.password }}</dd>
 <dt><input type="submit" value="Log in" /></dt>
+<dd><a href="{% url auth_password_reset %}">Forgot Password?</a></dd>
 </dl>
 </form>
 
 {% block content-related %}
-<p>If you don't have an account, you can <a href="/accounts/register/">sign
+<p>If you don't have an account, you can <a href="{% url registration_register %}">sign
 up</a> for one.
 {% endblock %}
 

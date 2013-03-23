@@ -5,13 +5,14 @@
 <h3>Image Upload</h3>
 <div class="rgbimg-background">
 <div class="alert alert-info" id="userNotice"><strong>Note: </strong>Choose either to upload a single RGB image file or three files for each image channel</div>
+{% if form.errors %}
 <div class="alert alert-error">
-{{ form.redBlue.errors }}
 {{ form.redImg.errors }}
 {{ form.greenImg.errors }}
 {{ form.blueImg.errors }}
 {{ form.mixedImg.errors }}
 </div>
+{% endif %}
  <ul class="nav nav-tabs">
    <li><a href="#singleRGB" data-toggle="tab" id="id_singleRGB">Single RGB Image</a></li>
    <li><a href="#threeRGB" data-toggle="tab" id="id_threeRGB">Three Channel Images</a></li>
