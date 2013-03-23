@@ -13,14 +13,13 @@
       <a class="brand" href="#">ICS</a>
       <ul class="nav">
        <li><a href="{% url home %}">Home</a></li>
-       {% if user.is_active %}
-       <li><a href="{% url program %}">ICS</a></li>
+       <li><a href="{% url rgb_upload %}">Single Mode</a></li>
        <li><a href="{% url batchmode %}">Batch Mode</a></li>
-       {% endif %}
        <li><a href="#">Documentation</a></li>
        </ul>
        <ul class="nav pull-right">
         {% if user.is_active %}
+         <li><a>You are logged in as: {{ user.username }}</a></li>
          <li><a href="/accounts/logout">Logout</a></li>
         {% else %}
          <li><a href="/accounts/login">Register / Login</a></li>
