@@ -61,6 +61,18 @@ def convertInfoToGraphs(info):
     with open("batch_1_graph_trip.png", "w") as f:
         f.writelines(graphString.readlines())
 
+
+def runBadConfigOutputFiles():
+    myBadConfig = BadConfig()
+    # fix the input directory
+    myBadConfig.input_directory = "accTests/inputs/badData/"
+    myBadConfig.output_directory = "output/"
+    bRunner = batchRunner.BatchRunner(myBadConfig)
+    bRunner.runAll(printProgress)
+    bRunner.outputAllFiles()
+
+
 if __name__ == "__main__":
     runBadConfig()
     runBadConfigManual()
+    runBadConfigOutputFiles()
