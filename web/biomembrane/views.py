@@ -25,6 +25,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from pickle import dumps
 from icsform import RgbSettingsForm, BatchSettingsForm;
+from models import Batch, Job
 import scipy.misc
 import icsform
 import models
@@ -49,9 +50,24 @@ def program(request):
         # proccess the data in form.cleaned_data
         # ...
           return HttpResponseRedirect('/proccess/') # redirect after post
-    else:
-        form = RgbSettingsForm()
-    temp = {"sec_title": "Image Correlation Spectroscopy Program", "copyrightdate": 2013, "form": form}
+
+    batch = Batch.objects.get(id=request.session['batch_id'])
+    job = Job.objects.get(batch=batch)
+    rgbUrl = job.rgb_image.url
+    redUrl = job.red_image.url
+    greenUrl = job.green_image.url
+    blueUrl = job.blue_image.url
+    images = {}
+    images['RGB'] = {}
+    images['RGB']['url'] = rgbUrl
+    images['Red'] = {}
+    images['Red']['url'] = redUrl
+    images['Green'] = {}
+    images['Green']['url'] = greenUrl
+    images['Blue'] = {}
+    images['Blue']['url'] = blueUrl
+    form = RgbSettingsForm()
+    temp = {"sec_title": "Image Correlation Spectroscopy Program", "copyrightdate": 2013, "form": form, "rgbimgs": images}
     return render(request, 'icslayout.html', temp)
 
 def home(request):
