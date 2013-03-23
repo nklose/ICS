@@ -30,6 +30,7 @@ import icsform
 import models
 import image_utils
 
+@login_required(login_url='/accounts/login/')
 def program(request):
 
     """ Renders a test view.
