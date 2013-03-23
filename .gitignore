@@ -8,3 +8,5 @@ settings_local.py
 bin/*
 build/*
 *~
+web/web/media
+*.swp

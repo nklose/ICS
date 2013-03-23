@@ -27,7 +27,7 @@ from PIL import Image
 import tempfile
 import os
 
-import commandline.image_reader as image_reader
+import backend.bimloader as image_reader
 
 
 class LosslessImageField(forms.FileField):
@@ -80,14 +80,18 @@ class LosslessImageField(forms.FileField):
         try:
             if isPath:
                 image_reader.validate_image(file)
+                return Image.open(file)
             else:
                 file.seek(0)
                 lines = file.readlines()
                 for line in lines:
                     os.write(fd, line)
                 os.close(fd)
-                return image_reader.validate_image(path)
-        except:
+                image_reader.validate_image(path)
+                return Image.open(path)
+        except image_reader.ImageFormatException:
             raise ValidationError(self.error_messages['not_losseless'])
+        except Exception as e:
+            raise ValidationError(e.message)
         finally:
             os.remove(path)

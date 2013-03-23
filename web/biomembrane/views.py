@@ -22,6 +22,7 @@ signing of this agreement.
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponseServerError, HttpResponseForbidden, Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.files.base import ContentFile
 from pickle import dumps
 from icsform import RgbSettingsForm, BatchSettingsForm;
 import scipy.misc
@@ -29,6 +30,12 @@ import StringIO
 import icsform
 import models
 import image_utils
+
+def imageToStringIO(image):
+    io = StringIO.StringIO()
+    image.save(io, format='PNG')
+    io.seek(0)
+    return io
 
 @login_required(login_url='/accounts/login/')
 def program(request):
@@ -69,16 +76,13 @@ def home(request):
     temp = {"sec_title": "Welcome to the Homepage", "copyrightdate": 2013,}
     return render(request, 'homepage.html', temp)
 
-
 @login_required(login_url='/accounts/login/')
 def rgb_upload(request):
     if request.method == 'POST':  # If the form has been submitted...
         form = icsform.SampleImageForm(request.POST, request.FILES)
         if form.is_valid():
-            # All validation rules pass
-            print form.isSingleUpload()
             if form.isSingleUpload():
-                batch = models.Batch(user=None) # create a new batch
+                batch = models.Batch(user=request.user) # create a new batch
                 batch.save()
 
                 # Process the data in form.cleaned_data
@@ -88,25 +92,21 @@ def rgb_upload(request):
                 r, g, b = image_utils.get_channels(rgb) # generate the three channels
                 redImage, greenImage, blueImage = image_utils.create_images(r, g, b) #create the images
                 
-                singleJob = models.Job(batch=batch,
+                singleJob = models.Job(number=1,
+                                       batch=batch,
                                        state=models.Job.UPLOADING,
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                io = StringIO.StringIO()
-                redImage.save(io, format='PNG')
-                singleJob.red_image.save('r.png', io)
-                greenImage.save(io, format='PNG')
-                singleJob.green_image.save('g.png', io)
-                blueImage.save(io, format='PNG')
-                singleJob.blue_image.save('b.png', io)
-                rgbImage.save(io, format='PNG')
-                singleJob.rgb_image.save('rgb.png', io)
+                singleJob.red_image.save('r.png', ContentFile(imageToStringIO(redImage).read()))
+                singleJob.green_image.save('g.png', ContentFile(imageToStringIO(greenImage).read()))
+                singleJob.blue_image.save('b.png', ContentFile(imageToStringIO(blueImage).read()))
+                singleJob.rgb_image.save('rgb.png', ContentFile(imageToStringIO(rgbImage).read()))
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
-            elif form.isMultipleUpload():
-                batch = models.Batch(user=None) # create a new batch
+            else:
+                batch = models.Batch(user=request.user) # create a new batch
                 batch.save()
 
                 # Proccess the three image data in form.cleaned_data
@@ -118,30 +118,21 @@ def rgb_upload(request):
                 b = scipy.misc.fromimage(blueImage)
                 rgbImage = image_utils.create_image(r, g, b)
 
-                singleJob = models.Job(batch=batch,
+                singleJob = models.Job(number=1,
+                                       batch=batch,
                                        state=models.Job.UPLOADING, 
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                io = StringIO.StringIO()
-                redImage.save(io, format='PNG')
-                singleJob.red_image.save('r.png', io)
-                greenImage.save(io, format='PNG')
-                singleJob.green_image.save('g.png', io)
-                blueImage.save(io, format='PNG')
-                singleJob.blue_image.save('b.png', io)
-                rgbImage.save(io, format='PNG')
-                singleJob.rgb_image.save('rgb.png', io)
+                singleJob.red_image.save('r.png', ContentFile(imageToStringIO(redImage).read()))
+                singleJob.green_image.save('g.png', ContentFile(imageToStringIO(greenImage).read()))
+                singleJob.blue_image.save('b.png', ContentFile(imageToStringIO(blueImage).read()))
+                singleJob.rgb_image.save('rgb.png', ContentFile(imageToStringIO(rgbImage).read()))
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
-            else:
-                image = None
-        else:
-            image = None
     else:
         form = icsform.SampleImageForm()  # An unbound form
-        #sciImg = None
 
     temp = {"sec_title": "Image Upload", "copyrightdate": 2013,
             "form": form}
