@@ -55,7 +55,8 @@ def saveAllFiles(results):
     outputPath = "output/"
     # save results.txt, filename is usually "results.txt", just making the
     # argument obvious
-    shutil.rmtree(outputPath)
+    if os.path.exists(outputPath):
+        shutil.rmtree(outputPath)
     os.mkdir(outputPath)
     result.saveResultsFile(outputPath, results, filename="results.txt")
     # result.saveResultsFile(outputPath, results) is equivalent

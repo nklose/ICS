@@ -50,7 +50,7 @@ def run_dual_mixed_image(pilImage, colorList, g0, w, ginf, range_val,
                           consider_deltas)
 
 
-def run_dual_seperate_image(pilR, pilG, pilB, colorList, g0, w, ginf, range_val,
+def run_dual_separate_image(pilR, pilG, pilB, colorList, g0, w, ginf, range_val,
                             consider_deltas):
     """Runs dual on seperated images
 

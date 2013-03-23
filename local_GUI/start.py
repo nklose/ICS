@@ -17,6 +17,7 @@ import sys
 import os.path
 import scipy
 import numpy
+import PIL
 import shutil # used to recursively remove directories
 from PyQt4 import QtCore, QtGui
 from PIL import Image
@@ -31,6 +32,13 @@ sys.path.append(ROOT_DIR)
 import backend.bimloader as bimloader
 import backend.dual as dual
 import backend.triple as triple
+
+# Import midend modules
+import midend.adaptor
+
+# Global constants
+PRECISION = 6      # number of decimal places to show for output values
+
 
 class StartQT4(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -255,7 +263,6 @@ class StartQT4(QtGui.QMainWindow):
 
             # Remove any temporary images from the interface
             self.refresh_temp()
-            self.refresh_paths()
 
             # Remember old size in case something bad happens
             oldSize = self.size
@@ -313,7 +320,6 @@ class StartQT4(QtGui.QMainWindow):
 
             # Remove any temporary images from the interface
             self.refresh_temp()
-            self.refresh_paths()
 
             # Remember old size in case something bad happens
             oldSize = self.size
@@ -359,52 +365,13 @@ class StartQT4(QtGui.QMainWindow):
             # Remove values and images from output tab, if necessary
             self.clear_output_tab()
 
-            # Update progress bar
-            self.progress(5)
-
             # Update message bar with input parameters
             text = ""
             if mode == "auto":
-                # Construct string containing channels to be used
-                self.msgAuto()
-
-                # Do auto-correlation by calling the backend
-                if self.get_red_checkbox():
-                    result = self.correlate(self.redChannel)
-                    self.update_auto(result)
-                    self.progress(33)
-                if self.get_green_checkbox():
-                    result = self.correlate(self.greenChannel)
-                    self.update_auto(result)
-                    self.progress(66)
-                if self.get_blue_checkbox():
-                    result = self.correlate(self.blueChannel)
-                    self.update_auto(result)
-                    self.progress(100)
-
-                # Change to auto section of output tab
-                self.select_tab("output", "auto")
+                self.autoCorrelation()
 
             elif mode == "cross":
-                # Construct string containing channels to be used
-                self.msgCross()
-
-                # Do cross-correlation by calling the backend
-                if self.get_red_green_checkbox():
-                    result = self.correlate(self.redChannel, self.greenChannel)
-                    self.update_cross(result)
-                    self.progress(33)
-                if self.get_red_blue_checkbox():
-                    result = self.correlate(self.redChannel, self.blueChannel)
-                    self.update_cross(result)
-                    self.progress(66)
-                if self.get_green_blue_checkbox():
-                    result = self.correlate(self.greenChannel, self.blueChannel)
-                    self.update_cross(result)
-                    self.progress(100)
-
-                # Change to cross section of output tab
-                self.select_tab("output", "cross")
+                self.crossCorrelation()
 
             elif mode == "triple":
                 # Construct string containing channels to be used
@@ -569,71 +536,71 @@ class StartQT4(QtGui.QMainWindow):
     ## Text inputs
     # Returns inputted Range in AC
     def get_auto_range(self):
-        return str(self.ui.autoRangeTextbox.text())
+        return int(self.ui.autoRangeTextbox.text())
 
     # Returns inputted G(0) in AC
     def get_auto_G0(self):
-        return str(self.ui.autoG0Textbox.text())
+        return float(self.ui.autoG0Textbox.text())
 
     # Returns inputted W in AC
     def get_auto_W(self):
-        return str(self.ui.autoWTextbox.text())
+        return float(self.ui.autoWTextbox.text())
 
     # Returns inputted G(Inf) in AC
     def get_auto_Ginf(self):
-        return str(self.ui.autoGinfTextbox.text())
+        return float(self.ui.autoGinfTextbox.text())
 
     # Returns inputted Range in XC
     def get_cross_range(self):
-        return str(self.ui.crossRangeTextbox.text())
+        return int(self.ui.crossRangeTextbox.text())
 
     # Returns inputted G(0) in XC
     def get_cross_G0(self):
-        return str(self.ui.crossG0Textbox.text())
+        return float(self.ui.crossG0Textbox.text())
 
     # Returns inputted W in XC
     def get_cross_W(self):
-        return str(self.ui.crossWTextbox.text())
+        return float(self.ui.crossWTextbox.text())
 
     # Returns inputted G(Inf) in XC
     def get_cross_Ginf(self):
-        return str(self.ui.crossGinfTextbox.text())
+        return float(self.ui.crossGinfTextbox.text())
 
     # Returns inputted Range in AXC
     def get_all_range(self):
-        return str(self.ui.allAutoCrossRangeTextbox.text())
+        return int(self.ui.allAutoCrossRangeTextbox.text())
 
     # Returns inputted G(0) in AXC
     def get_all_G0(self):
-        return str(self.ui.allAutoCrossG0Textbox.text())
+        return float(self.ui.allAutoCrossG0Textbox.text())
 
     # Returns inputted W in AXC
     def get_all_W(self):
-        return str(self.ui.allAutoCrossWTextbox.text())
+        return float(self.ui.allAutoCrossWTextbox.text())
 
     # Returns inputted Ginf in AXC
     def get_all_Ginf(self):
-        return str(self.ui.allAutoCrossGinfTextbox.text())
+        return float(self.ui.allAutoCrossGinfTextbox.text())
 
     # Returns inputted limit for TC (Output Tab)
     def get_triple_limit(self):
-        return str(self.ui.startingPointInput.text())
+        return float(self.ui.startingPointInput.text())
 
     # Returns inputted range for TC (Output Tab)
     def get_triple_range(self):
-        return str(self.ui.tripleRangeTextbox.text())
+        return int(self.ui.tripleRangeTextbox.text())
 
     # Returns inputted G(0) for TC (Output Tab)
     def get_triple_G0(self):
-        return str(self.ui.tripleG0Textbox.text())
+        return float(self.ui.tripleG0Textbox.text())
 
     # Returns inputted W for TC (Output Tab)
     def get_triple_W(self):
-        return str(self.ui.tripleWTextbox.text())
+        return float(self.ui.tripleWTextbox.text())
 
     # Returns inputted G(Inf) for TC (Output Tab)
     def get_triple_Ginf(self):
-        return str(self.ui.tripleGinfTextbox.text())
+        return float(self.ui.tripleGinfTextbox.text())
 
     ## Radio buttons
 
@@ -905,48 +872,193 @@ class StartQT4(QtGui.QMainWindow):
     #####################################################
     # Correlation Functions                             #
     #####################################################
+    
+    # Performs an auto-correlation
+    def autoCorrelation(self):
+        # Construct message box string and show it
+        self.msgAuto()
 
-    # Perform a single correlation by calling the backend
-    def correlate(self, array1, array2 = None, array3 = None):
-        # auto-correlation
-        if array2 == None:
-            range = float(self.get_auto_range())
-            g0 = float(self.get_auto_G0())
-            w = float(self.get_auto_W())
-            gInf = float(self.get_auto_Ginf())
-            deltas = bool(self.get_auto_deltas_checkbox())
-            return dual.core(array1, None, range, [g0, w, gInf, 0, 0], deltas)
-        # cross-correlation
-        elif array3 == None:
-            range = float(self.get_cross_range())
-            g0 = float(self.get_cross_G0())
-            w = float(self.get_cross_W())
-            gInf = float(self.get_cross_Ginf())
-            deltas = bool(self.get_cross_deltas_checkbox())
-            return dual.core(array1, array2, range, [g0, w, gInf, 0, 0], deltas)
+        # Make list of colors to send to midend
+        colorList = []
+        if self.get_red_checkbox():
+            colorList.append('r')
+        if self.get_green_checkbox():
+            colorList.append('g')
+        if self.get_blue_checkbox():
+            colorList.append('b')
 
-    # Perform all possible correlations
-    def correlate_all(self, array1, array2, array3):
-        range = float(self.get_all_range())
-        g0 = float(self.get_all_G0())
-        w = float(self.get_all_W())
-        gInf = float(self.get_all_Ginf())
-        deltas = self.get_all_deltas_checkbox()
+        # Get input parameters
+        g0 = self.get_auto_G0()
+        w = self.get_auto_W()
+        ginf = self.get_auto_Ginf()
+        range_val = self.get_auto_range()
+        deltas = self.get_auto_deltas_checkbox()
 
-        auto1 = dual.core(array1, None, range, [g0, w, gInf, 0, 0], deltas)
-        self.progress(12) # update progress bar
-        auto2 = dual.core(array2, None, range, [g0, w, gInf, 0, 0], deltas)
-        self.progress(24)
-        auto3 = dual.core(array3, None, range, [g0, w, gInf, 0, 0], deltas)
-        self.progress(36)
-        cross1 = dual.core(array1, array2, range, [g0, w, gInf, 0, 0], deltas)
-        self.progress(48)
-        cross2 = dual.core(array1, array3, range, [g0, w, gInf, 0, 0], deltas)
-        self.progress(60)
-        cross3 = dual.core(array2, array3, range, [g0, w, gInf, 0, 0], deltas)
-        self.progress(72)
-        self.progress(84)
-        return (auto1, auto2, auto3, cross1, cross2, cross3)
+        # Run correlation by calling midend
+        result = None
+        if self.get_num_images() == 1:
+            # get PIL form of image from path
+            pilImage = PIL.Image.open(self.rgbPath)
+
+            # construct inputs to send to midend
+            inputs = (pilImage, colorList, g0, w, ginf, range_val, deltas)
+
+            # call the midend to get the result object
+            result = midend.adaptor.run_dual_mixed_image(*inputs)
+
+        elif self.get_num_images() == 3:
+            # get PIL form of images from paths
+            pilR = PIL.Image.open(self.redPath)
+            pilG = PIL.Image.open(self.greenPath)
+            pilB = PIL.Image.open(self.bluePath)
+
+            # construct inputs to send to midend
+            inputs = (pilR, pilG, pilB, colorList, g0, w, ginf, range_val, deltas)
+
+            # call the midend to get the result object
+            result = midend.adaptor.run_dual_separate_image(*inputs)
+
+        else:
+            print("Error: number of images is not 1 or 3.")
+        # Get individual channel results
+        redResult = result[0]
+
+        # update output tab with new parameters
+        self.set_auto_resnorm(round(redResult.resNorm,PRECISION))
+        self.set_auto_G0(round(redResult.g0,PRECISION))
+        self.set_auto_W(round(redResult.w,PRECISION))
+        self.set_auto_Ginf(round(redResult.ginf,PRECISION))
+        self.set_auto_deltas(round(redResult.usedDeltas,PRECISION))
+
+        # create and display the graphs
+        rPath = os.path.join(self.temp_dir, "r_graph.png")
+        gPath = os.path.join(self.temp_dir, "g_graph.png")
+        bPath = os.path.join(self.temp_dir, "b_graph.png")
+                
+        for i, x in enumerate(result):
+            fileLike = x.plotToStringIO()
+            outFile = None
+            if x.color == "r":
+                outFile = open(rPath, "w")
+            elif x.color == "g":
+                outFile = open(gPath, "w")
+            elif x.color == "b":
+                outFile = open(bPath, "w")
+            else:
+                print("Error: invalid color.")
+                
+            for line in fileLike.readlines():
+                outFile.write(line)
+            outFile.close()
+
+        if self.get_red_checkbox():
+            self.ui.imageAutoRed.setPixmap(QtGui.QPixmap(rPath))
+        if self.get_green_checkbox():
+            self.ui.imageAutoGreen.setPixmap(QtGui.QPixmap(gPath))
+        if self.get_blue_checkbox():
+            self.ui.imageAutoBlue.setPixmap(QtGui.QPixmap(bPath))
+
+        # Change to auto section of output tab
+        self.select_tab("output", "auto")
+
+    # Performs a cross-correlation.
+    def crossCorrelation(self):
+        # Construct message box string and show it
+        self.msgCross()
+
+        # Make list of colors to send to midend
+        colorList = []
+        if self.get_red_green_checkbox():
+            colorList.append('rg')
+        if self.get_red_blue_checkbox():
+            colorList.append('rb')
+        if self.get_green_blue_checkbox():
+            colorList.append('gb')
+
+        # Get input parameters
+        g0 = self.get_cross_G0()
+        w = self.get_cross_W()
+        ginf = self.get_cross_Ginf()
+        range_val = self.get_cross_range()
+        deltas = self.get_cross_deltas_checkbox()
+
+        # Run correlation by calling midend
+        result = None
+        if self.get_num_images() == 1:
+            # get PIL form of image from path
+            pilImage = PIL.Image.open(self.rgbPath)
+
+            # construct inputs to send to midend
+            inputs = (pilImage, colorList, g0, w, ginf, range_val, deltas)
+
+            # call the midend to get the result object
+            result = midend.adaptor.run_dual_mixed_image(*inputs)
+
+        elif self.get_num_images() == 3:
+            # get PIL form of images from paths
+            pilR = PIL.Image.open(self.redPath)
+            pilG = PIL.Image.open(self.greenPath)
+            pilB = PIL.Image.open(self.bluePath)
+
+            # construct inputs to send to midend
+            inputs = (pilR, pilG, pilB, colorList, g0, w, ginf, range_val, deltas)
+
+            # call the midend to get the result object
+            result = midend.adaptor.run_dual_separate_image(*inputs)
+
+        # Get individual channel results
+        redGreenResult = result[0]
+
+        # update output tab with new parameters
+        self.set_cross_resnorm(round(redGreenResult.resNorm,PRECISION))
+        self.set_cross_G0(round(redGreenResult.g0,PRECISION))
+        self.set_cross_W(round(redGreenResult.w,PRECISION))
+        self.set_cross_Ginf(round(redGreenResult.ginf,PRECISION))
+        self.set_cross_deltas(round(redGreenResult.usedDeltas,PRECISION))
+
+        # create and display the graphs
+        rgPath = os.path.join(self.temp_dir, "rg_graph.png")
+        rbPath = os.path.join(self.temp_dir, "rb_graph.png")
+        gbPath = os.path.join(self.temp_dir, "gb_graph.png")
+                
+        for i, x in enumerate(result):
+            fileLike = x.plotToStringIO()
+            outFile = None
+            if x.color == "rg":
+                outFile = open(rgPath, "w")
+            elif x.color == "rb":
+                outFile = open(rbPath, "w")
+            elif x.color == "gb":
+                outFile = open(gbPath, "w")
+            else:
+                print("Error: invalid color.")
+                
+            for line in fileLike.readlines():
+                outFile.write(line)
+            outFile.close()
+
+        if self.get_red_green_checkbox():
+            self.ui.imageCrossRG.setPixmap(QtGui.QPixmap(rgPath))
+        if self.get_red_blue_checkbox():
+            self.ui.imageCrossRB.setPixmap(QtGui.QPixmap(rbPath))
+        if self.get_green_blue_checkbox():
+            self.ui.imageCrossGB.setPixmap(QtGui.QPixmap(gbPath))
+
+        # Change to auto section of output tab
+        self.select_tab("output", "cross")
+
+    # Returns the number of images to use (0, 1, or 3). 0 means
+    # the user hasn't yet loaded all required channels, 1 means
+    # the user has loaded one RGB image, and 3 means the user
+    # has loaded 3 individual monochrome images.
+    def get_num_images(self):
+        if self.rgbPath != "":
+            return 1
+        elif self.redPath != "" and self.greenPath != "" and self.bluePath != "":
+            return 3
+        else:
+            print("No image loaded.")
+            return 0
 
     # Show Fourier transform (red) surface plot
     def show_fourier(self):
@@ -1061,15 +1173,15 @@ class StartQT4(QtGui.QMainWindow):
 
         # Construct output string
         text = "Starting auto-correlation using " + channels
-        text += " and parameters\n[range = " + self.get_auto_range()
-        text += ", g(0) = " + self.get_auto_G0() +", w = "
-        text += self.get_auto_W() + ", gInf = " + self.get_auto_Ginf()
+        text += " and parameters\n[range = " + str(self.get_auto_range())
+        text += ", g(0) = " + str(self.get_auto_G0()) +", w = "
+        text += str(self.get_auto_W()) + ", gInf = " + str(self.get_auto_Ginf())
         text += "],"
         if self.get_auto_deltas_checkbox() == False:
             text += " do not"
         text += " consider deltas, S.R. "
         res = str(self.get_sample_resolution())
-        text += res + " x " + res + "."
+        text += str(res) + " x " + str(res) + "."
         self.message(text)
 
     # Construct message to show user when cross-correlation is selected
@@ -1097,10 +1209,10 @@ class StartQT4(QtGui.QMainWindow):
 
         text = "Starting cross-correlation using " + channels
         text += " and parameters\n[Range = "
-        text += self.get_cross_range() + ", g(0) = "
-        text += self.get_cross_G0() + ", w = "
-        text += self.get_cross_W() + ", gInf = "
-        text += self.get_cross_Ginf() + "],"
+        text += str(self.get_cross_range()) + ", g(0) = "
+        text += str(self.get_cross_G0()) + ", w = "
+        text += str(self.get_cross_W()) + ", gInf = "
+        text += str(self.get_cross_Ginf()) + "],"
         if self.get_cross_deltas_checkbox() == False:
             text+= " do not"
         text += " consider deltas, S.R. "
@@ -1134,34 +1246,6 @@ class StartQT4(QtGui.QMainWindow):
     #####################################################
     # Interface Update Functions                        #
     #####################################################
-    # Updates the output tab based on result values for autocorrelations
-    def update_auto(self, result):
-        range = self.get_auto_range()
-        g0 = result[1][0]
-        w = result[1][1]
-        gInf = result[1][2]
-        deltas = result[2]
-
-        self.set_auto_G0(g0)
-        self.set_auto_W(w)
-        self.set_auto_Ginf(gInf)
-        self.set_auto_deltas(deltas)
-
-    # Updates the output tab based on the result values for cross-correlations
-    def update_cross(self, result):
-        range = self.get_cross_range()
-        g0 = result[1][0]
-        w = result[1][1]
-        gInf = result[1][2]
-        deltas = result[2]
-
-        self.set_cross_G0(g0)
-        self.set_cross_W(w)
-        self.set_cross_Ginf(gInf)
-        self.set_cross_deltas(deltas)
-
-    # Updates the output tab based on result values for all correlations
-
     # Selects a specific tab on the interface
     def select_tab(self, mainTab, subTab=None):
         if mainTab == "input":
@@ -1216,12 +1300,12 @@ class StartQT4(QtGui.QMainWindow):
                 self.stop()
 
             # Save the image to a file in the temporary directory
-            self.rgbPath = self.temp_dir + "/rgb.png"
+            path = os.path.join(self.temp_dir, "rgb.png")
             self.refresh_temp()
-            rgbImage.save(self.rgbPath)
+            rgbImage.save(path)
 
             # Load the image into the interface
-            self.ui.imageRgb.setPixmap(QtGui.QPixmap(self.rgbPath))
+            self.ui.imageRgb.setPixmap(QtGui.QPixmap(path))
 
     # Refreshes the temporary directory by deleting and recreating it
     def refresh_temp(self):
