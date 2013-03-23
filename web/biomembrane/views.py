@@ -71,16 +71,15 @@ def home(request):
 @login_required(login_url='/accounts/login/')
 def rgb_upload(request):
     if request.method == 'POST':  # If the form has been submitted...
-        print "POST"
         form = icsform.SampleImageForm(request.POST, request.FILES)
         if form.is_valid():
-            if form.isSingleUpload():
-                batch = models.Batch(user=request.user) # create a new batch
-                batch.save()
+            batch = models.Batch(user=request.user) # create a new batch
+            batch.save()
+            request.session['batch_id'] = batch.id
 
+            if form.isSingleUpload():
                 # Process the data in form.cleaned_data
                 rgbImage = form.cleaned_data['mixedImg']
-                # Change to scipy image:
                 rgb = scipy.misc.fromimage(rgbImage)
                 r, g, b = image_utils.get_channels(rgb) # generate the three channels
                 redImage, greenImage, blueImage = image_utils.create_images(r, g, b) #create the images
@@ -99,9 +98,6 @@ def rgb_upload(request):
 
                 return HttpResponseRedirect('/program/')
             else:
-                batch = models.Batch(user=request.user) # create a new batch
-                batch.save()
-
                 # Proccess the three image data in form.cleaned_data
                 redImage = form.cleaned_data['redImg']
                 greenImage = form.cleaned_data['greenImg']
