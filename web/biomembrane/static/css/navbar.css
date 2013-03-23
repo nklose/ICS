@@ -24,70 +24,9 @@
 #nav-main{
     height:1.813em;
     float:left;
-    background-image:url(../img/nav-bg.gif);
     background-repeat:repeat-x;
     background-position:top left;
     width:100%;
     margin-top: 0.833em;
     margin-bottom: 0.833em;
-}
-
-    /* Menu Body */
-ul#menu {
-    height:1.813em;
-    line-height:1.813em;
-    background-image:url(../img/nav-bar.gif);
-    background-position:right;
-    background-repeat:no-repeat;
-    list-style:none;
-    float:left;
-    padding:0em 0.083em 0em 0em;
-    margin:0em 0em 0em 0.833em;
-    float: left;
-}
-    /* Float LI Elements - horizontal display */
-ul#menu li {
-     float:left;
-}
-
-    /* Link - common attributes */
-ul#menu li a {
-    background-image:url(../img/active-sprite-colours-long.gif) ;
-    background-repeat: no-repeat;
-    background-image: top left;
-    display:block;
-    height:2.417em;
-    position:relative;
-    z-index:10;
-    padding-left: 1.667em;
-    padding-right: 1.667em;
-}
-
-    /* Specify width and background position attributes specifically for the c       lass: "highlight" */
-
-ul#menu li a.highlight {
-
-}
-
-    /* Span (on hover) - common attributes */
-ul#menu li a span {
-
-background:url(../img/active-sprite-colours-long.gif) no-repeat scroll bottom left;
-    display:block;
-    position:absolute;
-    top:0;
-    left:0;
-    height:100%;
-    width:100%;
-    z-index:10;
-}
-
-     /* Span (on hover) - display pointer */
-ul#menu li a span:hover {
-        cursor:pointer;
-       }
-
-     /* Shift background position on hover for the class: "highlight" */
-ul#menu li a.highlight span {
-     background-position:0em - 1.813em;
 }

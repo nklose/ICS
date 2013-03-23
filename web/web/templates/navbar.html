@@ -1,8 +1,36 @@
 {% block nav-main %}
-<ul id="menu">
-  <li><a href="../home" class="highlight">Home<span style="opacity: 0;">Home</span></a></li>
-   <li><a href="../rgb_upload" class="highlight">ICS<span style="opacity: 0;">ICS</span></a></li>
-   <li><a href="../batchmode" class="highlight">Batch Mode<span style="opacity: 0;">Batch Mode</span></a></li>
-  <li><a href="#" class="highlight">Documentation<span style="opacity: 0;">Documentation</span></a></li>
-</ul>
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+ 
+      <!-- Be sure to leave the brand out there if you want it shown -->
+      <a class="brand" href="#">ICS</a>
+      <ul class="nav">
+       <li><a href="{% url home %}">Home</a></li>
+       {% if user.is_active %}
+       <li><a href="{% url program %}">ICS</a></li>
+       <li><a href="{% url batchmode %}">Batch Mode</a></li>
+       {% endif %}
+       <li><a href="#">Documentation</a></li>
+       </ul>
+       <ul class="nav pull-right">
+        {% if user.is_active %}
+         <li><a href="/accounts/logout">Logout</a></li>
+        {% else %}
+         <li><a href="/accounts/login">Register / Login</a></li>
+        {% endif %}
+      </ul>
+      <!-- Everything you want hidden at 940px or less, place within here -->
+      <div class="nav-collapse collapse">
+        <!-- .nav, .navbar-search, .navbar-form, etc -->
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

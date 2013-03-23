@@ -8,16 +8,16 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'web.views.home', name='home'),
     # url(r'^web/', include('web.foo.urls')),
 
-    #url(r'/', view.home),
+    (r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/static/img/icon.ico'}),
+    url(r'^$', view.home, name='home'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/', include('registration.backends.default.urls')),
-    url(r'^program/', view.program),
-    url(r'^home/', view.home),
-    url(r'^rgb_upload/', view.rgb_upload),
+    url(r'^accounts/', include('registration.backends.default.urls'), name='accounts'),
+    url(r'^program/', view.program, name='program'),
+    url(r'^home/', view.home, name='home'),
+    url(r'^rgb_upload/', view.rgb_upload, name='rgb_upload'),
     url(r'results', view.results),
-    url(r'batchmode', view.batch),
+    url(r'batchmode', view.batch, name='batchmode'),
 )

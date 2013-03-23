@@ -1,7 +1,13 @@
 {% extends "generic.html" %}
 {% block content-main %}
-<form action="/accounts/register" method="post">{% csrf_token %}
+<h3>Signup</h3>
+<form action="/accounts/register/" method="post">{% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Submit"/>
 </form>
+
+{% block content-related %}
+<p>If you already have an account, you can <a href="/accounts/login/">sign
+in</a>.
+{% endblock %}
 {% endblock content-main %}

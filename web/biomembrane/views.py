@@ -21,6 +21,7 @@ signing of this agreement.
 """
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponseServerError, HttpResponseForbidden, Http404, HttpResponse
+from django.contrib.auth.decorators import login_required
 from pickle import dumps
 from icsform import RgbSettingsForm, BatchSettingsForm;
 import scipy.misc
@@ -67,6 +68,8 @@ def home(request):
     temp = {"sec_title": "Welcome to the Homepage", "copyrightdate": 2013,}
     return render(request, 'homepage.html', temp)
 
+
+@login_required(login_url='/accounts/login/')
 def rgb_upload(request):
     if request.method == 'POST':  # If the form has been submitted...
         form = icsform.SampleImageForm(request.POST, request.FILES)
@@ -143,6 +146,7 @@ def rgb_upload(request):
             "form": form}
     return render(request, 'rgb_upload.html', temp)
 
+@login_required(login_url='/accounts/login/')
 def results(request):
     """ Renders a home  view.
          Template: /web/web/templates/results.html
@@ -157,6 +161,7 @@ def results(request):
     temp = {"sec_title": "Results", "copyrightdate": 2013,}
     return render(request, 'results.html', temp)
 
+@login_required(login_url='/accounts/login/')
 def batch(request):
     """ Renders a home  view.
          Template: /web/web/templates/results.html
