@@ -117,9 +117,6 @@ class BatchRunner(object):
             Return Value:
                 batch.Info object describing the run results.
         """
-        if not self.isDoneRunning:
-            raise Exception("Batch execution has not finished, results not "
-                            "valid")
         return self.info
 
     def outputAllFiles(self):
