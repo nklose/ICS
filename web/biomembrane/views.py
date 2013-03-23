@@ -26,16 +26,9 @@ from django.core.files.base import ContentFile
 from pickle import dumps
 from icsform import RgbSettingsForm, BatchSettingsForm;
 import scipy.misc
-import StringIO
 import icsform
 import models
 import image_utils
-
-def imageToStringIO(image):
-    io = StringIO.StringIO()
-    image.save(io, format='PNG')
-    io.seek(0)
-    return io
 
 @login_required(login_url='/accounts/login/')
 def program(request):
@@ -61,7 +54,6 @@ def program(request):
     temp = {"sec_title": "Image Correlation Spectroscopy Program", "copyrightdate": 2013, "form": form}
     return render(request, 'icslayout.html', temp)
 
-
 def home(request):
     """ Renders a home  view.
          Template: /web/web/templates/homepage.html
@@ -79,6 +71,7 @@ def home(request):
 @login_required(login_url='/accounts/login/')
 def rgb_upload(request):
     if request.method == 'POST':  # If the form has been submitted...
+        print "POST"
         form = icsform.SampleImageForm(request.POST, request.FILES)
         if form.is_valid():
             if form.isSingleUpload():
@@ -98,10 +91,10 @@ def rgb_upload(request):
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                singleJob.red_image.save('r.png', ContentFile(imageToStringIO(redImage).read()))
-                singleJob.green_image.save('g.png', ContentFile(imageToStringIO(greenImage).read()))
-                singleJob.blue_image.save('b.png', ContentFile(imageToStringIO(blueImage).read()))
-                singleJob.rgb_image.save('rgb.png', ContentFile(imageToStringIO(rgbImage).read()))
+                singleJob.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
+                singleJob.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
+                singleJob.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))
+                singleJob.rgb_image.save('rgb.png', ContentFile(image_utils.image_to_string_io(rgbImage).read()))
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
@@ -124,10 +117,10 @@ def rgb_upload(request):
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                singleJob.red_image.save('r.png', ContentFile(imageToStringIO(redImage).read()))
-                singleJob.green_image.save('g.png', ContentFile(imageToStringIO(greenImage).read()))
-                singleJob.blue_image.save('b.png', ContentFile(imageToStringIO(blueImage).read()))
-                singleJob.rgb_image.save('rgb.png', ContentFile(imageToStringIO(rgbImage).read()))
+                singleJob.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
+                singleJob.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
+                singleJob.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))
+                singleJob.rgb_image.save('rgb.png', ContentFile(image_utils.image_to_string_io(rgbImage).read()))
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
