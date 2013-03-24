@@ -33,7 +33,7 @@ def get_channels(image, astype="d"):
 
 def create_image(red, green, blue):
     """ Creates a single from color channels """
-    rgb = np.dstack((red, green, blue)) 
+    rgb = np.dstack((red, green, blue))
     rgb_image = PIL.Image.fromarray(np.uint8(rgb))
     return rgb_image
 

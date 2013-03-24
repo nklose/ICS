@@ -44,7 +44,7 @@ class LosslessImageField(forms.FileField):
 
     def __init__(self, *args, **kwargs):
         self.mixed = kwargs.pop("isSingleChannel", False)
-        super(LosslessImageField, self).__init__()
+        super(LosslessImageField, self).__init__(*args, **kwargs)
 
     def to_python(self, data):
         """
