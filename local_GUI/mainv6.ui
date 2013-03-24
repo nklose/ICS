@@ -2020,7 +2020,7 @@
        <property name="geometry">
         <rect>
          <x>70</x>
-         <y>420</y>
+         <y>410</y>
          <width>181</width>
          <height>61</height>
         </rect>
@@ -2057,7 +2057,7 @@
        <property name="geometry">
         <rect>
          <x>410</x>
-         <y>420</y>
+         <y>410</y>
          <width>161</width>
          <height>61</height>
         </rect>
@@ -2094,7 +2094,7 @@
        <property name="geometry">
         <rect>
          <x>730</x>
-         <y>420</y>
+         <y>410</y>
          <width>161</width>
          <height>21</height>
         </rect>
@@ -2114,7 +2114,7 @@
       <widget class="QLabel" name="labelTripleResNorm">
        <property name="geometry">
         <rect>
-         <x>840</x>
+         <x>640</x>
          <y>440</y>
          <width>91</width>
          <height>31</height>
@@ -2130,8 +2130,8 @@
       <widget class="QLabel" name="tripleResNormValue">
        <property name="geometry">
         <rect>
-         <x>850</x>
-         <y>470</y>
+         <x>740</x>
+         <y>440</y>
          <width>101</width>
          <height>31</height>
         </rect>
@@ -2157,8 +2157,8 @@
       <widget class="QLabel" name="tripleG0">
        <property name="geometry">
         <rect>
-         <x>800</x>
-         <y>10</y>
+         <x>650</x>
+         <y>50</y>
          <width>61</width>
          <height>31</height>
         </rect>
@@ -2173,8 +2173,8 @@
       <widget class="QLabel" name="tripleW">
        <property name="geometry">
         <rect>
-         <x>620</x>
-         <y>50</y>
+         <x>770</x>
+         <y>10</y>
          <width>91</width>
          <height>31</height>
         </rect>
@@ -2184,36 +2184,6 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="tripleGinfTextbox">
-       <property name="geometry">
-        <rect>
-         <x>870</x>
-         <y>50</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="tripleG0Textbox">
-       <property name="geometry">
-        <rect>
-         <x>870</x>
-         <y>10</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="tripleRangeTextbox">
-       <property name="geometry">
-        <rect>
-         <x>720</x>
-         <y>10</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
        </property>
       </widget>
       <widget class="QLabel" name="tripleRange">
@@ -2246,16 +2216,6 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="tripleWTextbox">
-       <property name="geometry">
-        <rect>
-         <x>720</x>
-         <y>50</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
        </property>
       </widget>
       <widget class="QLabel" name="imageTripleFourier">
@@ -2355,7 +2315,7 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QRadioButton" name="resolution32">
+       <widget class="QRadioButton" name="resolution16">
         <property name="geometry">
          <rect>
           <x>100</x>
@@ -2365,13 +2325,13 @@
          </rect>
         </property>
         <property name="text">
-         <string>32 x 32</string>
+         <string>16 x 16</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
-       <widget class="QRadioButton" name="resolution48">
+       <widget class="QRadioButton" name="resolution32">
         <property name="geometry">
          <rect>
           <x>100</x>
@@ -2381,7 +2341,10 @@
          </rect>
         </property>
         <property name="text">
-         <string>48 x 48</string>
+         <string>32 x 32</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QRadioButton" name="resolution64">
@@ -2397,25 +2360,6 @@
          <string>64 x 64</string>
         </property>
        </widget>
-      </widget>
-      <widget class="QCheckBox" name="tripleDeltasUsedCheckbox">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="geometry">
-        <rect>
-         <x>670</x>
-         <y>470</y>
-         <width>131</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Deltas Used</string>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
       </widget>
       <widget class="QPushButton" name="continueButton2">
        <property name="geometry">
@@ -2443,17 +2387,173 @@
         <string>Continue</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="tripleDeltasCheckbox">
+      <widget class="QLabel" name="tripleG0Value_2">
        <property name="geometry">
         <rect>
-         <x>680</x>
-         <y>100</y>
-         <width>171</width>
-         <height>17</height>
+         <x>740</x>
+         <y>480</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="labelTripleG0">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>480</y>
+         <width>91</width>
+         <height>31</height>
         </rect>
        </property>
        <property name="text">
-        <string>Consider Deltas</string>
+        <string>g(0):</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="labelTripleW">
+       <property name="geometry">
+        <rect>
+         <x>860</x>
+         <y>440</y>
+         <width>21</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>w:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="tripleWValue">
+       <property name="geometry">
+        <rect>
+         <x>890</x>
+         <y>440</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="tripleGinfValue">
+       <property name="geometry">
+        <rect>
+         <x>890</x>
+         <y>480</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="labelTripleGinf">
+       <property name="geometry">
+        <rect>
+         <x>850</x>
+         <y>480</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gInf:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="tripleRangeTextbox">
+       <property name="geometry">
+        <rect>
+         <x>720</x>
+         <y>10</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="tripleG0Textbox">
+       <property name="geometry">
+        <rect>
+         <x>720</x>
+         <y>50</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="tripleWTextbox">
+       <property name="geometry">
+        <rect>
+         <x>870</x>
+         <y>10</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="tripleGinfTextbox">
+       <property name="geometry">
+        <rect>
+         <x>870</x>
+         <y>50</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
        </property>
       </widget>
      </widget>

@@ -519,13 +519,6 @@ class StartQT4(QtGui.QMainWindow):
         else:
             return False
 
-    # Returns the state of the TC Consider Deltas checkbox
-    def get_triple_deltas_checkbox(self):
-        if self.ui.allDeltasCheckbox.checkState() != 0:
-            return True
-        else:
-            return False
-
     ## Text inputs
     # Returns inputted Range in AC
     def get_auto_range(self):
@@ -606,6 +599,7 @@ class StartQT4(QtGui.QMainWindow):
         elif self.ui.resolution64.isChecked() != 0:
             return 64
         else:
+            print("Limit error!")
             return -1
 
     # Validate interface input
@@ -857,10 +851,6 @@ class StartQT4(QtGui.QMainWindow):
     # Set the gInf value on the triple tab
     def set_triple_Ginf(self, value):
         self.ui.tripleGinfValue.setText(str(value))
-
-    # Set the deltas checkbox on the triple tab
-    def set_triple_deltas(self, value):
-        self.ui.tripleDeltasUsedCheckbox.setChecked(bool(value))
 
     #####################################################
     # Correlation Functions                             #
@@ -1144,7 +1134,6 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleWTextbox.setEnabled(True)
         self.ui.tripleG0Textbox.setEnabled(True)
         self.ui.tripleGinfTextbox.setEnabled(True)
-        self.ui.tripleDeltasCheckbox.setEnabled(True)
         self.ui.continueButton2.setEnabled(True)
 
     # Finish off triple correlation process (part 3)
@@ -1154,38 +1143,29 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleWTextbox.setEnabled(False)
         self.ui.tripleG0Textbox.setEnabled(False)
         self.ui.tripleGinfTextbox.setEnabled(False)
-        self.ui.tripleDeltasCheckbox.setEnabled(False)
         self.ui.continueButton2.setEnabled(False)
 
-        self.progress(10)
-        range = 0.0
-        g0 = 0.0
-        w = 0.0
-        gInf = 0.0
-        deltas = False
-        if self.get_triple_range() != "":
-            range = float(self.get_triple_range())
-            g0 = float(self.get_triple_G0())
-            w = float(self.get_triple_W())
-            gInf = float(self.get_triple_Ginf())
-            deltas = self.get_triple_deltas_checkbox()
-        else:
-            range = float(self.get_all_range())
-            g0 = float(self.get_all_G0())
-            w = float(self.get_all_W())
-            gInf = float(self.get_all_Ginf())
-            deltas = self.get_all_deltas_checkbox()
+        range_val = int(self.get_triple_range())
+        g0 = self.get_triple_G0()
+        w = self.get_triple_W()
+        gInf = self.get_triple_Ginf()
 
-        self.progress(25)
-        # Do triple correlation
+        # call the midend to get the result object
+        result = midend.adaptor.run_triple_part3(self.tripleResult, range_val, g0, w, gInf)
+        
+        # create the fitting curve
+        path = os.path.join(self.temp_dir, "triple_3.png")
+        fileLike = result.plotToStringIO()
+        outFile = open(path, "w")
+        for line in fileLike.readlines():
+            outFile.write(line)
+        outFile.close()
 
-        self.progress(75)
         # Show fitting curve
+        self.ui.imageTripleFittingCurve.setPixmap(QtGui.QPixmap(path))
 
-        self.progress(95)
-        # Show res. norm. and whether deltas were used
-
-        self.progress(100)
+        # Show updated parameters
+        
 
     #####################################################
     # Message Box Functions                             #
