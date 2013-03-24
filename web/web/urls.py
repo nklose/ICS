@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     # url(r'^web/', include('web.foo.urls')),
 
     (r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/static/img/icon.ico'}),
+    (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     url(r'^$', view.home, name='home'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),

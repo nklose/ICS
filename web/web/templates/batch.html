@@ -2,8 +2,7 @@
 {% block stylesheet %}{{ block.super }}{% endblock stylesheet %}
 {% block script %}{{ block.super}}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">{% endblock script %}
 {% block content-main %}
-<h2>Image Correlation Spectroscopy</h2>
-<h5>Batch Mode</h5>
+<h5>Image Correlation Spectroscopy Batch Mode</h5>
 <form action ="#" name="batchform">
   <div class="row-fluid">
     <div class="span4">
@@ -25,7 +24,7 @@
       <label for="{{form.rangeAutoCross.auto_id}}">Range</label>{{ form.rangeAutoCross }}
       <label for="{{form.ginfAutoCross.auto_id}}">gInf</label>{{ form.ginfAutoCross }}
       <label for="{{form.wAutoCross.auto_id}}">w</label>{{ form.wAutoCross }}
-      <label for="{{form.gzeroAutoCross.auto_id}}">gzero</label>{{ form.gzeroAutoCross }}
+      <label for="{{form.gzeroAutoCross.auto_id}}">g(0)</label>{{ form.gzeroAutoCross }}
      </fieldset>
     </div> <!-- span5 -->
     <div class="span4">
@@ -34,7 +33,7 @@
       <label for="{{form.rangeTriple.auto_id}}">Range</label>{{ form.rangeTriple }}
       <label for="{{form.ginfTriple.auto_id}}">gInf</label>{{ form.ginfTriple }}
       <label for="{{form.wTriple.auto_id}}">w</label>{{ form.wTriple }}
-      <label for="{{form.gzeroTriple.auto_id}}">gzero</label>{{ form.gzeroTriple }}
+      <label for="{{form.gzeroTriple.auto_id}}">g(0)</label>{{ form.gzeroTriple }}
       </fieldset>
      <div id="imgSize">
      <label for="id_resolutions">Set Image resolution to sample</label>

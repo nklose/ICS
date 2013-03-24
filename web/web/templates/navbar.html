@@ -10,19 +10,22 @@
       </a>
  
       <!-- Be sure to leave the brand out there if you want it shown -->
-      <a class="brand" href="#">ICS</a>
+      <a class="brand">ICS</a>
       <ul class="nav">
        <li><a href="{% url home %}">Home</a></li>
        <li><a href="{% url rgb_upload %}">Single Mode</a></li>
        <li><a href="{% url batchmode %}">Batch Mode</a></li>
        <li><a href="#">Documentation</a></li>
        </ul>
-       <ul class="nav pull-right">
+       <ul class="nav-collapse collapse nav pull-right">
         {% if user.is_active %}
+          {% if user.is_staff %}
+          <li><a href="/admin/">Admin</a></li> 
+          {% endif %}
          <li><a>You are logged in as: {{ user.username }}</a></li>
-         <li><a href="/accounts/logout">Logout</a></li>
+         <li><a href="{% url auth_logout %}">Logout</a></li>
         {% else %}
-         <li><a href="/accounts/login">Register / Login</a></li>
+         <li><a href="{% url auth_login %}">Register / Login</a></li>
         {% endif %}
       </ul>
       <!-- Everything you want hidden at 940px or less, place within here -->

@@ -1,11 +1,4 @@
-""" Contains code to convert an input image into a bitmap. This allows all
-backend work to be done in one file format.
-
-The standard way to open files now would be:
-
->>> import image_reader
->>> redImage, greenImage, blueImage = image_reader.get_channels(image)
-
+"""
 Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar
 Qadri, and James Wang under the 401 IP License.
 
@@ -26,22 +19,12 @@ the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
 import PIL.Image
-import scipy.misc
 import numpy as np
+import StringIO
 
 
 def get_channels(image, astype="d"):
-    """ Returns the RGB channels for a single image.
-
-    Arguments:
-        filepath: The path to the file to open
-        filepath type: string
-        astype: The type to open the image as.
-    :   astype type: string or Type.
-
-    Return Value:
-        Tuple of RGB channels.
-    """
+    """ Returns the RGB channels for a single image. """
     r = image[:, :, 0].astype(astype)
     g = image[:, :, 1].astype(astype)
     b = image[:, :, 2].astype(astype)
@@ -49,13 +32,23 @@ def get_channels(image, astype="d"):
 
 
 def create_image(red, green, blue):
+    """ Creates a single from color channels """
     rgb = np.dstack((red, green, blue)) 
     rgb_image = PIL.Image.fromarray(np.uint8(rgb))
     return rgb_image
 
 
 def create_images(red, green, blue):
+    """ Creates separate images for each color channel """
     red_image = PIL.Image.fromarray(np.uint8(red))
     green_image = PIL.Image.fromarray(np.uint8(green))
     blue_image = PIL.Image.fromarray(np.uint8(blue))
     return (red_image, green_image, blue_image)
+
+
+def image_to_string_io(image):
+    """ Convert PIL image to StringIO object """
+    io = StringIO.StringIO()
+    image.save(io, format='PNG')
+    io.seek(0)
+    return io

@@ -22,10 +22,11 @@ signing of this agreement.
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponseServerError, HttpResponseForbidden, Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.files.base import ContentFile
 from pickle import dumps
 from icsform import RgbSettingsForm, BatchSettingsForm;
+from models import Batch, Job
 import scipy.misc
-import StringIO
 import icsform
 import models
 import image_utils
@@ -49,11 +50,25 @@ def program(request):
         # proccess the data in form.cleaned_data
         # ...
           return HttpResponseRedirect('/proccess/') # redirect after post
-    else:
-        form = RgbSettingsForm()
-    temp = {"sec_title": "Image Correlation Spectroscopy Program", "copyrightdate": 2013, "form": form}
-    return render(request, 'icslayout.html', temp)
 
+    batch = Batch.objects.get(id=request.session['batch_id'])
+    job = Job.objects.get(batch=batch)
+    rgbUrl = job.rgb_image.url
+    redUrl = job.red_image.url
+    greenUrl = job.green_image.url
+    blueUrl = job.blue_image.url
+    images = {}
+    images['RGB'] = {}
+    images['RGB']['url'] = rgbUrl
+    images['Red'] = {}
+    images['Red']['url'] = redUrl
+    images['Green'] = {}
+    images['Green']['url'] = greenUrl
+    images['Blue'] = {}
+    images['Blue']['url'] = blueUrl
+    form = RgbSettingsForm()
+    temp = {"sec_title": "Image Correlation Spectroscopy Program", "copyrightdate": 2013, "form": form, "rgbimgs": images}
+    return render(request, 'icslayout.html', temp)
 
 def home(request):
     """ Renders a home  view.
@@ -69,46 +84,36 @@ def home(request):
     temp = {"sec_title": "Welcome to the Homepage", "copyrightdate": 2013,}
     return render(request, 'homepage.html', temp)
 
-
 @login_required(login_url='/accounts/login/')
 def rgb_upload(request):
     if request.method == 'POST':  # If the form has been submitted...
         form = icsform.SampleImageForm(request.POST, request.FILES)
         if form.is_valid():
-            # All validation rules pass
-            print form.isSingleUpload()
-            if form.isSingleUpload():
-                batch = models.Batch(user=None) # create a new batch
-                batch.save()
+            batch = models.Batch(user=request.user) # create a new batch
+            batch.save()
+            request.session['batch_id'] = batch.id
 
+            if form.isSingleUpload():
                 # Process the data in form.cleaned_data
                 rgbImage = form.cleaned_data['mixedImg']
-                # Change to scipy image:
                 rgb = scipy.misc.fromimage(rgbImage)
                 r, g, b = image_utils.get_channels(rgb) # generate the three channels
                 redImage, greenImage, blueImage = image_utils.create_images(r, g, b) #create the images
                 
-                singleJob = models.Job(batch=batch,
+                singleJob = models.Job(number=1,
+                                       batch=batch,
                                        state=models.Job.UPLOADING,
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                io = StringIO.StringIO()
-                redImage.save(io, format='PNG')
-                singleJob.red_image.save('r.png', io)
-                greenImage.save(io, format='PNG')
-                singleJob.green_image.save('g.png', io)
-                blueImage.save(io, format='PNG')
-                singleJob.blue_image.save('b.png', io)
-                rgbImage.save(io, format='PNG')
-                singleJob.rgb_image.save('rgb.png', io)
+                singleJob.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
+                singleJob.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
+                singleJob.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))
+                singleJob.rgb_image.save('rgb.png', ContentFile(image_utils.image_to_string_io(rgbImage).read()))
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
-            elif form.isMultipleUpload():
-                batch = models.Batch(user=None) # create a new batch
-                batch.save()
-
+            else:
                 # Proccess the three image data in form.cleaned_data
                 redImage = form.cleaned_data['redImg']
                 greenImage = form.cleaned_data['greenImg']
@@ -118,30 +123,21 @@ def rgb_upload(request):
                 b = scipy.misc.fromimage(blueImage)
                 rgbImage = image_utils.create_image(r, g, b)
 
-                singleJob = models.Job(batch=batch,
+                singleJob = models.Job(number=1,
+                                       batch=batch,
                                        state=models.Job.UPLOADING, 
                                        red=dumps(r),
                                        green=dumps(g),
                                        blue=dumps(b))
-                io = StringIO.StringIO()
-                redImage.save(io, format='PNG')
-                singleJob.red_image.save('r.png', io)
-                greenImage.save(io, format='PNG')
-                singleJob.green_image.save('g.png', io)
-                blueImage.save(io, format='PNG')
-                singleJob.blue_image.save('b.png', io)
-                rgbImage.save(io, format='PNG')
-                singleJob.rgb_image.save('rgb.png', io)
+                singleJob.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
+                singleJob.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
+                singleJob.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))
+                singleJob.rgb_image.save('rgb.png', ContentFile(image_utils.image_to_string_io(rgbImage).read()))
                 singleJob.save()
 
                 return HttpResponseRedirect('/program/')
-            else:
-                image = None
-        else:
-            image = None
     else:
         form = icsform.SampleImageForm()  # An unbound form
-        #sciImg = None
 
     temp = {"sec_title": "Image Upload", "copyrightdate": 2013,
             "form": form}

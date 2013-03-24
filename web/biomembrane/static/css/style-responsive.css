@@ -83,6 +83,7 @@ img {
     #content {
         width: auto;
         float: none;
+        margin-top: 20%;
     }
 
     #sidebar {
@@ -96,6 +97,10 @@ img {
 
     #header {
         height: auto;
+    }
+
+    #content {
+        margin-top: 40%;
     }
 
     h1 {
