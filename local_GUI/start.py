@@ -1165,7 +1165,10 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.imageTripleFittingCurve.setPixmap(QtGui.QPixmap(path))
 
         # Show updated parameters
-        
+        self.ui.tripleResNormValue.setText(str(round(result.resNorm,PRECISION)))
+        self.ui.tripleG0Value.setText(str(round(result.g0,PRECISION)))
+        self.ui.tripleWValue.setText(str(round(result.w,PRECISION)))
+        self.ui.tripleGinfValue.setText(str(round(result.ginf,PRECISION)))
 
     #####################################################
     # Message Box Functions                             #
@@ -1314,7 +1317,12 @@ class StartQT4(QtGui.QMainWindow):
     # Construct an RGB Image from three separate channel images
     def constructRGB(self):
         if self.redPath != "" and self.greenPath != "" and self.bluePath != "":
-            print('hello')
+            rgb = numpy.dstack((self.redChannel,self.greenChannel,self.blueChannel))
+            rgb_image = PIL.Image.fromarray(numpy.uint8(rgb))
+            path = os.path.join(self.temp_dir, "rgb_image.png")
+            scipy.misc.imsave(path, rgb_image)
+
+            self.ui.imageRgb.setPixmap(QtGui.QPixmap(path))
 
     # Refreshes the temporary directory by deleting and recreating it
     def refresh_temp(self):

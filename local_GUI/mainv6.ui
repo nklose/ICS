@@ -2387,7 +2387,7 @@
         <string>Continue</string>
        </property>
       </widget>
-      <widget class="QLabel" name="tripleG0Value_2">
+      <widget class="QLabel" name="tripleG0Value">
        <property name="geometry">
         <rect>
          <x>740</x>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainv6.ui'
 #
-# Created: Sat Mar 23 18:24:51 2013
+# Created: Sat Mar 23 18:44:08 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -764,16 +764,16 @@ class Ui_Dialog(object):
         self.continueButton1 = QtGui.QPushButton(self.tripleOutputTab)
         self.continueButton1.setGeometry(QtCore.QRect(540, 90, 81, 41))
         self.continueButton1.setObjectName(_fromUtf8("continueButton1"))
-        self.tripleG0Value_2 = QtGui.QLabel(self.tripleOutputTab)
-        self.tripleG0Value_2.setGeometry(QtCore.QRect(740, 480, 101, 31))
+        self.tripleG0Value = QtGui.QLabel(self.tripleOutputTab)
+        self.tripleG0Value.setGeometry(QtCore.QRect(740, 480, 101, 31))
         font = QtGui.QFont()
         font.setPointSize(8)
-        self.tripleG0Value_2.setFont(font)
-        self.tripleG0Value_2.setFrameShape(QtGui.QFrame.Box)
-        self.tripleG0Value_2.setFrameShadow(QtGui.QFrame.Sunken)
-        self.tripleG0Value_2.setText(_fromUtf8(""))
-        self.tripleG0Value_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.tripleG0Value_2.setObjectName(_fromUtf8("tripleG0Value_2"))
+        self.tripleG0Value.setFont(font)
+        self.tripleG0Value.setFrameShape(QtGui.QFrame.Box)
+        self.tripleG0Value.setFrameShadow(QtGui.QFrame.Sunken)
+        self.tripleG0Value.setText(_fromUtf8(""))
+        self.tripleG0Value.setAlignment(QtCore.Qt.AlignCenter)
+        self.tripleG0Value.setObjectName(_fromUtf8("tripleG0Value"))
         self.labelTripleG0 = QtGui.QLabel(self.tripleOutputTab)
         self.labelTripleG0.setGeometry(QtCore.QRect(640, 480, 91, 31))
         self.labelTripleG0.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
