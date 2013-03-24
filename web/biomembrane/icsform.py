@@ -42,10 +42,9 @@ class RgbSettingsForm(forms.Form):
     redgreen = forms.BooleanField(required=False, initial=True)
     redblue = forms.BooleanField(required=False, initial=True)
     greenblue = forms.BooleanField(required=False, initial=True)
-    all = forms.BooleanField(required=False, initial=True)
+    allChannels = forms.BooleanField(required=False, initial=True)
     deltaAuto = forms.BooleanField(required=False)
     deltaCross = forms.BooleanField(required=False)
-    deltaTriple = forms.BooleanField(required=False)
     deltaAll = forms.BooleanField(required=False)
 
     userSelected = forms.CharField(required=False) # field containing the id of the type of correlation the user selects
@@ -69,12 +68,6 @@ class RgbSettingsForm(forms.Form):
     wAutoCrossAll = forms.FloatField(required=False)
     gzeroAutoCrossAll = forms.FloatField(required=False)
 
-    rangeTripleAll = forms.FloatField(required=False) # parameters for triple when the "all correlation" option is selected.
-    gzeroTripleAll = forms.FloatField(required=False)
-    wTripleAll = forms.FloatField(required=False)
-    ginfTripleAll = forms.FloatField(required=False)
-
-
     SIXTEEN, THIRTYTWO, SIXTYFOUR = u'16x16', u'32x32', u'64x64'
     RESOLUTIONS  = (     # set options for the user to specify sample for triple correlation
         (SIXTEEN, u'16x16'),
@@ -82,14 +75,14 @@ class RgbSettingsForm(forms.Form):
         (SIXTYFOUR, u'64x64'),
     )
 
-    resolutions = forms.ChoiceField(initial=SIXTYFOUR, choices=RESOLUTIONS)
+    resolutions = forms.ChoiceField(required=False, initial=SIXTYFOUR, choices=RESOLUTIONS)
 
     def selectedResolution(self):
-       if self.cleaned_data['resolutions'] == SIXTEEN:
+       if self.cleaned_data['resolutions'] == self.SIXTEEN:
           return 16
-       elif self.cleaned_data['resolutions'] == THIRTYTWO:
+       elif self.cleaned_data['resolutions'] == self.THIRTYTWO:
           return 32
-       elif self.cleaned_data['resolutions'] == SIXTYFOUR:
+       elif self.cleaned_data['resolutions'] == self.SIXTYFOUR:
           return 64
        else:
           return None;
@@ -137,13 +130,19 @@ class RgbSettingsForm(forms.Form):
             return False
 
     def isTriple(self):
+        """ Look at cleaned data for some attribute that lets me know I should
+        be using triple data.
+        """
         if self.cleaned_data['userSelected'] == 'id_triple':
            return True
         else:
            return False
 
     def isAll(self):
-        if self.cleaned_data['userSelected'] == 'id_all':
+        """ Look at cleaned data for some attribute that lets me know I should
+        be using all data.
+        """
+        if self.cleaned_data['userSelected'] == 'id_allChannels':
            return True
         else:
            return False
@@ -177,11 +176,11 @@ class BatchSettingsForm(forms.Form):
     resolutions = forms.ChoiceField(initial=SIXTYFOUR, choices=RESOLUTIONS)
 
     def selectedResolution(self):
-       if self.cleaned_data['resolutions'] == SIXTEEN:
+       if self.cleaned_data['resolutions'] == self.SIXTEEN:
           return 16
-       elif self.cleaned_data['resolutions'] == THIRTYTWO:
+       elif self.cleaned_data['resolutions'] == self.THIRTYTWO:
           return 32
-       elif self.cleaned_data['resolutions'] == SIXTYFOUR:
+       elif self.cleaned_data['resolutions'] == self.SIXTYFOUR:
           return 64
        else:
           return None;

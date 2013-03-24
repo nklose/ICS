@@ -21,4 +21,6 @@ urlpatterns = patterns('',
     url(r'^rgb_upload/', view.rgb_upload, name='rgb_upload'),
     url(r'results', view.results),
     url(r'batchmode', view.batch, name='batchmode'),
+    url(r'triple/setRes/', view.tripleSetRes, name='tripleSetRes'),
+    url(r'triple/setParams/', view.tripleSetParams, name='tripleParams'),
 )

@@ -21,7 +21,8 @@
     $(this).button('loading');
     // Then whatever you actually want to do i.e. submit form
     // After that has finished, reset the button state using
-    // $(this).button('reset');
+    $('#settings-form').submit();
+    $(this).button('reset');
   });
 
   function showSelected(value)

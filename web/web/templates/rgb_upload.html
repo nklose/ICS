@@ -34,7 +34,7 @@
     <small>(.bmp .png .tif, tiff, gif)</small>
   </div>
   <div class="modal-body">
-    <form action="" method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>{% csrf_token %}
+    <form method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>{% csrf_token %}
      <div class="control-group"><label class="control-label">{{ form.mixedImg }}</label></div>
   </div>
   <div class="modal-footer">

@@ -34,7 +34,7 @@ import image_utils
 @login_required(login_url='/accounts/login/')
 def program(request):
 
-    """ Renders a test view.
+    """ Renders the ICS Program view.
          Template: /web/web/templates/layout.html
 
          Request parameters (ie, parameters in the request object):
@@ -42,14 +42,60 @@ def program(request):
 
          Context parameters (ie, keys in the dictionary passed to the template):
         - sec_ title: The title of the section.
-        - copyrightdate: The Year of copyright
     """
     if request.method == 'POST':  #form has been submitted
         form = RgbSettingsForm(request.POST)
         if form.is_valid():
         # proccess the data in form.cleaned_data
-        # ...
-          return HttpResponseRedirect('/proccess/') # redirect after post
+            if form.isAuto():
+                #Auto correlations only forms
+                redChecked = form.cleaned_data['red'];
+                blueChecked = form.cleaned_data['blue']
+                greenChecked = form.cleaned_data['green']
+                considerDeltas = form.cleaned_data['deltaAuto']
+
+                rangeValue = form.cleaned_data['rangeAuto']
+                gzeroValue = form.cleaned_data['gzeroAuto']
+                wValue = form.cleaned_data['wAuto']
+                ginfValue = form.cleaned_data['ginfAuto']
+
+                #Do Auto with parameters above
+                return HttpResponseRedirect('/results/') #redirect results view
+
+            elif form.isCross():
+                #Cross correlations only forms
+                redgreenChecked = form.cleaned_data['redgreen'];
+                redblueChecked = form.cleaned_data['redblue']
+                greenblueChecked = form.cleaned_data['greenblue']
+                considerDeltas = form.cleaned_data['deltaCross'] #check this boolean
+
+                rangeValue = form.cleaned_data['rangeCross']
+                gzeroValue = form.cleaned_data['gzeroCross']
+                wValue = form.cleaned_data['wCross']
+                ginfValue = form.cleaned_data['ginfCross']
+
+                #Do Cross Correlation with above parameters
+                return HttpResponseRedirect('/results/') #redirect results view
+
+            elif form.isTriple():
+                #Triple correlations only
+                #Redirect to tripleSetRes (Triple Sample Resolution)
+                return HttpResponseRedirect('/triple/setRes/') 
+            elif form.isAll():
+                #All correlations form
+                allChannelsChecked = form.cleaned_data['allChannels']
+                considerDeltas = form.cleaned_data['deltaAll']
+
+                rangeValue = form.cleaned_data['rangeAutoCrossAll']
+                gzeroValue = form.cleaned_data['gzeroAutoCrossAll']
+                wValue = form.cleaned_data['wAutoCrossAll']
+                ginfValue = form.cleaned_data['gzeroAutoCrossAll']
+                
+                #Do Auto and Cross Sequentially Using Parameters Above
+                #Do Triple
+
+                #Redirect to tripleSetRes (Ask User for Triple's Sample Resolution)
+                return HttpResponseRedirect('/triple/setRes/') # see tripleSetRes view function
 
     batch = Batch.objects.get(id=request.session['batch_id'])
     job = Job.objects.get(batch=batch)
@@ -67,8 +113,63 @@ def program(request):
     images['Blue'] = {}
     images['Blue']['url'] = blueUrl
     form = RgbSettingsForm()
-    temp = {"sec_title": "Image Correlation Spectroscopy Program", "copyrightdate": 2013, "form": form, "rgbimgs": images}
+    temp = {"sec_title": "Image Correlation Spectroscopy Program","form": form, "rgbimgs": images}
     return render(request, 'icslayout.html', temp)
+
+@login_required(login_url='/accounts/login/')
+def tripleSetRes(request):
+
+    """ Renders the a view that asks users to input the sample resolution 
+        for triple correlation.
+
+         Template: /web/web/templates/tripleSetResolutions.html
+
+         Request parameters (ie, parameters in the request object):
+         - None
+
+         Context parameters (ie, keys in the dictionary passed to the template):
+        - sec_ title: The title of the section.
+    """
+    if request.method == 'POST':  #form has been submitted
+       form = RgbSettingsForm(request.POST, request.FILES)
+       if form.is_valid():
+          resolutions = form.selectedResolution() #get the sample resolution as 16,32,64
+          #Update Triple Correlation Parameters Here
+          #Redirect to tripleSetParams (Triple Parameters)
+          return HttpResponseRedirect('/triple/setParams/') 
+
+    form = RgbSettingsForm()
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Resolution To Sample", "form": form,}
+    return render(request, 'tripleSetResolution.html', temp)
+
+@login_required(login_url='/accounts/login/')
+def tripleSetParams(request):
+    """ Renders the a view that asks users to set parameters 
+        for triple correlation
+
+         Template: /web/web/templates/registration/login.html
+
+         Request parameters (ie, parameters in the request object):
+         - None
+
+         Context parameters (ie, keys in the dictionary passed to the template):
+        - sec_ title: The title of the section.
+    """
+    if request.method == 'POST':  #form has been submitted
+       form = RgbSettingsForm(request.POST, request.FILES)
+       if form.is_valid():
+
+          # Update Triple Correlation Parameters Here
+          rangeValue = form.cleaned_data['rangeTriple']
+          gzeroValue = form.cleaned_data['gzeroTriple']
+          wValue = form.cleaned_data['wTriple']
+          ginfValue = form.cleaned_data['ginfTriple']
+          return HttpResponseRedirect('/results/') # redirect after post
+
+    form = RgbSettingsForm()
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Parameters", "form": form,}
+    return render(request, 'tripleSetParameters.html', temp)
+
 
 def home(request):
     """ Renders a home  view.
@@ -79,9 +180,8 @@ def home(request):
 
          Context parameters (ie, keys in the dictionary passed to the template):
         - sec_ title: The title of the section
-        - copyrightdate: The year of copyright.
     """
-    temp = {"sec_title": "Welcome to the Homepage", "copyrightdate": 2013,}
+    temp = {"sec_title": "Welcome to the Homepage",}
     return render(request, 'homepage.html', temp)
 
 @login_required(login_url='/accounts/login/')
@@ -139,7 +239,7 @@ def rgb_upload(request):
     else:
         form = icsform.SampleImageForm()  # An unbound form
 
-    temp = {"sec_title": "Image Upload", "copyrightdate": 2013,
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Image Upload",
             "form": form}
     return render(request, 'rgb_upload.html', temp)
 
@@ -160,24 +260,46 @@ def results(request):
 
 @login_required(login_url='/accounts/login/')
 def batch(request):
-    """ Renders a home  view.
-         Template: /web/web/templates/results.html
+    """ Renders a batch view.
+         Template: /web/web/templates/batch.html
 
          Request parameters (ie, parameters in the request object):
          - None
 
          Context parameters (ie, keys in the dictionary passed to the template):
         - sec_ title: The title of the section
-        - copyrightdate: The year of copyright.
     """
     if request.method == 'POST':  #form has been submitted
-        form = BatchSettingsForm(request.POST)
+        form = BatchSettingsForm(request.POST, request.FILES)
         if form.is_valid():
-        # proccess the data in form.cleaned_data
-        # ...
-          return HttpResponseRedirect('/proccess/') # redirect after post
+           # Proccess the data in form.cleaned_data
+           # get the filenameFormat of each image file in the batch from user
+           filenameFormat = form.cleaned_data['filenameFormat'];
+           imageSize = form.cleaned_data['imageSize']; #get the size of images from the user
+           resolutions = form.selectedResolution() #the size to sample for triple correlation
+           firstImageIndex = form.cleaned_data['firstImageIndex']; #which image file number to start at (suppose they skip some)
+           lastImageIndex = form.cleaned_data['lastImageIndex']; #which image file number to end at
+
+           # Auto and Cross Parameters
+           rangeValue = form.cleaned_data['rangeAutoCross']
+           gzeroValue = form.cleaned_data['gzeroAutoCross']
+           wValue = form.cleaned_data['wAutoCross']
+           ginfValue = form.cleaned_data['ginfAutoCross']
+           deltaAuto = form.cleaned_data['considerDeltaForAuto'] #check this boolean
+           deltaCross = form.cleaned_data['considerDeltaForCross'] #check this boolean
+
+           rangeTripleValue = form.cleaned_data['rangeTriple']
+           gzeroTripleValue = form.cleaned_data['gzeroTriple']
+           wTripleValue = form.cleaned_data['wTriple']
+           ginfTripleValue = form.cleaned_data['ginfTriple']
+
+           # Run Batch with settings
+
+           # Redirect to batch result
+           
+           return HttpResponseRedirect('/results/') # redirect after post
     else:
         form = BatchSettingsForm()
 
-    temp = {"sec_title": "Batch Mode", "copyrightdate": 2013, "form": form}
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Batch Mode", "form": form}
     return render(request, 'batch.html', temp)

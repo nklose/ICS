@@ -3,5 +3,11 @@
 {% block script %}{{ block.super}}{% endblock script %}
 {% block content-main %}
 <h1>Results</h1>
+<div class="img-displayblock">
+    <ul class="sortableImgList" id="sortable-img"> 
+    {% for key, val in graphImgs.items %}
+    <li><span class="sortableImg"><img src="{{val.url}}" alt="{{key}}"/></span>{{key}}</li>
+    {% endfor %}
+</div>
 <input class="btn btn-primary" type="button" value="Export"/>
 {% endblock content-main %}

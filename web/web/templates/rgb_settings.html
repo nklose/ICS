@@ -1,11 +1,11 @@
-{% block rgb-controls %}
+{% block rgb-controls %} {% csrf_token %}
 <h5>Correlation Settings</h5>
  <div class="alert alert-info" id="userNotice"><strong>Note: </strong>Please Select the Type of Correlation(s) to Run</div>
  {{ form.userSelected.as_hidden }} 
   <ul class="nav nav-tabs">
    <li><a href="#auto" id="id_auto" data-toggle="tab">Auto-Correlation</a></li>
    <li><a href="#cross" id="id_cross" data-toggle="tab">Cross-Correlation</a></li>
-   <li><a href="#triplecross" id="id_triplecross" data-toggle="tab">Triple-Correlation</a></li>
+   <li><a href="#triple" id="id_triple" data-toggle="tab">Triple-Correlation</a></li>
    <li><a href="#all" id="id_all" data-toggle="tab">All</a></li>
  </ul>
 {% endblock %}
@@ -61,7 +61,7 @@
     </div> <!-- row -->
    </div> <!-- cross -->
 
- <div class="tab-pane" id="triplecross">
+ <div class="tab-pane" id="triple">
   <div class="row-fluid">
     <div>
     <p>Triple-correlation parameters are inputted sequentially. After loading images(s) into the program, press the START button to begin</p>

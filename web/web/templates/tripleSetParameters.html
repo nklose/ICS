@@ -1,0 +1,27 @@
+{% extends "generic.html" %}
+{% block stylesheet %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">
+{% endblock stylesheet %}
+{% block content-main %}
+<div class="rgbimg-background"></div>
+  <form method="post">{% csrf_token %}
+ <div class="rgbimg-background">
+  <div class="row-fluid">
+     <div class="span4">
+      <fieldset>
+      <legend>Paramters:</legend>
+      <div class="control-group">{{ form.rangeTriple.errors }}<label for="{{form.rangeTriple.auto_id}}" class="control-label">Range:</label>{{ form.rangeTriple }}</div>
+      <div class="control-group">{{ form.gzeroTriple.errors }}<label for="{{form.gzeroTriple.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroTriple}}</div>
+      <div class="control-group">{{ form.wTriple.errors }}<label for="{{form.wTriple.auto_id}}" class="control-label">    w:</label>{{ form.wTriple }}</div>
+      <div class="control-group">{{ form.ginfTriple.errors }}<label for="{{form.ginfTriple.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfTriple }}</div>
+      </fieldset>
+     </div> <!-- span4 -->
+     </div> <!-- row -->
+ </div>
+ <div class="rgbimg-background">
+  <input class="btn btn-primary" type="submit" value="Next"/>
+  <input class="btn" type="button" onclick="window.location='/program/'" value="Cancel"/>
+  </form>
+ </div>
+{% endblock content-main %}
