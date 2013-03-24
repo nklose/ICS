@@ -36,10 +36,11 @@ def plot(gnew, gfit, color, ginf):
 
     plotFit = gfit[0:, 0]
     plotNew = gnew[1:, 0]
+    upperBound = max(int(math.ceil(gfit[0, 0])), int(math.ceil(gnew[1, 0])))
 
     __plot(plotFit, plotNew, color, rangeVal)
 
-    pp.axis([0, rangeVal, min(0, lowerBound), max(gfit[0, 0], gnew[1, 0])])
+    pp.axis([0, rangeVal, min(0, lowerBound), upperBound])
     pp.savefig(graphString)
     graphString.seek(0)
     return graphString
@@ -70,9 +71,11 @@ def plot_1d(gnew, gfit, color, ginf):
 
     plotFit = gfit[0:]
     plotNew = gnew[1:]
+    upperBound = max(int(math.ceil(gfit[0])), int(math.ceil(gnew[1])))
+
     __plot(plotFit, plotNew, color, rangeVal)
 
-    pp.axis([0, rangeVal, min(0, lowerBound), max(gfit[0], gnew[1])])
+    pp.axis([0, rangeVal, min(0, lowerBound), upperBound])
     pp.savefig(graphString)
     graphString.seek(0)
     return graphString

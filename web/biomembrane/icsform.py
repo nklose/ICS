@@ -4,13 +4,15 @@ import formfields
 
 class SampleImageForm(forms.Form):
 
-    redImg = formfields.LosslessImageField(required=False)
-    greenImg = formfields.LosslessImageField(required=False)
-    blueImg = formfields.LosslessImageField(required=False)
+    redImg = formfields.LosslessImageField(required=False, isSingleChannel=True)
+    greenImg = formfields.LosslessImageField(required=False,
+                                             isSingleChannel=True)
+    blueImg = formfields.LosslessImageField(required=False,
+                                            isSingleChannel=True)
     mixedImg = formfields.LosslessImageField(required=False)
 
     uploadType = forms.CharField()
-    
+
     def isSingleUpload(self):
         if self.cleaned_data['uploadType'] == 'id_singleRGB':
            return True
@@ -22,7 +24,7 @@ class SampleImageForm(forms.Form):
            return True
         else:
            return False
-        
+
 
 
 class RgbSettingsForm(forms.Form):
@@ -154,7 +156,7 @@ class BatchSettingsForm(forms.Form):
     filenameFormat = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'rgb_{:03d}.bmp'}))
     considerDeltaForAuto = forms.BooleanField(initial=False)
     considerDeltaForCross = forms.BooleanField(initial=False)
-     
+
     rangeAutoCross = forms.FloatField(initial=20) # parameters for auto and cross
     ginfAutoCross = forms.FloatField(initial=10)
     wAutoCross = forms.FloatField(initial=0)

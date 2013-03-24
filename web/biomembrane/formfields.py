@@ -42,6 +42,10 @@ class LosslessImageField(forms.FileField):
                           "lossless image types.")
     }
 
+    def __init__(self, *args, **kwargs):
+        self.mixed = kwargs.pop("isSingleChannel", False)
+        super(LosslessImageField, self).__init__(*args, **kwargs)
+
     def to_python(self, data):
         """
         Checks that the file-upload field data contains a valid image
@@ -79,7 +83,7 @@ class LosslessImageField(forms.FileField):
         fd, path = tempfile.mkstemp()
         try:
             if isPath:
-                image_reader.validate_image(file)
+                image_reader.validate_image(file, self.mixed)
                 return Image.open(file)
             else:
                 file.seek(0)
@@ -87,7 +91,7 @@ class LosslessImageField(forms.FileField):
                 for line in lines:
                     os.write(fd, line)
                 os.close(fd)
-                image_reader.validate_image(path)
+                image_reader.validate_image(path, self.mixed)
                 return Image.open(path)
         except image_reader.ImageFormatException:
             raise ValidationError(self.error_messages['not_losseless'])
