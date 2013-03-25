@@ -64,7 +64,16 @@ A few items are required:
 		Wand should be successfully installed.
 4. Install the Visual Studio C++ Redistributable version here:
    http://www.microsoft.com/en-us/download/details.aspx?id=29 (included in repo)
-5. Launch the mingw 32-bit shell:
+5. Open mingw 32-bit shell, navigate to C:\Python27\Lib\site-packages\matplotlib
+6. Call
+
+    ls -r *.py | xargs sed -i.bak "s/.*__doc__.*//g"
+    chmod -R 644 *
+
+This will remove a lot of docstring manipulating code preventing optimization.
+Additional changes will have to be done to many files. vendor contains a zip of my
+matplotlib changes confirmed to work.
+5. Launch the mingw 32-bit shell, navigate to this repo:
      a. To create the 32 bit version, call "make"
      b. (DOESN'T WORK) To create the 64 bit version, call "make DLL_64=1"
 6. To make the icon work, install pywin32:

@@ -59,7 +59,7 @@ OPTIONS = {
         "dll_excludes": DLL_EXCLUDES,
         'bundle_files': 3,  # 1 = .exe; 2 = .zip; 3 = separate
         'compressed': 2,
-        'optimize': 0,  # Must be disabled for matplotlib. Fixable with edits, see http://www.py2exe.org/index.cgi/MatPlotLib
+        'optimize': 2,  # Must be disabled for matplotlib. Fixable with edits, see http://www.py2exe.org/index.cgi/MatPlotLib
         'xref': False,
         'skip_archive': False,
         'ascii': False,
