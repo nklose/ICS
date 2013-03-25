@@ -66,6 +66,9 @@ class StartQT4(QtGui.QMainWindow):
         # Temporary file directory (used during runtime only, purged each run)
         self.temp_dir = "./ics_tmp"
 
+        # Refresh the temporary directory
+        self.refresh_temp()
+
         # Size of the images in pixels (e.g. 64 would mean a 64x64 image)
         self.size = 0
 
