@@ -1342,8 +1342,31 @@ class StartQT4(QtGui.QMainWindow):
     # Miscellaneous Functions                           #
     #####################################################
 
-    # Construct an RGB Image from three separate channel images
+    # Construct an RGB Image from three separate channel images (if needed)
+    #  This function will also get rid of any RGB image that was previously loaded,
+    #  as the user has changed their mind if they are now trying to load a monochrome
+    #  image. It also gets rid of any monochrome images that have been loaded from
+    #  the temporary directory as these have been split from the RGB image.
     def constructRGB(self):
+        # Refresh the temporary directory
+        self.refresh_temp()
+
+        # If an RGB image has been loaded, clear it
+        self.rgbPath = ""
+        self.ui.imageRgb.clear()
+
+        # For each monochrome image, clear them if their path is the temporary directory
+        if str(os.path.dirname(self.redPath)) == self.temp_dir:
+            self.redPath = ""
+            self.ui.imageRed.clear()
+        if str(os.path.dirname(self.greenPath)) == self.temp_dir:
+            self.greenPath = ""
+            self.ui.imageGreen.clear()
+        if str(os.path.dirname(self.bluePath)) == self.temp_dir:
+            self.bluePath = ""
+            self.ui.imageBlue.clear()
+
+        # If all 3 monochrome images have been loaded, combine them
         if self.redPath != "" and self.greenPath != "" and self.bluePath != "":
             rgb = numpy.dstack((self.redChannel,self.greenChannel,self.blueChannel))
             rgb_image = PIL.Image.fromarray(numpy.uint8(rgb))
