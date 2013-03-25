@@ -37,7 +37,7 @@ import backend.triple as triple
 import midend.adaptor
 
 # Global constants
-PRECISION = 6      # number of decimal places to show for output values
+PRECISION = 5      # number of decimal places to show for output values
 
 
 class StartQT4(QtGui.QMainWindow):
@@ -46,23 +46,24 @@ class StartQT4(QtGui.QMainWindow):
         self.setWindowIcon(QtGui.QIcon('icon.ico'))
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        # Force theme
+
+        # Force consistent theme and font size
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("Plastique"))
         self.setStyleSheet("font-size: 11pt")
 
-        # Interface variables
+        # Paths to channel input files
         self.redPath = ""
         self.greenPath = ""
         self.bluePath = ""
         self.rgbPath = ""
 
-        # Image arrays
+        # Image channel arrays
         self.redChannel = ""
         self.greenChannel = ""
         self.blueChannel = ""
         self.rgbChannel = ""
 
-        # Temporary file directory (used during runtime only)
+        # Temporary file directory (used during runtime only, purged each run)
         self.temp_dir = "./ics_tmp"
 
         # Size of the images in pixels (e.g. 64 would mean a 64x64 image)
@@ -130,13 +131,19 @@ class StartQT4(QtGui.QMainWindow):
         # Open the file loader and get the path of the desired image
         self.rgbPath = str(QtGui.QFileDialog.getOpenFileName())
 
-        # Call the backend to separate the image by channel
-        try:
-            images = bimloader.load_image_mixed(str(self.rgbPath))
-        except bimloader.ImageFormatException:
+        # Check for cancel
+        if self.rgbPath == "" or self.rgbPath == None:
             validImage = False
-            self.msgBadFormat()
-            self.rgbPath = ""
+            self.message("Image loading canceled.")
+
+        # Call the backend to separate the image by channel
+        if validImage:
+            try:
+                images = bimloader.load_image_mixed(str(self.rgbPath))
+            except bimloader.ImageFormatException:
+                validImage = False
+                self.msgBadFormat()
+                self.rgbPath = ""
 
         if validImage:
             # Update user interface with image
@@ -188,13 +195,23 @@ class StartQT4(QtGui.QMainWindow):
         # Open the file loader to get the path of the desired image
         self.redPath = str(QtGui.QFileDialog.getOpenFileName())
 
-        # Call the backend to check that the file extension is valid
-        try:
-            self.redChannel = bimloader.load_image_split(str(self.redPath))
-        except bimloader.ImageFormatException:
+        # Check for cancel
+        if self.redPath == "" or self.redPath == None:
             validImage = False
-            self.msgBadFormat()
-            self.redPath = ""
+            self.message("Image loading canceled.")
+
+        # Call the backend to check that the file extension is valid
+        if validImage:
+            try:
+                self.redChannel = bimloader.load_image_split(str(self.redPath))
+            except bimloader.ImageFormatException:
+                validImage = False
+                self.msgBadFormat()
+                self.redPath = ""
+            except:
+                validImage = False
+                self.msgBadChannels()
+                self.greenPath = ""
 
         if validImage:
             # Clear RGB path, since the user has opted to use single-channel images
@@ -242,18 +259,23 @@ class StartQT4(QtGui.QMainWindow):
         # Open the file loader to get the path of the desired image
         self.greenPath = str(QtGui.QFileDialog.getOpenFileName())
 
-        # Call the backend to load the image as an array
-        try:
-            self.greenChannel = bimloader.load_image_split(str(self.greenPath))
+        # Check for cancel
+        if self.greenPath == "" or self.greenPath == None:
+            validImage = False
+            self.message("Image loading canceled.")
 
-        except bimloader.ImageFormatException:
-            validImage = False
-            self.msgBadFormat()
-            self.greenPath = ""
-        except:
-            validImage = False
-            self.msgBadChannels()
-            self.greenPath = ""
+        # Call the backend to load the image as an array
+        if validImage:
+            try:
+                self.greenChannel = bimloader.load_image_split(str(self.greenPath))
+            except bimloader.ImageFormatException:
+                validImage = False
+                self.msgBadFormat()
+                self.greenPath = ""
+            except:
+                validImage = False
+                self.msgBadChannels()
+                self.greenPath = ""
 
         if validImage:
             # Update user interface with image
@@ -300,17 +322,23 @@ class StartQT4(QtGui.QMainWindow):
         # Open the file loader to get the path of the desired image
         self.bluePath = str(QtGui.QFileDialog.getOpenFileName())
 
+        # Check for cancel
+        if self.bluePath == "" or self.bluePath == None:
+            validImage = False
+            self.message("Image loading canceled.")
+
         # Call the backend to load the image as an array
-        try:
-            self.blueChannel = bimloader.load_image_split(str(self.bluePath))
-        except bimloader.ImageFormatException:
-            validImage = False
-            self.msgBadFormat()
-            self.bluePath = ""
-        except:
-            validImage = False
-            self.msgBadChannels()
-            self.bluePath = ""
+        if validImage:
+            try:
+                self.blueChannel = bimloader.load_image_split(str(self.bluePath))
+            except bimloader.ImageFormatException:
+                validImage = False
+                self.msgBadFormat()
+                self.bluePath = ""
+            except:
+                validImage = False
+                self.msgBadChannels()
+                self.bluePath = ""
 
         if validImage:
             # Update user interface with image
