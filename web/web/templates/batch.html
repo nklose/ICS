@@ -3,7 +3,25 @@
 {% block script %}{{ block.super}}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">{% endblock script %}
 {% block content-main %}
 <h5>Image Correlation Spectroscopy Batch Mode</h5>
-<form action ="#" name="batchform">
+{% if form.errors %}
+<div class="alert alert-error">
+{{ form.imageSize.errors }}
+{{ form.redImg.errors }}
+{{ form.firstImageIndex.errors }}
+{{ form.lastImageIndex.errors }}
+{{ form.filenameFormat.errors }}
+{{ form.rangeAutoCross.errors }}
+{{ form.ginfAutoCross.errors }}
+{{ form.wAutoCross.errors }}
+{{ form.gzeroAutoCross.errors }}
+{{ form.rangeTriple.errors }}
+{{ form.ginfTriple.errors }}
+{{ form.wTriple.errors }}
+{{ form.gzeroTriple.errors }}
+{{ form.resolution.errors }}
+</div>
+{% endif %} 
+<form name="batchform" method="post">{% csrf_token %}
   <div class="row-fluid">
     <div class="span4">
      <fieldset>
@@ -23,7 +41,7 @@
       <legend>Auto/Cross Parameters</legend>
       <label for="{{form.rangeAutoCross.auto_id}}">Range</label>{{ form.rangeAutoCross }}
       <label for="{{form.ginfAutoCross.auto_id}}">gInf</label>{{ form.ginfAutoCross }}
-      <label for="{{form.wAutoCross.auto_id}}">w</label>{{ form.wAutoCross }}
+      <label for="{{form.wAutoCross.auto_id}}=">w</label>{{ form.wAutoCross }}
       <label for="{{form.gzeroAutoCross.auto_id}}">g(0)</label>{{ form.gzeroAutoCross }}
      </fieldset>
     </div> <!-- span5 -->
@@ -44,8 +62,8 @@
 <div class="rgbimg-background">
  <div id="batchcontrols">
   <div class="alert alert-info" id="userNotice"><strong>Note: </strong>When ready click <strong>Next</strong> to Proceed to Batch File Upload</div>
-  <button type="button" id="start" class="btn" data-loading-text="Loading...">Next</button>
-  <button type="button" id="batch" class="btn" data-toggle="button" onclick="window.location='../rgb_upload'">Swtich to Single Mode</button>
+  <input type="submit" id="batchStart" class="btn" value="Next">
+  <button type="button" id="batchCancel" class="btn" data-toggle="button" onclick="window.location='../rgb_upload'">Swtich to Single Mode</button>
  </div>
 </div>
 </form>
