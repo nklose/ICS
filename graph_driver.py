@@ -28,8 +28,10 @@ def generate_graphs(resultList, name_format="graph%d.png"):
     for i, x in enumerate(resultList):
         # Get a file like object that contains the string of the image.
         fileLike = x.plotToStringIO()
-        outFile = open(name_format % i, "w")
-        for line in fileLike.readlines():
+        lines = fileLike.readlines()
+        outFile = open(name_format % i, "wb")
+        firstLine = True
+        for line in lines:
             outFile.write(line)
 
 

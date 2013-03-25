@@ -922,11 +922,11 @@ class StartQT4(QtGui.QMainWindow):
             fileLike = x.plotToStringIO()
             outFile = None
             if x.color == "r":
-                outFile = open(rPath, "w")
+                outFile = open(rPath, "wb")
             elif x.color == "g":
-                outFile = open(gPath, "w")
+                outFile = open(gPath, "wb")
             elif x.color == "b":
-                outFile = open(bPath, "w")
+                outFile = open(bPath, "wb")
             else:
                 print("Error: invalid color.")
                 
@@ -1008,11 +1008,11 @@ class StartQT4(QtGui.QMainWindow):
             fileLike = x.plotToStringIO()
             outFile = None
             if x.color == "rg":
-                outFile = open(rgPath, "w")
+                outFile = open(rgPath, "wb")
             elif x.color == "rb":
-                outFile = open(rbPath, "w")
+                outFile = open(rbPath, "wb")
             elif x.color == "gb":
-                outFile = open(gbPath, "w")
+                outFile = open(gbPath, "wb")
             else:
                 print("Error: invalid color.")
                 
@@ -1079,7 +1079,7 @@ class StartQT4(QtGui.QMainWindow):
 
         # create the graph
         fileLike = result.plotToStringIO()
-        outFile = open(path, "w")
+        outFile = open(path, "wb")
         for line in fileLike.readlines():
             outFile.write(line)
         outFile.close()
@@ -1115,7 +1115,7 @@ class StartQT4(QtGui.QMainWindow):
 
         # create the graph
         fileLike = result.plotToStringIO()
-        outFile = open(path, "w")
+        outFile = open(path, "wb")
         for line in fileLike.readlines():
             outFile.write(line)
         outFile.close()
@@ -1156,7 +1156,7 @@ class StartQT4(QtGui.QMainWindow):
         # create the fitting curve
         path = os.path.join(self.temp_dir, "triple_3.png")
         fileLike = result.plotToStringIO()
-        outFile = open(path, "w")
+        outFile = open(path, "wb")
         for line in fileLike.readlines():
             outFile.write(line)
         outFile.close()

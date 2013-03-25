@@ -51,6 +51,13 @@ A few items are required:
 	 b. py2exe: http://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/
 	 c. pyqt: http://www.riverbankcomputing.com/software/pyqt/download
 	    Version 4.10 has been successfully used.
+	 d. wand: Follow http://docs.wand-py.org/en/0.2-maintenance/guide/install.html#install-imagemagick-on-windows
+	    then use the pip premade package in the pythonlibs link above. Then
+		open a command prompt, navigate to pip (C:\Python27\Scripts) and call
+		
+		    pip.exe install Wand
+			
+		Wand should be successfully installed.
 4. Install the Visual Studio C++ Redistributable version here:
    http://www.microsoft.com/en-us/download/details.aspx?id=29 (included in repo)
 5. Launch the mingw 32-bit shell:
