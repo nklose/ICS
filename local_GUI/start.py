@@ -1624,24 +1624,24 @@ class StartQT4(QtGui.QMainWindow):
     # Sets the default parameters for all input fields.
     def set_default_parameters(self):
         self.ui.autoRangeTextbox.setPlaceholderText("20")
-        self.ui.autoGinfTextbox.setPlaceholderText("10")
-        self.ui.autoWTextbox.setPlaceholderText("0")
-        self.ui.autoG0Textbox.setPlaceholderText("20")
+        self.ui.autoGinfTextbox.setPlaceholderText("0")
+        self.ui.autoWTextbox.setPlaceholderText("10")
+        self.ui.autoG0Textbox.setPlaceholderText("1")
         
         self.ui.crossRangeTextbox.setPlaceholderText("20")
-        self.ui.crossGinfTextbox.setPlaceholderText("10")
-        self.ui.crossWTextbox.setPlaceholderText("0")
-        self.ui.crossG0Textbox.setPlaceholderText("20")
+        self.ui.crossGinfTextbox.setPlaceholderText("0")
+        self.ui.crossWTextbox.setPlaceholderText("10")
+        self.ui.crossG0Textbox.setPlaceholderText("1")
 
         self.ui.allAutoCrossRangeTextbox.setPlaceholderText("20")
-        self.ui.allAutoCrossGinfTextbox.setPlaceholderText("10")
-        self.ui.allAutoCrossWTextbox.setPlaceholderText("0")
-        self.ui.allAutoCrossG0Textbox.setPlaceholderText("20")
+        self.ui.allAutoCrossGinfTextbox.setPlaceholderText("0")
+        self.ui.allAutoCrossWTextbox.setPlaceholderText("10")
+        self.ui.allAutoCrossG0Textbox.setPlaceholderText("1")
 
-        self.ui.tripleRangeTextbox.setPlaceholderText("15")
+        self.ui.tripleRangeTextbox.setPlaceholderText("20")
         self.ui.tripleGinfTextbox.setPlaceholderText("0")
-        self.ui.tripleWTextbox.setPlaceholderText("0")
-        self.ui.tripleG0Textbox.setPlaceholderText("0")
+        self.ui.tripleWTextbox.setPlaceholderText("10")
+        self.ui.tripleG0Textbox.setPlaceholderText("1")
 
 def start():
     app = QtGui.QApplication(sys.argv)
