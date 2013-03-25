@@ -22,7 +22,8 @@ LIB_BACKEND = os.path.join(BACKEND, "libbackend.so")
 LIB_BACKEND_PATH = os.path.join(ROOT_PATH, LIB_BACKEND)
 
 INCLUDES = ["sip", "scipy.linalg.cblas", "scipy.linalg.fblas",
-            "scipy.linalg.flapack", "scipy.linalg.clapack", "matplotlib"]
+            "ctypes", "scipy.linalg.flapack", "scipy.linalg.clapack",
+            "matplotlib", "matplotlib.backends.backend_tkagg"]
 
 # Dependencies are automatically detected, but it might need fine tuning.
 include_files = [(a, os.path.join(IMAGE_FOLDER, os.path.basename(a)))

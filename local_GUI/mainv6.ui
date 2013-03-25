@@ -209,7 +209,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>../../.designer/backup/images/rgb.png</pixmap>
+       <pixmap>Images/rgb.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -237,7 +237,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>../../.designer/backup/images/r.png</pixmap>
+       <pixmap>Images/r.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -265,7 +265,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>../../.designer/backup/images/g.png</pixmap>
+       <pixmap>Images/g.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -293,7 +293,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>../../.designer/backup/images/b.png</pixmap>
+       <pixmap>Images/b.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>

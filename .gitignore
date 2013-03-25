@@ -10,3 +10,4 @@ build/*
 *~
 web/web/media
 *.swp
+ics_tmp/*.png
