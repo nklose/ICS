@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainv6.ui'
 #
-# Created: Sat Mar 23 18:44:08 2013
+# Created: Mon Mar 25 11:44:02 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -821,7 +821,7 @@ class Ui_Dialog(object):
         self.outputCorrelationTabWidget.addTab(self.tripleOutputTab, _fromUtf8(""))
         self.mainTabWidget.addTab(self.outputTab, _fromUtf8(""))
         self.progressBar = QtGui.QProgressBar(Dialog)
-        self.progressBar.setEnabled(True)
+        self.progressBar.setEnabled(False)
         self.progressBar.setGeometry(QtCore.QRect(300, 630, 461, 23))
         self.progressBar.setAutoFillBackground(False)
         self.progressBar.setProperty("value", 0)

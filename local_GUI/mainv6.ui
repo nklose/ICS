@@ -2562,7 +2562,7 @@
   </widget>
   <widget class="QProgressBar" name="progressBar">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="geometry">
     <rect>

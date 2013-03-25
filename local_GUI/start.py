@@ -433,10 +433,8 @@ class StartQT4(QtGui.QMainWindow):
 
     # Start button functionality
     def start(self):
-        # Disable start button and batch button and enable stop button
-        self.ui.startButton.setEnabled(False)
-        self.ui.stopButton.setEnabled(True)
-        self.ui.batchModeButton.setEnabled(False)
+        # Put the interface into processing mode
+        self.set_processing(True)
 
         # Find out which correlation to do
         mode = self.get_correlation_tab()
@@ -446,7 +444,6 @@ class StartQT4(QtGui.QMainWindow):
 
         # Continue if input is valid
         if validInput:
-
             # Remove values and images from output tab, if necessary
             self.clear_output_tab()
 
@@ -470,10 +467,8 @@ class StartQT4(QtGui.QMainWindow):
             else:
                 self.message("Mode error.")
 
-        # Disable stop button and re-enable start button and batch button
-        self.ui.startButton.setEnabled(True)
-        self.ui.batchModeButton.setEnabled(True)
-        self.ui.stopButton.setEnabled(False)
+        # Get the interface out of processing mode
+        self.set_processing(False)
 
     # Stop button functionality
     def stop(self):
@@ -482,10 +477,7 @@ class StartQT4(QtGui.QMainWindow):
         # Reset progress bar
         self.progress(0)
 
-        # Enable start button and batch mode button, and disable stop button
-        self.ui.startButton.setEnabled(True)
-        self.ui.stopButton.setEnabled(False)
-        self.ui.batchModeButton.setEnabled(True)
+        self.set_processing(False)
 
 
     ######################################################
@@ -1556,6 +1548,24 @@ class StartQT4(QtGui.QMainWindow):
     # Updates the progress bar
     def progress(self, percent):
         self.ui.progressBar.setValue(percent)
+
+    # Sets the program mode as 'processing' or 'not processing', which includes
+    #  enabling/disabling of start and stop buttons and other interface features
+    def set_processing(self, value):
+        if value:
+            self.ui.startButton.setEnabled(False)
+            self.ui.stopButton.setEnabled(True)
+            self.ui.batchModeButton.setEnabled(False)
+            self.ui.correlationSettingsGroup.setEnabled(False)
+            self.ui.imageSettingsGroup.setEnabled(False)
+            self.ui.progressBar.setEnabled(True)
+        else:
+            self.ui.startButton.setEnabled(True)
+            self.ui.stopButton.setEnabled(False)
+            self.ui.batchModeButton.setEnabled(True)
+            self.ui.correlationSettingsGroup.setEnabled(True)
+            self.ui.imageSettingsGroup.setEnabled(True)
+            self.ui.progressBar.setEnabled(False)
 
     # Remove paths for any nonexistent images
     def remove_paths(self):
