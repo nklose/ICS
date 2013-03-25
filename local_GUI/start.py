@@ -69,6 +69,9 @@ class StartQT4(QtGui.QMainWindow):
         # Refresh the temporary directory
         self.refresh_temp()
 
+        # Set the default parameters for the input fields
+        self.set_default_parameters()
+
         # Size of the images in pixels (e.g. 64 would mean a 64x64 image)
         self.size = 0
 
@@ -1617,6 +1620,28 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleWTextbox.clear()
         self.ui.tripleG0Textbox.clear()
         self.ui.tripleGinfTextbox.clear()
+
+    # Sets the default parameters for all input fields.
+    def set_default_parameters(self):
+        self.ui.autoRangeTextbox.setPlaceholderText("20")
+        self.ui.autoGinfTextbox.setPlaceholderText("10")
+        self.ui.autoWTextbox.setPlaceholderText("0")
+        self.ui.autoG0Textbox.setPlaceholderText("20")
+        
+        self.ui.crossRangeTextbox.setPlaceholderText("20")
+        self.ui.crossGinfTextbox.setPlaceholderText("10")
+        self.ui.crossWTextbox.setPlaceholderText("0")
+        self.ui.crossG0Textbox.setPlaceholderText("20")
+
+        self.ui.allAutoCrossRangeTextbox.setPlaceholderText("20")
+        self.ui.allAutoCrossGinfTextbox.setPlaceholderText("10")
+        self.ui.allAutoCrossWTextbox.setPlaceholderText("0")
+        self.ui.allAutoCrossG0Textbox.setPlaceholderText("20")
+
+        self.ui.tripleRangeTextbox.setPlaceholderText("15")
+        self.ui.tripleGinfTextbox.setPlaceholderText("0")
+        self.ui.tripleWTextbox.setPlaceholderText("0")
+        self.ui.tripleG0Textbox.setPlaceholderText("0")
 
 def start():
     app = QtGui.QApplication(sys.argv)
