@@ -173,7 +173,8 @@ class StartQT4(QtGui.QMainWindow):
             scipy.misc.imsave(self.bluePath, self.blueChannel)
 
             # Convert each monochrome image to RGB for display on the interface
-            # Get rid of the green and blue channels
+
+            # Get rid of the green and blue channels in red image
             redImage = PIL.Image.open(self.redPath)
             redImage = redImage.convert("RGB")
             red = redImage.split()[0]
@@ -182,13 +183,15 @@ class StartQT4(QtGui.QMainWindow):
             redColorized = os.path.join(self.temp_dir, "rc_split.png")
             redImage.save(redColorized, "PNG")
 
+            # Get rid of red and blue channels in green image
             greenImage = PIL.Image.open(self.greenPath)
             greenImage = greenImage.convert("RGB")
             green = greenImage.split()[1]
             greenImage = PIL.Image.merge("RGB", (empty, green, empty))
             greenColorized = os.path.join(self.temp_dir, "gc_split.png")
             greenImage.save(greenColorized, "PNG")
-            
+
+            # Get rid of red and green channels in blue image
             blueImage = PIL.Image.open(self.bluePath)
             blueImage = blueImage.convert("RGB")
             blue = blueImage.split()[2]
@@ -461,18 +464,9 @@ class StartQT4(QtGui.QMainWindow):
             elif mode == "all":
                 # Construct string containing channels to be used
                 self.msgAll()
-                red = self.redChannel
-                green = self.greenChannel
-                blue = self.blueChannel
-                result = self.correlate_all(red, green, blue)
-                redAuto = result[0]
-                greenAuto = result[1]
-                blueAuto = result[2]
-                redGreenCross = result[3]
-                redBlueCross = result[4]
-                greenBlueCross = result[5]
-                self.select_tab("output", "triple")
-                self.show_fourier()
+                
+                self.allCorrelations()
+
             else:
                 self.message("Mode error.")
 
@@ -1021,7 +1015,7 @@ class StartQT4(QtGui.QMainWindow):
             self.ui.imageAutoBlue.setPixmap(QtGui.QPixmap(bPath))
 
         # Change to auto section of output tab
-        self.select_tab("output", "auto")
+        self.select_tab("output", "auto")        
 
     # Performs a cross-correlation.
     def crossCorrelation(self):
@@ -1249,6 +1243,105 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleWValue.setText(str(round(result.w,PRECISION)))
         self.ui.tripleGinfValue.setText(str(round(result.ginf,PRECISION)))
 
+    # Performs all possible correlations
+    def allCorrelations(self):
+        # Make color lists to send to the midend
+        autoColors = ['r', 'g', 'b']
+        crossColors = ['rg', 'rb', 'gb']
+        
+        # Get input parameters
+        g0 = self.get_all_G0()
+        w = self.get_all_W()
+        ginf = self.get_all_Ginf()
+        range_val = self.get_all_range()
+        deltas = self.get_all_deltas_checkbox()
+
+        # Run auto and cross correlations by calling the midend
+        autoResult = None
+        crossResult = None
+        if self.get_num_images() == 1:
+            pilImage = PIL.Image.open(self.rgbPath)
+            inputs = (pilImage, autoColors, g0, w, ginf, range_val, deltas)
+            autoResult = midend.adaptor.run_dual_mixed_image(*inputs)
+            inputs = (pilImage, crossColors, g0, w, ginf, range_val, deltas)
+            crossResult = midend.adaptor.run_dual_mixed_image(*inputs)
+        elif self.get_num_images() == 3:
+            pilR = PIL.Image.open(self.redPath)
+            pilG = PIL.Image.open(self.greenPath)
+            pilB = PIL.Image.open(self.bluePath)
+            inputs = (pilR, pilG, pilB, autoColors, g0, w, ginf, range_val, deltas)
+            autoResult = midend.adaptor.run_dual_separate_image(*inputs)
+            inputs = (pilR, pilG, pilB, crossColors, g0, w, ginf, range_val, deltas)
+            crossResult = midend.adaptor.run_dual_separate_image(*inputs)
+        else:
+            print("Error: number of images is not 1 or 3.")
+
+        # Get updated parameters and update output tab
+        self.set_auto_resnorm(round(autoResult[0].resNorm, PRECISION))
+        self.set_auto_G0(round(autoResult[0].g0,PRECISION))
+        self.set_auto_W(round(autoResult[0].w,PRECISION))
+        self.set_auto_Ginf(round(autoResult[0].ginf,PRECISION))
+        self.set_auto_deltas(autoResult[0].usedDeltas)
+
+        self.set_cross_resnorm(round(crossResult[0].resNorm, PRECISION))
+        self.set_cross_G0(round(crossResult[0].g0, PRECISION))
+        self.set_cross_W(round(crossResult[0].w, PRECISION))
+        self.set_cross_Ginf(round(crossResult[0].ginf, PRECISION))
+        self.set_cross_deltas(crossResult[0].usedDeltas)
+
+        # Create and display the graphs
+        rPath = os.path.join(self.temp_dir, "r_graph.png")
+        gPath = os.path.join(self.temp_dir, "g_graph.png")
+        bPath = os.path.join(self.temp_dir, "b_graph.png")
+        rgPath = os.path.join(self.temp_dir, "rg_graph.png")
+        rbPath = os.path.join(self.temp_dir, "rb_graph.png")
+        gbPath = os.path.join(self.temp_dir, "gb_path.png")
+
+        for i, x in enumerate(autoResult):
+            fileLike = x.plotToStringIO()
+            outFile = None
+            if x.color == "r":
+                outFile = open(rPath, "wb")
+            elif x.color == "g":
+                outFile = open(gPath, "wb")
+            elif x.color == "b":
+                outFile = open(bPath, "wb")
+            else:
+                print("Error: invalid color.")
+                
+            for line in fileLike.readlines():
+                outFile.write(line)
+            outFile.close()
+        
+        for i, x in enumerate(crossResult):
+            fileLike = x.plotToStringIO()
+            outFile = None
+            if x.color == "rg":
+                outFile = open(rgPath, "wb")
+            elif x.color == "rb":
+                outFile = open(rbPath, "wb")
+            elif x.color == "gb":
+                outFile = open(gbPath, "wb")
+            else:
+                print("Error: invalid color.")
+
+            for line in fileLike.readlines():
+                outFile.write(line)
+            outFile.close()
+
+        self.ui.imageAutoRed.setPixmap(QtGui.QPixmap(rPath))
+        self.ui.imageAutoGreen.setPixmap(QtGui.QPixmap(gPath))
+        self.ui.imageAutoBlue.setPixmap(QtGui.QPixmap(bPath))
+        self.ui.imageCrossRG.setPixmap(QtGui.QPixmap(rgPath))
+        self.ui.imageCrossRB.setPixmap(QtGui.QPixmap(rbPath))
+        self.ui.imageCrossGB.setPixmap(QtGui.QPixmap(gbPath))
+
+        # Select triple correlation tab to allow further parameter input
+        self.select_tab("output", "triple")
+
+        # Show the Fourier transform (red) surface plot
+        self.show_fourier()
+
     #####################################################
     # Message Box Functions                             #
     #####################################################
@@ -1348,9 +1441,9 @@ class StartQT4(QtGui.QMainWindow):
     # Constructive message to show user when all correlations are selected
     def msgAll(self):
         text = "Running all possible correlations using parameters ["
-        text += "Range = " + self.get_all_range() + ", g(0) = "
-        text += self.get_all_G0() + ", w = " + self.get_all_W()
-        text += ", gInf = " + self.get_all_Ginf() + "],"
+        text += "Range = " + str(self.get_all_range()) + ", g(0) = "
+        text += str(self.get_all_G0()) + ", w = " + str(self.get_all_W())
+        text += ", gInf = " + str(self.get_all_Ginf()) + "],"
         if self.get_all_deltas_checkbox() == False:
             text += " do not"
             text += " consider deltas, using sample resolution "
