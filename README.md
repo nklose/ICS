@@ -30,6 +30,10 @@ License.
    Riverbank Computing Limited is a company registered in England and Wales
    with company number 4314904.
 
+It is also necessary to install `ImageMagick`. Please install at least version
+6.7.7-10. Some issues have been seen with loading single-channel images with
+that version, but they appear to be fixed in ImageMagick-6.7.9-1.
+
 In addition, if you wish to run testcases, the following modules are required:
 
 1. mock (sudo pip install -U mock). mock is Copyright (c) 2003-2010, Michael
@@ -54,9 +58,9 @@ A few items are required:
 	 d. wand: Follow http://docs.wand-py.org/en/0.2-maintenance/guide/install.html#install-imagemagick-on-windows
 	    then use the pip premade package in the pythonlibs link above. Then
 		open a command prompt, navigate to pip (C:\Python27\Scripts) and call
-		
+
 		    pip.exe install Wand
-			
+
 		Wand should be successfully installed.
 4. Install the Visual Studio C++ Redistributable version here:
    http://www.microsoft.com/en-us/download/details.aspx?id=29 (included in repo)
