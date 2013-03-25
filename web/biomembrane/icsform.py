@@ -149,10 +149,10 @@ class RgbSettingsForm(forms.Form):
 
 
 class BatchSettingsForm(forms.Form):
-    imageSize = forms.IntegerField();
-    firstImageIndex = forms.IntegerField(); # name_min in batch
-    lastImageIndex = forms.IntegerField(); #  name_max in batch
-    filenameFormat = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'rgb_{:03d}.bmp'}))
+    imageSize = forms.IntegerField(error_messages={'required': 'Please input the image size of images to be fitted'});
+    firstImageIndex = forms.IntegerField(error_messages={'required': 'Please specify the first image to fit'}); # name_min in batch
+    lastImageIndex = forms.IntegerField(error_messages={'required': 'Please specify the last image to be fit'}); #  name_max in batch
+    filenameFormat = forms.CharField(initial='rgb_{:03d}.bmp', error_messages={'required': 'Please specify the filename format for batch images'}) 
     considerDeltaForAuto = forms.BooleanField(initial=False)
     considerDeltaForCross = forms.BooleanField(initial=False)
 
