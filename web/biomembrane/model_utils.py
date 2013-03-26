@@ -30,6 +30,7 @@ def create_params_auto(batch, color, rangeVal, g0, w, ginf, useDeltas):
     params.save()
     return params
 
+
 def create_params_cross(batch, color1, color2, rangeVal, g0, w, ginf, useDeltas):
     params = __create_params(batch, rangeVal, g0, w, ginf, useDeltas)
     params = __set_colors(params, color1, color2)
