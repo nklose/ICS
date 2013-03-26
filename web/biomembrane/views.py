@@ -47,6 +47,7 @@ def program(request):
         form = RgbSettingsForm(request.POST)
         if form.is_valid():
         # proccess the data in form.cleaned_data
+            print "Valid"
             if form.isAuto():
                 #Auto correlations only forms
                 redChecked = form.cleaned_data['red'];
@@ -96,7 +97,8 @@ def program(request):
 
                 #Redirect to tripleSetRes (Ask User for Triple's Sample Resolution)
                 return HttpResponseRedirect('/triple/setRes/') # see tripleSetRes view function
-
+    else:
+         form = RgbSettingsForm()
     batch = Batch.objects.get(id=request.session['batch_id'])
     job = Job.objects.get(batch=batch)
     rgbUrl = job.rgb_image.url
@@ -112,7 +114,6 @@ def program(request):
     images['Green']['url'] = greenUrl
     images['Blue'] = {}
     images['Blue']['url'] = blueUrl
-    form = RgbSettingsForm()
     temp = {"sec_title": "Image Correlation Spectroscopy Program","form": form, "rgbimgs": images}
     return render(request, 'icslayout.html', temp)
 
@@ -137,8 +138,9 @@ def tripleSetRes(request):
           #Update Triple Correlation Parameters Here
           #Redirect to tripleSetParams (Triple Parameters)
           return HttpResponseRedirect('/triple/setParams/') 
+    else:
+          form = RgbSettingsForm()
 
-    form = RgbSettingsForm()
     temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Resolution To Sample", "form": form,}
     return render(request, 'tripleSetResolution.html', temp)
 
@@ -165,8 +167,9 @@ def tripleSetParams(request):
           wValue = form.cleaned_data['wTriple']
           ginfValue = form.cleaned_data['ginfTriple']
           return HttpResponseRedirect('/results/') # redirect after post
+    else:
+          form = RgbSettingsForm()
 
-    form = RgbSettingsForm()
     temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Parameters", "form": form,}
     return render(request, 'tripleSetParameters.html', temp)
 

@@ -26,10 +26,10 @@
     <div class="span4">
      <fieldset>
      <legend>Batch Settings</legend>
-     <label for="{{form.imageSize.auto_id}}">Batch Image Size:</label>{{ form.imageSize }}
-     <label for="{{form.firstImageIndex.auto_id}}">Start At Image #:</label>{{ form.firstImageIndex}}
-     <label for="{{form.lastImageIndex.auto_id}}">Stop At Image #:</label>{{ form.lastImageIndex }}
-     <label for="{{form.filenameFormat.auto_id}}">File Name Format:</label>{{ form.filenameFormat }}
+     <div class="control-group {% if form.imageSize.errors %}error{% endif %}"><label for="{{form.imageSize.auto_id}}">Batch Image Size:</label>{{ form.imageSize }}</div>
+     <div class="control-group {% if form.firstImageIndex.errors %}error{% endif %}"><label for="{{form.firstImageIndex.auto_id}}">Start At Image #:</label>{{ form.firstImageIndex}}</div>
+     <div class="control-group {% if form.lastImageIndex.errors %}error{% endif %}"><label for="{{form.lastImageIndex.auto_id}}">Stop At Image #:</label>{{ form.lastImageIndex }}</div>
+     <div class="control-group {% if form.filenameFormat.errors %}error{% endif %}"><label for="{{form.filenameFormat.auto_id}}">File Name Format:</label>{{ form.filenameFormat }}</div>
      </fieldset>
      <fieldset>
      {{ form.considerDeltaForAuto }}Consider Deltas In Auto<br>
@@ -39,19 +39,19 @@
     <div class="span4">
      <fieldset>
       <legend>Auto/Cross Parameters</legend>
-      <label for="{{form.rangeAutoCross.auto_id}}">Range</label>{{ form.rangeAutoCross }}
-      <label for="{{form.ginfAutoCross.auto_id}}">gInf</label>{{ form.ginfAutoCross }}
-      <label for="{{form.wAutoCross.auto_id}}=">w</label>{{ form.wAutoCross }}
-      <label for="{{form.gzeroAutoCross.auto_id}}">g(0)</label>{{ form.gzeroAutoCross }}
+      <div class="control-group {% if form.rangeAutoCross.errors %}error{% endif %}"><label for="{{form.rangeAutoCross.auto_id}}">Range</label>{{ form.rangeAutoCross }}</div>
+      <div class="control-group {% if form.ginfAutoCross.errors %}error{% endif %}"><label for="{{form.ginfAutoCross.auto_id}}">gInf</label>{{ form.ginfAutoCross }}</div>
+      <div class="control-group {% if form.wAutoCross.errors %}error{% endif %}"><label for="{{form.wAutoCross.auto_id}}">w</label>{{ form.wAutoCross }}</div>
+      <div class="control-group {% if form.gzeroAutoCross.errors %}error{% endif %}"><label for="{{form.gzeroAutoCross.auto_id}}">g(0)</label>{{ form.gzeroAutoCross }}</div>
      </fieldset>
     </div> <!-- span5 -->
     <div class="span4">
       <fieldset>
       <legend>Triple Correlation Parameters</legend>
-      <label for="{{form.rangeTriple.auto_id}}">Range</label>{{ form.rangeTriple }}
-      <label for="{{form.ginfTriple.auto_id}}">gInf</label>{{ form.ginfTriple }}
-      <label for="{{form.wTriple.auto_id}}">w</label>{{ form.wTriple }}
-      <label for="{{form.gzeroTriple.auto_id}}">g(0)</label>{{ form.gzeroTriple }}
+      <div class="control-group {% if form.rangeTriple.errors %}error{% endif %}"><label for="{{form.rangeTriple.auto_id}}">Range</label>{{ form.rangeTriple }}</div>
+      <div class="control-group {% if form.ginfTriple.errors %}error{% endif %}"><label for="{{form.ginfTriple.auto_id}}">gInf</label>{{ form.ginfTriple }}</div>
+      <div class="control-group {% if form.wTriple.errors %}error{% endif %}"><label for="{{form.wTriple.auto_id}}">w</label>{{ form.wTriple }}</div>
+      <div class="control-group {% if form.gzeroTriple.errors %}error{% endif %}"><label for="{{form.gzeroTriple.auto_id}}">g(0)</label>{{ form.gzeroTriple }}</div>
       </fieldset>
      <div id="imgSize">
      <label for="id_resolutions">Set Image resolution to sample</label>

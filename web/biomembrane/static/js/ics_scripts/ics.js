@@ -8,6 +8,8 @@
    selected = e.target // activated tab
    e.relatedTarget // previous tab
 
+  localStorage.setItem('lastTab', $(e.target).attr('id'));
+
   if ($("#id_userSelected") != null)
         $("#id_userSelected").val(selected.id);
 
@@ -15,6 +17,11 @@
         $("#id_uploadType").val(selected.id);
    $("#userNotice").val(selected.id).html(showSelected(selected.id) +" is Selected");
   });
+
+  var lastTab = localStorage.getItem('lastTab');
+  if (lastTab) {
+      $('#'+lastTab).tab('show');
+  }
 
   $('#start').button();
    $('#start').click(function() {
@@ -35,7 +42,7 @@
     {
       return "<strong>Note</strong>: Cross Correlation";
     }
-    else if (value == 'id_triplecross')
+    else if (value == 'id_triple')
     {
       return "<strong>Note</strong>: Triple Correlation";
     }
@@ -54,5 +61,28 @@
     else
     {
       return "<strong>Note</strong>: Please Choose an option";
+    }
+  }
+
+  function getTabId(value) {
+
+    if (value == "id_auto")
+    {
+      return "#auto";
+    }
+    else if (value == 'id_cross')
+    {
+      return '#cross';
+    }
+    else if (value == 'id_triplecross')
+    {
+      return "#triple";
+    }
+    else if (value == 'id_all')
+    {
+      return '#all';
+    }
+    else {
+      return null;
     }
   }

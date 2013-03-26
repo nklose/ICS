@@ -1,15 +1,13 @@
-{% block rgb-controls %} {% csrf_token %}
+{% block rgb-controls %}
+ {{ form.userSelected.as_hidden }}
 <h5>Correlation Settings</h5>
  <div class="alert alert-info" id="userNotice"><strong>Note: </strong>Please Select the Type of Correlation(s) to Run</div>
- {{ form.userSelected.as_hidden }} 
   <ul class="nav nav-tabs">
    <li><a href="#auto" id="id_auto" data-toggle="tab">Auto-Correlation</a></li>
    <li><a href="#cross" id="id_cross" data-toggle="tab">Cross-Correlation</a></li>
    <li><a href="#triple" id="id_triple" data-toggle="tab">Triple-Correlation</a></li>
    <li><a href="#all" id="id_all" data-toggle="tab">All</a></li>
  </ul>
-{% endblock %}
-
 {% block tab-content %}
 <div class="tab-content">
  <div class="tab-pane" id="auto">
@@ -19,19 +17,19 @@
      {{ form.red.errors }}
      <label for="{{form.red.auto_id}}" class="checkbox">{{ form.red }}Red</label>
      {{ form.blue.errors }}
-     <label for="{{form.blue.auto_id}}"class="checkbox">{{ form.blue }}Blue</label>
+     <label for="{{form.blue.auto_id}}" class="checkbox">{{ form.blue }}Blue</label>
      {{ form.green.errors }}
-     <label for="{{form.green.auto_id}}"class="checkbox">{{ form.green }}Green</label>
+     <label for="{{form.green.auto_id}}" class="checkbox">{{ form.green }}Green</label>
      </fieldset>
     </div> <!-- span4 -->
     <div class="span4">
      <fieldset>
      <legend>Paramters:</legend>
-     <div class="control-group">{{ form.rangeAuto.errors }}<label for="{{form.rangeAuto.auto_id}}" class="control-label">Range:</label><div class="controls">{{ form.rangeAuto }}</div></div>
-     <div class="control-group">{{ form.gzeroAuto.errors }}<label for="{{form.gzeroAuto.auto_id}}" class="control-label"> g(0):</label><div class="controls">{{ form.gzeroAuto}}</div></div>
-     <div class="control-group">{{ form.wAuto.errors }}<label for="{{form.wAuto.auto_id}}" class="control-label">    w:</label><div class="controls">{{ form.wAuto }}</div></div>
-     <div class="control-group">{{ form.ginfAuto.errors }}<label for="{{form.ginfAuto.auto_id}}" class="control-label"> ginf:</label><div class="controls">{{ form.ginfAuto }}</div></div>
-     <div class="control-group">{{ form.deltaAuto.errors }}<label for="{{form.deltaAuto.auto_id}}" class="checkbox">{{ form.deltaAuto }}Consider Deltas</label></div>
+     <div class="control-group {% if form.rangeAuto.errors %}error{% endif %}"><label for="{{form.rangeAuto.auto_id}}" class="control-label">Range:</label><div class="controls">{{ form.rangeAuto }}</div></div>
+     <div class="control-group {% if form.gzeroAuto.errors %}error{% endif %}"><label for="{{form.gzeroAuto.auto_id}}" class="control-label"> g(0):</label><div class="controls">{{ form.gzeroAuto}}</div></div>
+     <div class="control-group {% if form.wAuto.errors %}error{% endif %}"><label for="{{form.wAuto.auto_id}}" class="control-label">    w:</label><div class="controls">{{ form.wAuto }}</div></div>
+     <div class="control-group {% if form.ginfAuto.errors %}error{% endif %}"><label for="{{form.ginfAuto.auto_id}}" class="control-label"> ginf:</label><div class="controls">{{ form.ginfAuto }}</div></div>
+     <div class="control-group"><label for="{{form.deltaAuto.auto_id}}" class="checkbox">{{ form.deltaAuto }}Consider Deltas</label></div>
      </fieldset>
     </div> <!-- span4 -->
   </div> <!-- auto -->
@@ -42,20 +40,20 @@
     <div class="control-group">
     <fieldset>
      <legend>Channels:</legend><br>
-     <div class="checkbox">{{ form.redgreen }}<label class="control-label">{{ form.redgreen }}Red-Green</label></div>
-     <div class="checkbox">{{ form.redblue }}<label class="control-label">{{ form.redblue }}Red-Blue</label></div>
-     <div class="checkbox">{{ form.greenblue }}<label class="control-label">{{ form.greenblue }}Green-Blue</label></div>
+     <div class="checkbox">{{ form.redgreen }}<label for="{{ form.redgreen.auto_id }}" class="control-label">Red-Green</label></div>
+     <div class="checkbox">{{ form.redblue }}<label for="{{ form.redblue.auto_id }}" class="control-label">Red-Blue</label></div>
+     <div class="checkbox">{{ form.greenblue }}<label  for="{{ form.greenblue.auto_id }}" class="control-label">Green-Blue</label></div>
      </fieldset>
      </div> <!-- control -->
     </div> <!-- span4 -->
     <div class="row span4">
      <fieldset>
      <legend>Paramters:</legend>
-     <div class="control-group">{{ form.rangeCross.errors }}<label for="{{form.rangeCross.auto_id}}" class="control-label">Range:</label>{{ form.rangeCross }}</div>
-     <div class="control-group">{{ form.gzeroCross.errors }}<label for="{{form.gzeroCross.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroCross}}</div>
-     <div class="control-group">{{ form.wCross.errors }}<label for="{{form.wCross.auto_id}}" class="control-label">    w:</label>{{ form.wCross }}</div>
-     <div class="control-group">{{ form.ginfCross.errors }}<label for="{{form.ginfCross.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfCross }}</div>
-     <div class="control-group">{{ form.deltaCross.errors }}<label for="{{form.deltaCross.auto_id}}" class="checkbox">{{ form.deltaAuto }}Consider Deltas</label></div>
+     <div class="control-group {% if form.rangeCross.errors %}error{% endif %}"><label for="{{form.rangeCross.auto_id}}" class="control-label">Range:</label>{{ form.rangeCross }}</div>
+     <div class="control-group {% if form.gzeroCross.errors %}error{% endif %}">{{ form.gzeroCross.errors }}<label for="{{form.gzeroCross.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroCross}}</div>
+     <div class="control-group"><label for="{{form.wCross.auto_id}}" class="control-label">    w:</label>{{ form.wCross }}</div>
+     <div class="control-group {% if form.ginfCross.errors %}error{% endif %}"><label for="{{form.ginfCross.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfCross }}</div>
+     <div class="control-group"><label for="{{form.deltaCross.auto_id}}" class="checkbox">{{ form.deltaCross }}Consider Deltas</label></div>
      </fieldset>
     </div> <!-- span4 -->
     </div> <!-- row -->
@@ -75,15 +73,15 @@
     <div class="span4">
      <fieldset>
      <legend>Paramters:</legend>
-     <div class="control-group">{{ form.rangeTripleAll.errors }}<label for="{{form.rangeAutoCrossAll.auto_id}}" class="control-label">Range:</label>{{ form.rangeAutoCrossAll }}</div>
-     <div class="control-group">{{ form.gzeroTripleAll.errors }}<label for="{{form.gzeroAutoCrossAll.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroAutoCrossAll}}</div>
-     <div class="control-group">{{ form.wTripleAll.errors }}<label for="{{form.wAutoCrossAll.auto_id}}" class="control-label">    w:</label>{{ form.wAutoCrossAll }}</div>
-     <div class="control-group">{{ form.ginfTripleAll.errors }}<label for="{{form.ginfAutoCrossAll.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfAutoCrossAll }}</div>
-     <div class="control-group">{{ form.deltaAll.errors }}<label for="{{form.deltaAll.auto_id}}" class="checkbox">{{ form.deltaAll }}Consider Deltas</label>
+     <div class="control-group {% if form.rangeAutoCrossAll.errors %}error{% endif %}"><label for="{{form.rangeAutoCrossAll.auto_id}}" class="control-label">Range:</label>{{ form.rangeAutoCrossAll }}</div>
+     <div class="control-group {% if form.gzeroAutoCrossAll.errors %}error{% endif %}"><label for="{{form.gzeroAutoCrossAll.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroAutoCrossAll}}</div>
+     <div class="control-group {% if form.wAutoCrossAll.errors %}error{% endif %}"><label for="{{form.wAutoCrossAll.auto_id}}" class="control-label">    w:</label>{{ form.wAutoCrossAll }}</div>
+     <div class="control-group {% if form.ginfAutoCrossAll.errors %}error{% endif %}"><label for="{{form.ginfAutoCrossAll.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfAutoCrossAll }}</div>
+     <div class="control-group"><label for="{{form.deltaAll.auto_id}}" class="checkbox">{{ form.deltaAll }}Consider Deltas</label></div>
      </fieldset>
     </div> <!-- span4 -->
     </div> <!-- row -->
    </div> <!-- all -->
-
  </div> <!-- tab -->
+{% endblock %}
 {% endblock %}

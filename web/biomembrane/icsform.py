@@ -29,8 +29,7 @@ class SampleImageForm(forms.Form):
 
 class RgbSettingsForm(forms.Form):
 
-    """ Renders a home  view.
-         A set of forms used in program view
+    """ A set of forms used in program view
 
          forms.Form
          - None
@@ -47,26 +46,26 @@ class RgbSettingsForm(forms.Form):
     deltaCross = forms.BooleanField(required=False)
     deltaAll = forms.BooleanField(required=False)
 
-    userSelected = forms.CharField(required=False) # field containing the id of the type of correlation the user selects
-    rangeAuto = forms.FloatField(required=False)  # parameters for auto correlation
-    gzeroAuto = forms.FloatField(required=False)
-    wAuto = forms.FloatField(required=False)
-    ginfAuto = forms.FloatField(required=False)
+    userSelected = forms.CharField(required=True,error_messages={'blank': 'Please select a fit'}) # field containing the id of the type of correlation the user selects
+    rangeAuto = forms.FloatField(required=False, initial=20)  # parameters for auto correlation
+    gzeroAuto = forms.FloatField(required=False, initial=10)
+    wAuto = forms.FloatField(required=False, initial=0)
+    ginfAuto = forms.FloatField(required=False, initial=20)
 
-    rangeCross = forms.FloatField(required=False) # parameters when only the cross correlation option is selected
-    gzeroCross  = forms.FloatField(required=False)
-    wCross = forms.FloatField(required=False)
-    ginfCross= forms.FloatField(required=False)
+    rangeCross = forms.FloatField(required=False, initial=20) # parameters when only the cross correlation option is selected
+    gzeroCross  = forms.FloatField(required=False, initial=20)
+    wCross = forms.FloatField(required=False, initial=0)
+    ginfCross= forms.FloatField(required=False, initial=10)
 
-    rangeTriple = forms.FloatField(required=False) # parameters when only triple correlation when option is selected
-    gzeroTriple = forms.FloatField(required=False)
-    wTriple = forms.FloatField(required=False)
-    ginfTriple = forms.FloatField(required=False)
+    rangeTriple = forms.FloatField(required=False, initial=20) # parameters when only triple correlation when option is selected
+    gzeroTriple = forms.FloatField(required=False, initial=20)
+    wTriple = forms.FloatField(required=False, initial=0)
+    ginfTriple = forms.FloatField(required=False, initial=10)
 
-    rangeAutoCrossAll = forms.FloatField(required=False) # parameters for auto and cross when the "all correlation" option is selected
-    ginfAutoCrossAll = forms.FloatField(required=False)
-    wAutoCrossAll = forms.FloatField(required=False)
-    gzeroAutoCrossAll = forms.FloatField(required=False)
+    rangeAutoCrossAll = forms.FloatField(required=False, initial=20) # parameters for auto and cross when the "all correlation" option is selected
+    ginfAutoCrossAll = forms.FloatField(required=False, initial=10)
+    wAutoCrossAll = forms.FloatField(required=False, initial=0)
+    gzeroAutoCrossAll = forms.FloatField(required=False, initial=20)
 
     SIXTEEN, THIRTYTWO, SIXTYFOUR = u'16x16', u'32x32', u'64x64'
     RESOLUTIONS  = (     # set options for the user to specify sample for triple correlation
@@ -142,7 +141,7 @@ class RgbSettingsForm(forms.Form):
         """ Look at cleaned data for some attribute that lets me know I should
         be using all data.
         """
-        if self.cleaned_data['userSelected'] == 'id_allChannels':
+        if self.cleaned_data['userSelected'] == 'id_all':
            return True
         else:
            return False
@@ -153,8 +152,8 @@ class BatchSettingsForm(forms.Form):
     firstImageIndex = forms.IntegerField(error_messages={'required': 'Please specify the first image to fit'}); # name_min in batch
     lastImageIndex = forms.IntegerField(error_messages={'required': 'Please specify the last image to be fit'}); #  name_max in batch
     filenameFormat = forms.CharField(initial='rgb_{:03d}.bmp', error_messages={'required': 'Please specify the filename format for batch images'}) 
-    considerDeltaForAuto = forms.BooleanField(initial=False)
-    considerDeltaForCross = forms.BooleanField(initial=False)
+    considerDeltaForAuto = forms.BooleanField(required=False, initial=False)
+    considerDeltaForCross = forms.BooleanField(required=False, initial=False)
 
     rangeAutoCross = forms.FloatField(initial=20) # parameters for auto and cross
     ginfAutoCross = forms.FloatField(initial=10)

@@ -10,13 +10,29 @@
 {% block header-main %}{{block.super}}{% endblock %}
 {% block content-main %}
 <h2>Image Correlation Spectroscopy</h2>
-<form id="settings-form" method="post">
+<form id="settings-form" method="post">{% csrf_token %}
+{% if form.errors %}
+<div class="alert alert-error">
+ {{ form.userSelected.errors }}
+ {{ form.rangeAuto.errors }}
+ {{ form.gzeroAuto.errors }}
+ {{ form.wAuto.errors }}
+ {{ form.ginfAuto.errors }}
+ {{ form.rangeCross.errors }}
+ {{ form.gzeroCross.errors }}
+ {{ form.wCross.errors }}
+ {{ form.ginfCross.errors }}
+ {{ form.rangeAutoCrossAll.errors }}
+ {{ form.gzeroAutoCrossAll.errors }}
+ {{ form.wAutoCrossAll.errors }}
+ {{ form.ginfAutoCrossAll.errors }}
+</div>
+{% endif %}
 <div id="rgbimg-display" class="row-fluid">{% include "rgbimg_display.html" %}</div>
 <div id="rgbimg-settings" class="row-fluid">
  <div class="row span2">{% include "img_attributes.html" %}</div>
  <div class="row span8">{% include "rgb_settings.html" %}</div>
 </div>
 <div id="app-controls" class="row-fluid">{% include "app_controls.html" %}</div>
-
 </form>
 {% endblock content-main %}
