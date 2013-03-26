@@ -43,7 +43,7 @@ INCLUDES = ["sip", "scipy.linalg.cblas", "scipy.linalg.fblas",
             "matplotlib.backends.backend_tkagg"]
 EXCLUDES = ["_gtkagg", "_tkagg"]
 DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll", "numpy.linalg.lapack_lite.pyd",
-                "libgdk-win32-2.0-0.dll", 'libgobject-2.0-0.dll']
+                ]
 
 QT_ICON_DLL = r'C:\Python27\Lib\site-packages\PyQt4\plugins\imageformats\qico4.dll'
 DATA_FILES = [(IMAGE_FOLDER, LOCAL_IMAGES), ("", [ICON_FILE]),

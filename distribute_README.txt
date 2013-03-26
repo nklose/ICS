@@ -3,18 +3,26 @@
 =======================================================
 Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar Qadri, and James Wang
 
-Beta V2
+Beta V2.1
 
 NOTE: This application is currently in BETA.
 
 Changes since Beta V1
 =====================
+- All correlations now works!
 - Res Norm is now Displayed
 - Graphs are now generated
 - Triple Correlations are computed
 - Separate images are being combined and displayed
 - The Progress bar has been temporarily disabled.
-- The speed is temporarily slightly slower. This is due to an optimization step that needs to be worked around.
+- Fixed: The speed is temporarily slightly slower. This is due to an optimization step that needs to be worked around.
+- Separate channels appear Red / Green / Blue, rather then grayscale.
+- Fixed: Error log messages appear after trying to load an image that has been previously loaded.
+- Fixed: Canceling an image selection may cause the program to cease responding.
+- Fixed: Some of our systems experience crashes when the user attempts to load a monochrome image.
+- Fixed: Permission error 13 on startup.
+- Fixed: Log messages after running the program
+
 
 Installation
 ============
@@ -31,26 +39,11 @@ Working Features
 5. The interface provides input checking to ensure at least one channel (for autocorrelation) or channel pair (for cross-correlation) has been selected, that no parameters are missing, and that all parameters are numeric.
 6. The start button and progress bar are functional. The interface disables the start button when correlation is in place, and jumps to the appropriate output tab.
 7. The triple-correlation process.
+8. All correlations works.
 
 Known Bugs/Issues
 =================
 1. Export button has not been added.
 2. Batch mode has not yet been implemented.
-3. Separate channels do not appear colored Red / Green / Blue, but rather grayscale.
-4. Error log messages appear after trying to load an image that has been previously loaded.
-5. Canceling an image selection may cause the program to cease responding.
-6. Some of our systems experience crashes when the user attempts to load a monochrome image.
-7. The stop button is not fully functional.
-8. The Progress bar has been temporarily disabled.
-9. The following "log messages" may be generated:
-
-UserWarning:  This call to matplotlib.use() has no effect
-because the the backend has already been chosen;
-matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
-or matplotlib.backends is imported for the first time.
-
-UserWarning: Attempting to set identical bottom==top results
-in singular transformations; automatically expanding.
-bottom=0, top=0
-
-These warning messages may be safely ignored.
+3. The stop button is not fully functional.
+4. The Progress bar has been temporarily disabled.
