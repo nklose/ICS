@@ -30,6 +30,8 @@ import scipy.misc
 import icsform
 import models
 import image_utils
+import model_utils
+
 
 @login_required(login_url='/accounts/login/')
 def program(request):
@@ -43,6 +45,8 @@ def program(request):
          Context parameters (ie, keys in the dictionary passed to the template):
         - sec_ title: The title of the section.
     """
+    batch = Batch.objects.get(id=request.session['batch_id'])
+
     if request.method == 'POST':  #form has been submitted
         form = RgbSettingsForm(request.POST)
         if form.is_valid():
@@ -60,6 +64,13 @@ def program(request):
                 wValue = form.cleaned_data['wAuto']
                 ginfValue = form.cleaned_data['ginfAuto']
 
+                if redChecked:
+                    model_utils.create_params_auto(batch, model_utils.Colors.RED, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                if blueChecked:
+                    model_utils.create_params_auto(batch, model_utils.Colors.GREEN, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                if greenChecked:
+                    model_utils.create_params_auto(batch, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+
                 #Do Auto with parameters above
                 return HttpResponseRedirect('/results/') #redirect results view
 
@@ -74,6 +85,13 @@ def program(request):
                 gzeroValue = form.cleaned_data['gzeroCross']
                 wValue = form.cleaned_data['wCross']
                 ginfValue = form.cleaned_data['ginfCross']
+
+                if redgreenChecked:
+                    model_utils.create_params_cross(batch, model_utils.Colors.RED, model_utils.Colors.GREEN, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                if redblueChecked:
+                    model_utils.create_params_cross(batch, model_utils.Colors.RED, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                if greenblueChecked:
+                    model_utils.create_params_cross(batch, model_utils.Colors.GREEN, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
 
                 #Do Cross Correlation with above parameters
                 return HttpResponseRedirect('/results/') #redirect results view
@@ -91,15 +109,19 @@ def program(request):
                 gzeroValue = form.cleaned_data['gzeroAutoCrossAll']
                 wValue = form.cleaned_data['wAutoCrossAll']
                 ginfValue = form.cleaned_data['gzeroAutoCrossAll']
-                
-                #Do Auto and Cross Sequentially Using Parameters Above
-                #Do Triple
+
+                model_utils.create_params_auto(batch, model_utils.Colors.RED, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                model_utils.create_params_auto(batch, model_utils.Colors.GREEN, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                model_utils.create_params_auto(batch, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                model_utils.create_params_cross(batch, model_utils.Colors.RED, model_utils.Colors.GREEN, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                model_utils.create_params_cross(batch, model_utils.Colors.RED, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                model_utils.create_params_cross(batch, model_utils.Colors.GREEN, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
 
                 #Redirect to tripleSetRes (Ask User for Triple's Sample Resolution)
                 return HttpResponseRedirect('/triple/setRes/') # see tripleSetRes view function
     else:
          form = RgbSettingsForm()
-    batch = Batch.objects.get(id=request.session['batch_id'])
+
     job = Job.objects.get(batch=batch)
     rgbUrl = job.rgb_image.url
     redUrl = job.red_image.url
