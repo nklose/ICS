@@ -22,6 +22,7 @@ import shutil # used to recursively remove directories
 from PyQt4 import QtCore, QtGui
 from PIL import Image
 from main_ICS import Ui_Dialog
+from graphzoom import GraphZoom
 
 # Enable backend importing
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -60,6 +61,17 @@ class StartQT4(QtGui.QMainWindow):
         self.greenPath = ""
         self.bluePath = ""
         self.rgbPath = ""
+
+        # Paths to grapsh
+        self.autoRedGraphPath = ""
+        self.autoGreenGraphPath = ""
+        self.autoBlueGraphPath = ""
+        self.crossRGGraphPath = ""
+        self.crossRBGraphPath = ""
+        self.crossGBGraphPath = ""
+        self.tripleGraph1Path = ""
+        self.tripleGraph2Path = ""
+        self.tripleGraph3Path = ""
 
         # Image channel arrays
         self.redChannel = ""
@@ -130,6 +142,51 @@ class StartQT4(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.continueButton2,
                                QtCore.SIGNAL("clicked()"),
                                self.triple_complete)
+
+        # Auto Red Zoom Button
+        QtCore.QObject.connect(self.ui.redGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomRed)
+
+        # Auto Green Zoom Button
+        QtCore.QObject.connect(self.ui.greenGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomGreen)
+        
+        # Auto Blue Zoom Button
+        QtCore.QObject.connect(self.ui.blueGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomBlue)
+
+        # Cross Red-Green Zoom Button
+        QtCore.QObject.connect(self.ui.redGreenGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomRedGreen)
+        
+        # Cross Red-Blue Zoom Button
+        QtCore.QObject.connect(self.ui.redBlueGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomRedBlue)
+
+        # Cross Green-Blue Zoom Button
+        QtCore.QObject.connect(self.ui.greenBlueGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomGreenBlue)
+
+        # Triple Graph 1 Zoom Button
+        QtCore.QObject.connect(self.ui.tripleGraph1Zoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomTriple1)
+        
+        # Triple Graph 2 Zoom Button
+        QtCore.QObject.connect(self.ui.tripleGraph2Zoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomTriple2)
+        
+        # Triple Graph 3 Zoom Button
+        QtCore.QObject.connect(self.ui.tripleGraph3Zoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomTriple3)
 
 
     #######################################################
@@ -1014,10 +1071,13 @@ class StartQT4(QtGui.QMainWindow):
 
         if self.get_red_checkbox():
             self.ui.imageAutoRed.setPixmap(QtGui.QPixmap(rPath))
+            self.autoRedGraphPath = rPath
         if self.get_green_checkbox():
             self.ui.imageAutoGreen.setPixmap(QtGui.QPixmap(gPath))
+            self.autoGreenGraphPath = gPath
         if self.get_blue_checkbox():
             self.ui.imageAutoBlue.setPixmap(QtGui.QPixmap(bPath))
+            self.autoBlueGraphPath = bPath
 
         # Change to auto section of output tab
         self.select_tab("output", "auto")        
@@ -1100,10 +1160,13 @@ class StartQT4(QtGui.QMainWindow):
 
         if self.get_red_green_checkbox():
             self.ui.imageCrossRG.setPixmap(QtGui.QPixmap(rgPath))
+            self.autoRGGraphPath = rgPath
         if self.get_red_blue_checkbox():
             self.ui.imageCrossRB.setPixmap(QtGui.QPixmap(rbPath))
+            self.autoRBGraphPath = rbPath
         if self.get_green_blue_checkbox():
             self.ui.imageCrossGB.setPixmap(QtGui.QPixmap(gbPath))
+            self.autoGBGraphPath = gbPath
 
         # Change to auto section of output tab
         self.select_tab("output", "cross")
@@ -1138,6 +1201,9 @@ class StartQT4(QtGui.QMainWindow):
 
         # define a path to save the image
         path = os.path.join(self.temp_dir, "triple_1.png")
+
+        # Save graph path
+        self.tripleGraph1Path = path
 
         if self.get_num_images() == 1:
             # convert the RGB image to a PIL image
@@ -1181,6 +1247,9 @@ class StartQT4(QtGui.QMainWindow):
 
         # define a path to save the image
         path = os.path.join(self.temp_dir, "triple_2.png")
+
+        # Save graph path
+        self.tripleGraph2Path = path
 
          # Read sample resolution (limit)
         limit = self.get_sample_resolution()
@@ -1233,6 +1302,7 @@ class StartQT4(QtGui.QMainWindow):
         
         # create the fitting curve
         path = os.path.join(self.temp_dir, "triple_3.png")
+        self.tripleGraph3Path = path
         fileLike = result.plotToStringIO()
         outFile = open(path, "wb")
         for line in fileLike.readlines():
@@ -1301,6 +1371,13 @@ class StartQT4(QtGui.QMainWindow):
         rgPath = os.path.join(self.temp_dir, "rg_graph.png")
         rbPath = os.path.join(self.temp_dir, "rb_graph.png")
         gbPath = os.path.join(self.temp_dir, "gb_path.png")
+
+        self.autoRedGraphPath = rPath
+        self.autoGreenGraphPath = gPath
+        self.autoBlueGraphPath = bPath
+        self.crossRGGraphPath = rgPath
+        self.crossRBGraphPath = rbPath
+        self.crossGBGraphPath = gbPath
 
         for i, x in enumerate(autoResult):
             fileLike = x.plotToStringIO()
@@ -1486,6 +1563,37 @@ class StartQT4(QtGui.QMainWindow):
             self.ui.imageSettingsTabWidget.setCurrentIndex(1)
         elif subTab == "all":
             self.ui.correlationTabWidget.setCurrentIndex(3)
+
+    #####################################################
+    # Graph Zoom Functions                              #
+    #####################################################
+    
+    # Zoom functions for individual graphs
+    def zoomRed(self):
+        self.zoomGraph(self.autoRedGraphPath)
+    def zoomGreen(self):
+        self.zoomGraph(self.autoGreenGraphPath)
+    def zoomBlue(self):
+        self.zoomGraph(self.autoBlueGraphPath)
+    def zoomRedGreen(self):
+        self.zoomGraph(self.crossRGGraphPath)
+    def zoomRedBlue(self):
+        self.zoomGraph(self.crossRBGraphPath)
+    def zoomGreenBlue(self):
+        self.zoomGraph(self.crossGBGraphPath)
+    def zoomTriple1(self):
+        self.zoomGraph(self.tripleGraph1Path)
+    def zoomTriple2(self):
+        self.zoomGraph(self.tripleGraph2Path)
+    def zoomTriple3(self):
+        self.zoomGraph(self.tripleGraph3Path)
+
+    # Shows a zoomed-in version of an image at a given path
+    def zoomGraph(self, path):
+        zoomGraph = GraphZoom(self)
+        zoomGraph.show()
+        zoomGraph.load_image(path)
+        
 
     #####################################################
     # Miscellaneous Functions                           #
