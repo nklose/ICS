@@ -38,7 +38,11 @@ import midend.adaptor
 
 # Global constants
 PRECISION = 5      # number of decimal places to show for output values
-
+ZOOM_ICON = "./Images/zoom.png"
+RGB_PLACEHOLDER = "./Images/rgb.png"
+RED_PLACEHOLDER = "./Images/r.png"
+GREEN_PLACEHOLDER = "./Images/g.png"
+BLUE_PLACEHOLDER = "./Images/b.png"
 
 class StartQT4(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -71,6 +75,9 @@ class StartQT4(QtGui.QMainWindow):
 
         # Set the default parameters for the input fields
         self.set_default_parameters()
+
+        # Load the default/placeholder images
+        self.load_default_images()
 
         # Size of the images in pixels (e.g. 64 would mean a 64x64 image)
         self.size = 0
@@ -1642,6 +1649,22 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleGinfTextbox.setPlaceholderText("0")
         self.ui.tripleWTextbox.setPlaceholderText("10")
         self.ui.tripleG0Textbox.setPlaceholderText("1")
+
+    # Loads the default/placeholder images into the interface
+    def load_default_images(self):
+        self.ui.imageRgb.setPixmap(QtGui.QPixmap(RGB_PLACEHOLDER))
+        self.ui.imageRed.setPixmap(QtGui.QPixmap(RED_PLACEHOLDER))
+        self.ui.imageGreen.setPixmap(QtGui.QPixmap(GREEN_PLACEHOLDER))
+        self.ui.imageBlue.setPixmap(QtGui.QPixmap(BLUE_PLACEHOLDER))
+        self.ui.redGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.greenGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.blueGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.redGreenGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.redBlueGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.greenBlueGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.tripleGraph1Zoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.tripleGraph2Zoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.tripleGraph3Zoom.setIcon(QtGui.QIcon(ZOOM_ICON))
 
 def start():
     app = QtGui.QApplication(sys.argv)
