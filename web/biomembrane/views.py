@@ -109,9 +109,13 @@ def program(request):
                 gzeroValue = form.cleaned_data['gzeroAutoCrossAll']
                 wValue = form.cleaned_data['wAutoCrossAll']
                 ginfValue = form.cleaned_data['gzeroAutoCrossAll']
-                
-                #Do Auto and Cross Sequentially Using Parameters Above
-                #Do Triple
+
+                model_utils.create_params_auto(batch, model_utils.Colors.RED, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                model_utils.create_params_auto(batch, model_utils.Colors.GREEN, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                model_utils.create_params_auto(batch, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                model_utils.create_params_cross(batch, model_utils.Colors.RED, model_utils.Colors.GREEN, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                model_utils.create_params_cross(batch, model_utils.Colors.RED, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                model_utils.create_params_cross(batch, model_utils.Colors.GREEN, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
 
                 #Redirect to tripleSetRes (Ask User for Triple's Sample Resolution)
                 return HttpResponseRedirect('/triple/setRes/') # see tripleSetRes view function
