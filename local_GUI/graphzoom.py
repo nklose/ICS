@@ -14,7 +14,7 @@ See LICENSE file for more details.
 
 # Import python modules
 import sys
-import os.path
+import shutil
 from PyQt4 import QtCore, QtGui
 from gui_graphzoom import Ui_graphZoomWindow
 
@@ -30,16 +30,31 @@ class GraphZoom(QtGui.QMainWindow):
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("Plastique"))
         self.setStyleSheet("font-size: 11pt")
     
-        # Map close button
+        # Close Window Button
         QtCore.QObject.connect(self.ui.closeButton,
                                QtCore.SIGNAL("clicked()"),
                                self.close)
 
+        # Save Image Button
+        QtCore.QObject.connect(self.ui.saveButton,
+                               QtCore.SIGNAL("clicked()"),
+                               self.save)
+
     # Loads an image from the given path into the interface
     def load_image(self, path):
-        print("Loading image from path " + path)
         self.ui.image.setPixmap(QtGui.QPixmap(path))
         self.imagePath = path
+
+    # Saves an image to a path of the user's choice
+    def save(self):
+        if self.imagePath != "" and self.imagePath != None:
+            # get the path to save the image to
+            savePath = QtGui.QFileDialog.getSaveFileName(self,
+                                                         "Save File",
+                                                         "",
+                                                         "PNG Image (*.png)")
+            # copy the image to the chosen destination
+            shutil.copyfile(self.imagePath, savePath)
 
 def start():
     app = QtGui.QApplication(sys.argv)
