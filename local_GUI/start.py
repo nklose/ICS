@@ -97,6 +97,9 @@ class StartQT4(QtGui.QMainWindow):
         # Result of most recent triple correlation part, used for next part
         self.tripleResult = None
 
+        # Disable processing mode
+        self.set_processing(False)
+
         #######################################################
         # Interface Object Connections                        #
         #######################################################
@@ -128,10 +131,15 @@ class StartQT4(QtGui.QMainWindow):
                                QtCore.SIGNAL("clicked()"),
                                self.start)
 
-        # Stop BUtton
+        # Stop Button
         QtCore.QObject.connect(self.ui.stopButton,
                                QtCore.SIGNAL("clicked()"),
                                self.stop)
+
+        # Save All Graphs Button
+        QtCore.QObject.connect(self.ui.saveAllButton,
+                               QtCore.SIGNAL("clicked()"),
+                               self.saveAllGraphs)
 
         # Continue Button 1
         QtCore.QObject.connect(self.ui.continueButton1,
@@ -503,7 +511,8 @@ class StartQT4(QtGui.QMainWindow):
 
     # Start button functionality
     def start(self):
-        # Put the interface into processing mode
+
+        # Enable processing mode
         self.set_processing(True)
 
         # Find out which correlation to do
@@ -537,7 +546,7 @@ class StartQT4(QtGui.QMainWindow):
             else:
                 self.message("Mode error.")
 
-        # Get the interface out of processing mode
+        # Disable processing mode
         self.set_processing(False)
 
     # Stop button functionality
@@ -1667,26 +1676,20 @@ class StartQT4(QtGui.QMainWindow):
         return sum / num
 
     # Updates the progress bar
-    def progress(self, percent):
-        self.ui.progressBar.setValue(percent)
+    def progress(self, value):
+        self.ui.progressBar.setValue(value * 100)
 
     # Sets the program mode as 'processing' or 'not processing', which includes
     #  enabling/disabling of start and stop buttons and other interface features
     def set_processing(self, value):
-        if value:
-            self.ui.startButton.setEnabled(False)
-            self.ui.stopButton.setEnabled(True)
-            self.ui.batchModeButton.setEnabled(False)
-            self.ui.correlationSettingsGroup.setEnabled(False)
-            self.ui.imageSettingsGroup.setEnabled(False)
-            self.ui.progressBar.setEnabled(True)
-        else:
-            self.ui.startButton.setEnabled(True)
-            self.ui.stopButton.setEnabled(False)
-            self.ui.batchModeButton.setEnabled(True)
-            self.ui.correlationSettingsGroup.setEnabled(True)
-            self.ui.imageSettingsGroup.setEnabled(True)
-            self.ui.progressBar.setEnabled(False)
+        # not working currently
+        print('hello')
+        #self.ui.startButton.setVisible(not value)
+        #self.ui.stopButton.setVisible(value)
+        #self.ui.batchModeButton.setVisible(not value)
+        #self.ui.correlationSettingsGroup.setVisible(not value)
+        #self.ui.imageSettingsGroup.setVisible(not value)
+        #self.ui.progressBar.setVisible(value)
 
     # Remove paths for any nonexistent images
     def remove_paths(self):
@@ -1773,6 +1776,42 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleGraph1Zoom.setIcon(QtGui.QIcon(ZOOM_ICON))
         self.ui.tripleGraph2Zoom.setIcon(QtGui.QIcon(ZOOM_ICON))
         self.ui.tripleGraph3Zoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+
+    # Saves all graphs to a specified folder
+    def saveAllGraphs(self):
+        # get folder from user
+        saveDir = str(QtGui.QFileDialog.getExistingDirectory(self, "Export Graphs"))
+        
+        # enable processing mode
+        self.set_processing(True)
+
+        # export all graphs to that folder
+        self.exportFile(self.autoRedGraphPath, saveDir)
+        self.progress(1/9)
+        self.exportFile(self.autoGreenGraphPath, saveDir)
+        self.progress(2/9)
+        self.exportFile(self.autoBlueGraphPath, saveDir)
+        self.progress(3/9)
+        self.exportFile(self.crossRGGraphPath, saveDir)
+        self.progress(4/9)
+        self.exportFile(self.crossRBGraphPath, saveDir)
+        self.progress(5/9)
+        self.exportFile(self.crossGBGraphPath, saveDir)
+        self.progress(6/9)
+        self.exportFile(self.tripleGraph1Path, saveDir)
+        self.progress(7/9)
+        self.exportFile(self.tripleGraph2Path, saveDir)
+        self.progress(8/9)
+        self.exportFile(self.tripleGraph3Path, saveDir)
+        self.progress(9/9)
+
+        self.set_processing(False)
+
+    # Saves a specific file into a directory if the file exists
+    def exportFile(self, filepath, destination):
+        if os.path.isfile(filepath):
+            dest_path = os.path.join(destination, os.path.basename(filepath))
+            shutil.copyfile(filepath, dest_path)
 
 def start():
     app = QtGui.QApplication(sys.argv)
