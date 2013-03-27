@@ -98,9 +98,12 @@ class StartQT4(QtGui.QMainWindow):
         # Size of the images in pixels (e.g. 64 would mean a 64x64 image)
         self.size = 0
 
-        # Result of each triple correlation part
+        # Result objects for each correlation
+        self.autoResult = None
+        self.crossResult = None
         self.tripleResult1 = None
         self.tripleResult2 = None
+        self.tripleResult3 = None
 
         # Disable processing mode
         self.set_processing(False)
@@ -144,7 +147,7 @@ class StartQT4(QtGui.QMainWindow):
         # Save All Graphs Button
         QtCore.QObject.connect(self.ui.saveAllButton,
                                QtCore.SIGNAL("clicked()"),
-                               self.saveAllGraphs)
+                               self.saveAll)
 
         # Continue Button 1
         QtCore.QObject.connect(self.ui.continueButton1,
@@ -526,6 +529,13 @@ class StartQT4(QtGui.QMainWindow):
         if validInput:
             # Remove values and images from output tab, if necessary
             self.clear_output_tab()
+
+            # Remove result objects
+            self.autoResult = None
+            self.crossResult = None
+            self.tripleResult1 = None
+            self.tripleResult2 = None
+            self.tripleResult3 = None
 
             # Update message bar with input parameters
             text = ""
@@ -1091,6 +1101,9 @@ class StartQT4(QtGui.QMainWindow):
             self.progress(6)
         else:
             print("Error: number of images is not 1 or 3.")
+
+        # Save result object
+        self.autoResult = result
         # Get individual channel results
         redResult = result[0]
 
@@ -1214,6 +1227,9 @@ class StartQT4(QtGui.QMainWindow):
             result = midend.adaptor.run_dual_separate_image(*inputs)
 
             self.progress(6)
+
+        # Save result object
+        self.crossResult = result
 
         # Get individual channel results
         redGreenResult = result[0]
@@ -1431,6 +1447,9 @@ class StartQT4(QtGui.QMainWindow):
         # call the midend to get the result object
         result = midend.adaptor.run_triple_part3(self.tripleResult2, range_val, g0, w, gInf)
         
+        # save the result object
+        self.tripleResult3 = result
+
         self.progress(12)
 
         # create the fitting curve
@@ -1940,8 +1959,10 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleGraph2Zoom.setIcon(QtGui.QIcon(ZOOM_ICON))
         self.ui.tripleGraph3Zoom.setIcon(QtGui.QIcon(ZOOM_ICON))
 
-    # Saves all graphs to a specified folder
-    def saveAllGraphs(self):
+    # Saves all output to a specified folder
+    def saveAll(self):
+        self.numSteps = 12
+
         # get folder from user
         saveDir = str(QtGui.QFileDialog.getExistingDirectory(self, "Export Graphs"))
         
@@ -1949,7 +1970,6 @@ class StartQT4(QtGui.QMainWindow):
         self.set_processing(True)
 
         # export all graphs to that folder
-        self.numSteps = 9
         self.progress(0)
         self.exportFile(self.autoRedGraphPath, saveDir)
         self.progress(1)
@@ -1969,6 +1989,31 @@ class StartQT4(QtGui.QMainWindow):
         self.progress(8)
         self.exportFile(self.tripleGraph3Path, saveDir)
         self.progress(9)
+
+        # export all text files to that folder
+        if self.autoResult != None:
+            midend.result.saveResultsFile(saveDir, self.autoResult, "auto_result.txt")
+            for x in enumerate(self.autoResult):
+                x.saveData(saveDir)
+        self.progress(10)
+
+        if self.crossResult != None:
+            midend.result.saveResultsFile(saveDir, self.crossResult, "cross_result.txt")
+            for x in enumerate(self.crossResult):
+                x.saveData(saveDir)
+        self.progress(11)
+
+        #if self.tripleResult1 != None:
+        #    self.tripleResult1.saveData(saveDir)
+
+        #if self.tripleResult2 != None:
+        #    self.tripleResult2.saveData(saveDir)
+
+        if self.tripleResult3 != None:
+            self.tripleResult3.saveData(saveDir)
+            #midend.result.saveResultsFile(saveDir, self.tripleResult3, "triple_result.txt")
+            
+        self.progress(12)
 
         self.set_processing(False)
 
