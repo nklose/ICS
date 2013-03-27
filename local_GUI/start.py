@@ -621,7 +621,7 @@ class StartQT4(QtGui.QMainWindow):
         elif cur == 3:
             return "all"
         else:
-            return "<error in correlationTabWidget>"
+            return "<error>"
 
     ## Checkboxes
     # Returns state of AC Red checkbox

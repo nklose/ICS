@@ -79,6 +79,13 @@ class Batch(QtGui.QMainWindow):
     # Starts the selected correlation
     def start(self):
         self.set_processing(True)
+        validInput = self.validate_input()
+        if validInput:
+            # begin process
+            self.message("Beginning batch correlation process.")
+            pass
+
+        self.set_processing(False)
 
     # Stops the current operation
     def stop(self):
@@ -234,7 +241,108 @@ class Batch(QtGui.QMainWindow):
                 number = False
 
         return int(file_number)
-                
+ 
+    # Returns the selected correlation mode by reading which tab the user has open
+    def get_correlation_tab(self):
+        cur = self.ui.correlationTabWidget.currentIndex()
+        if cur == 0:
+            return "auto"
+        elif cur == 1:
+            return "cross"
+        elif cur == 2:
+            return "triple"
+        elif cur == 3:
+            return "all"
+        else:
+            return "<error>"
+
+    # Validates input parameters. Returns True only if parameters are valid.
+    def validate_input(self):
+        mode = self.get_correlation_tab()
+        # auto, cross, and triple-correlation parameters
+        mode = self.get_correlation_tab()
+        range_val = None
+        g0 = None
+        w = None
+        ginf = None
+        none_checked = True
+        # all correlations - extra parameters
+        range_val2 = None
+        g02 = None
+        w2 = None
+        ginf = None
+        # get input depending on current mode
+        if mode == "auto":
+            if self.ui.redCheckbox.isChecked():
+                none_checked = False
+            elif self.ui.greenCheckbox.isChecked():
+                none_checked = False
+            elif self.ui.blueCheckbox.isChecked():
+                none_checked = False
+            range_val = str(self.ui.autoRangeTextbox.text())
+            g0 = str(self.ui.autoG0Textbox.text())
+            w = str(self.ui.autoWTextbox.text())
+            ginf = str(self.ui.autoGinfTextbox.text())
+        elif mode == "cross":
+            if self.ui.redGreenCheckbox.isChecked():
+                none_checked = False
+            elif self.ui.redBlueCheckbox.isChecked():
+                none_checked = False
+            elif self.ui.greenBlueCheckbox.isChecked():
+                none_checked = False
+            range_val = str(self.ui.crossRangeTextbox.text())
+            g0 = str(self.ui.crossG0Textbox.text())
+            w = str(self.ui.crossWTextbox.text())
+            ginf = str(self.ui.crossGinfTextbox.text())
+        elif mode == "triple":
+            none_checked = False
+            range_val = str(self.ui.tripleRangeTextbox.text())
+            g0 = str(self.ui.tripleG0Textbox.text())
+            w = str(self.ui.tripleWTextbox.text())
+            ginf = str(self.ui.tripleGinfTextbox.text())
+        elif mode == "all":
+            none_checked = False
+            range_val = str(self.ui.allAutoCrossRangeTextbox.text())
+            g0 = str(self.ui.allAutoCrossG0Textbox.text())
+            w = str(self.ui.allAutoCrossWTextbox.text())
+            ginf = str(self.ui.allAutoCrossGinfTextbox.text())
+            range_val2 = str(self.ui.allTripleRangeTextbox.text())
+            g02 = str(self.ui.allTripleG0Textbox.text())
+            w2 = str(self.ui.allTripleWTextbox.text())
+            ginf2 = str(self.ui.allTripleGinfTextbox.text())
+        # Check if input is valid
+        validInput = True
+        if none_checked:
+            self.message("At least one checkbox is needed; aborting.")
+            validInput = False
+        elif range_val == "" or g0 == "" or ginf == "" or w == "":
+            self.message("Some parameters are missing; aborting.")
+            validInput = False
+        else:
+            try:
+                int(range_val)
+                float(g0)
+                float(w)
+                float(ginf)
+            except ValueError:
+                validInput = False
+                self.message("Some parameters are non-numeric; aborting.")
+            if mode == "all":
+                if range_val2 == "" or g02 == "" or ginf2 == "" or w2 == "":
+                    self.message("Some parameters are missing; aborting.")
+                    validInput = False
+                else:
+                    try:
+                        int(range_val2)
+                        float(g02)
+                        float(w2)
+                        float(ginf2)
+                    except ValueError:
+                        validInput = False
+                        self.message("Some parameters are non-numeric; aborting.")
+
+        return validInput
+                          
 # Program loop
 def start():
     app = QtGui.QApplication(sys.argv)
