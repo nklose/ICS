@@ -16,7 +16,7 @@ Installation
         sudo rabbitmqctl add_vhost biomembrane
         sudo rabbitmqctl set_permissions -p biomembrane biomembrane ".*" ".*" ".*"
 
-2. Create the sqlite database at /tmp/biomembrane.db (modify web/settings.py to change location)
+2. Create the sqlite database at web/biomembrane.db (modify web/settings.py to change location)
 
         python manage.py syncdb
 
