@@ -1538,6 +1538,10 @@ class StartQT4(QtGui.QMainWindow):
         else:
             print("Error: number of images is not 1 or 3.")
 
+        # Track results
+        self.autoResult = autoResult
+        self.crossResult = crossResult
+
         # Get updated parameters and update output tab
         self.set_auto_resnorm(round(autoResult[0].resNorm, PRECISION))
         self.set_auto_G0(round(autoResult[0].g0,PRECISION))
@@ -1840,18 +1844,9 @@ class StartQT4(QtGui.QMainWindow):
 
     # Refreshes the temporary directory by deleting and recreating it
     def refresh_temp(self):
-        self.remove_temp()
-        self.create_temp()
-
-    # Creates the temporary directory if it does not exist.
-    def create_temp(self):
-        if not os.path.exists(self.temp_dir):
-            os.makedirs(self.temp_dir)
-
-    # Removes the temporary directory if it exists.
-    def remove_temp(self):
         if os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir)
+        os.makedirs(self.temp_dir)
 
     # Updates the size of the image internally and on the GUI label.
     def update_size(self, size):
@@ -2007,13 +2002,13 @@ class StartQT4(QtGui.QMainWindow):
 
         if self.autoResult != None:
             resultList.extend(self.autoResult)
-            for x in enumerate(self.autoResult):
+            for x in self.autoResult:
                 x.saveData(saveDir)
         self.progress(10)
 
         if self.crossResult != None:
             resultList.extend(self.crossResult)
-            for x in enumerate(self.crossResult):
+            for x in self.crossResult:
                 x.saveData(saveDir)
         self.progress(11)
 

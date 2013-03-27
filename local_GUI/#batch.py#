@@ -100,7 +100,6 @@ class Batch(QtGui.QMainWindow):
             shutil.rmtree(TEMP_DIR)
         os.makedirs(TEMP_DIR)
         
-    
     # Shows default parameters on all input fields
     def set_default_parameters(self):
         pass
