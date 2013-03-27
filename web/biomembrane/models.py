@@ -81,7 +81,7 @@ class Parameters(models.Model):
     ginf = models.FloatField(null=True, blank=True)
     limit = models.FloatField(null=True, blank=True)
     use_deltas = models.BooleanField(blank=True)
-    resolution = models.IntegerField(blank=True)
+    resolution = models.IntegerField(null=True, blank=True)
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):

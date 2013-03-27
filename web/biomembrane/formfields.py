@@ -29,7 +29,6 @@ import os
 
 import backend.bimloader as image_reader
 
-
 class LosslessImageField(forms.FileField):
 
     default_error_messages = {

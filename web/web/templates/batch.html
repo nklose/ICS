@@ -19,9 +19,10 @@
 {{ form.wTriple.errors }}
 {{ form.gzeroTriple.errors }}
 {{ form.resolution.errors }}
+{{ form.zip_file.errors }}
 </div>
 {% endif %} 
-<form name="batchform" method="post">{% csrf_token %}
+<form name="batchform" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} method="post">{% csrf_token %}
   <div class="row-fluid">
     <div class="span4">
      <fieldset>
@@ -58,6 +59,7 @@
       {{ form.resolutions }}
      </div>
     </div> <!-- span4 -->
+    {{ form.zip_file }}
    </div> <!-- row -->
 <div class="rgbimg-background">
  <div id="batchcontrols">
