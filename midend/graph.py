@@ -30,13 +30,13 @@ def plot(gnew, gfit, color, ginf):
     Return values:
         graphString: a StringIO object representing the graph.
     """
-    lowerBound = int(math.floor(ginf))
     graphString = StringIO.StringIO()
     rangeVal = np.shape(gnew)[0]
 
     plotFit = gfit[0:, 0]
     plotNew = gnew[1:, 0]
-    upperBound = max(int(math.ceil(gfit[0, 0])), int(math.ceil(gnew[1, 0])))
+    upperBound = max(gfit[0, 0], gnew[1, 0]) + 0.02
+    lowerBound = ginf - 0.02
 
     __plot(plotFit, plotNew, color, rangeVal)
 
@@ -65,17 +65,17 @@ def plot_1d(gnew, gfit, color, ginf):
     Return values:
         graphString: a StringIO object representing the graph.
     """
-    lowerBound = int(math.floor(ginf))
     graphString = StringIO.StringIO()
     rangeVal = np.shape(gnew)[0]
 
     plotFit = gfit[0:]
     plotNew = gnew[1:]
-    upperBound = max(int(math.ceil(gfit[0])), int(math.ceil(gnew[1])))
+    upperBound = max(gfit[0], gnew[1]) + 0.02
+    lowerBound = ginf - 0.02
 
     __plot(plotFit, plotNew, color, rangeVal)
 
-    pp.axis([0, rangeVal, min(0, lowerBound), upperBound])
+    pp.axis([0, rangeVal, lowerBound, upperBound])
     pp.savefig(graphString)
     graphString.seek(0)
     return graphString
