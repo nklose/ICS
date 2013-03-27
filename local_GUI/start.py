@@ -18,6 +18,7 @@ import os.path
 import scipy
 import numpy
 import PIL
+import thread
 import shutil # used to recursively remove directories
 from PyQt4 import QtCore, QtGui
 from PIL import Image
@@ -97,8 +98,9 @@ class StartQT4(QtGui.QMainWindow):
         # Size of the images in pixels (e.g. 64 would mean a 64x64 image)
         self.size = 0
 
-        # Result of most recent triple correlation part, used for next part
-        self.tripleResult = None
+        # Result of each triple correlation part
+        self.tripleResult1 = None
+        self.tripleResult2 = None
 
         # Disable processing mode
         self.set_processing(False)
@@ -547,12 +549,16 @@ class StartQT4(QtGui.QMainWindow):
 
     # Stop button functionality
     def stop(self):
-        self.message("Stopping correlation.")
+        self.message("Correlation stopped.")
 
         # Reset progress bar
         self.progress(0)
 
+        # disable processing mode
         self.set_processing(False)
+
+        # interrupt main thread
+        thread.interrupt_main()
 
 
     ######################################################
@@ -1295,6 +1301,17 @@ class StartQT4(QtGui.QMainWindow):
 
     # Show Fourier transform (red) surface plot (part 1)
     def show_fourier(self):
+        # disable inputs for parts 2 and 3 for now
+        self.ui.resolution16.setEnabled(False)
+        self.ui.resolution32.setEnabled(False)
+        self.ui.resolution64.setEnabled(False)
+        self.ui.continueButton1.setEnabled(False)
+        self.ui.continueButton2.setEnabled(False)
+        self.ui.tripleRangeTextbox.setEnabled(False)
+        self.ui.tripleWTextbox.setEnabled(False)
+        self.ui.tripleG0Textbox.setEnabled(False)
+        self.ui.tripleGinfTextbox.setEnabled(False)
+
         result = None
 
         # define a path to save the image
@@ -1342,7 +1359,7 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.imageTripleFourier.setPixmap(QtGui.QPixmap(path))
 
         # save result for next part
-        self.tripleResult = result
+        self.tripleResult1 = result
 
         self.progress(7)
 
@@ -1370,10 +1387,10 @@ class StartQT4(QtGui.QMainWindow):
         limit = self.get_sample_resolution()
 
         # call the midend to get the result object
-        result = midend.adaptor.run_triple_part2(self.tripleResult, limit)
+        result = midend.adaptor.run_triple_part2(self.tripleResult1, limit)
 
         # save result for next part
-        self.tripleResult = result
+        self.tripleResult2 = result
 
         self.progress(8)
 
@@ -1390,12 +1407,6 @@ class StartQT4(QtGui.QMainWindow):
         # display the graph
         self.ui.imageTripleCorrelation.setPixmap(QtGui.QPixmap(path))
 
-        # disable sample resolution radio buttons and continue button 1
-        self.ui.resolution16.setEnabled(False)
-        self.ui.resolution32.setEnabled(False)
-        self.ui.resolution64.setEnabled(False)
-        self.ui.continueButton1.setEnabled(False)
-
         # Enable parameter inputs and continue button 2
         self.ui.tripleRangeTextbox.setEnabled(True)
         self.ui.tripleWTextbox.setEnabled(True)
@@ -1410,13 +1421,6 @@ class StartQT4(QtGui.QMainWindow):
         # enable processing mode if it isn't already enabled
         self.set_processing(True)
 
-        # disable parameter inputs and continue button 2
-        self.ui.tripleRangeTextbox.setEnabled(False)
-        self.ui.tripleWTextbox.setEnabled(False)
-        self.ui.tripleG0Textbox.setEnabled(False)
-        self.ui.tripleGinfTextbox.setEnabled(False)
-        self.ui.continueButton2.setEnabled(False)
-
         range_val = int(self.get_triple_range())
         g0 = self.get_triple_G0()
         w = self.get_triple_W()
@@ -1425,7 +1429,7 @@ class StartQT4(QtGui.QMainWindow):
         self.progress(11)
 
         # call the midend to get the result object
-        result = midend.adaptor.run_triple_part3(self.tripleResult, range_val, g0, w, gInf)
+        result = midend.adaptor.run_triple_part3(self.tripleResult2, range_val, g0, w, gInf)
         
         self.progress(12)
 
