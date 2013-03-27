@@ -2003,28 +2003,26 @@ class StartQT4(QtGui.QMainWindow):
         self.progress(9)
 
         # export all text files to that folder
+        resultList = []
+
         if self.autoResult != None:
-            midend.result.saveResultsFile(saveDir, self.autoResult, "auto_result.txt")
+            resultList.extend(self.autoResult)
             for x in enumerate(self.autoResult):
                 x.saveData(saveDir)
         self.progress(10)
 
         if self.crossResult != None:
-            midend.result.saveResultsFile(saveDir, self.crossResult, "cross_result.txt")
+            resultList.extend(self.crossResult)
             for x in enumerate(self.crossResult):
                 x.saveData(saveDir)
         self.progress(11)
 
-        #if self.tripleResult1 != None:
-        #    self.tripleResult1.saveData(saveDir)
-
-        #if self.tripleResult2 != None:
-        #    self.tripleResult2.saveData(saveDir)
-
         if self.tripleResult3 != None:
+            resultList.append(self.tripleResult3)
             self.tripleResult3.saveData(saveDir)
-            #midend.result.saveResultsFile(saveDir, self.tripleResult3, "triple_result.txt")
-            
+
+        midend.result.saveResultsFile(saveDir, resultList)
+    
         self.progress(12)
 
         self.set_processing(False)
