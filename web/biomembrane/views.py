@@ -25,7 +25,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from pickle import dumps
 from icsform import RgbSettingsForm, BatchSettingsForm;
-from models import Batch, Job
+from models import Batch, Job, Parameters
 import scipy.misc
 import icsform
 import models
@@ -155,14 +155,16 @@ def tripleSetRes(request):
         - sec_ title: The title of the section.
     """
     if request.method == 'POST':  #form has been submitted
-       form = RgbSettingsForm(request.POST, request.FILES)
-       if form.is_valid():
-          resolutions = form.selectedResolution() #get the sample resolution as 16,32,64
-          #Update Triple Correlation Parameters Here
-          #Redirect to tripleSetParams (Triple Parameters)
-          return HttpResponseRedirect('/triple/setParams/') 
+        form = RgbSettingsForm(request.POST, request.FILES)
+        if form.is_valid():
+            resolution = form.selectedResolution() #get the sample resolution as 16,32,64
+            batch = Batch.objects.get(id=request.session['batch_id'])
+            params = Parameters(batch=batch, correlationType=Parameters.TRIPLE, resolution=resolution)
+            params.save()
+            #Redirect to tripleSetParams (Triple Parameters)
+            return HttpResponseRedirect('/triple/setParams/') 
     else:
-          form = RgbSettingsForm()
+        form = RgbSettingsForm()
 
     temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Resolution To Sample", "form": form,}
     return render(request, 'tripleSetResolution.html', temp)
@@ -181,17 +183,23 @@ def tripleSetParams(request):
         - sec_ title: The title of the section.
     """
     if request.method == 'POST':  #form has been submitted
-       form = RgbSettingsForm(request.POST, request.FILES)
-       if form.is_valid():
-
-          # Update Triple Correlation Parameters Here
-          rangeValue = form.cleaned_data['rangeTriple']
-          gzeroValue = form.cleaned_data['gzeroTriple']
-          wValue = form.cleaned_data['wTriple']
-          ginfValue = form.cleaned_data['ginfTriple']
-          return HttpResponseRedirect('/results/') # redirect after post
+        form = RgbSettingsForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Update Triple Correlation Parameters Here
+            rangeValue = form.cleaned_data['rangeTriple']
+            gzeroValue = form.cleaned_data['gzeroTriple']
+            wValue = form.cleaned_data['wTriple']
+            ginfValue = form.cleaned_data['ginfTriple']
+            batch = Batch.objects.get(id=request.session['batch_id'])
+            params = Parameters.objects.get(batch=batch, correlationType=Parameters.TRIPLE)
+            params.range_val = rangeValue
+            params.g0 = gzeroValue
+            params.w = wValue
+            params.ginf = ginfValue
+            params.save()
+            return HttpResponseRedirect('/results/') # redirect after post
     else:
-          form = RgbSettingsForm()
+        form = RgbSettingsForm()
 
     temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Parameters", "form": form,}
     return render(request, 'tripleSetParameters.html', temp)
