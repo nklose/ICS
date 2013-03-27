@@ -28,6 +28,9 @@ CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(CUR_DIR)
 sys.path.append(ROOT_DIR)
 
+# Import midend modules
+import midend.batchRunner
+
 # Global constants
 TEMP_DIR = "./ics_tmp"
 RGB_PLACEHOLDER = "./Images/rgb.png"
@@ -83,7 +86,10 @@ class Batch(QtGui.QMainWindow):
         if validInput:
             # begin process
             self.message("Beginning batch correlation process.")
-            pass
+            
+            # create config object
+            config = Config()
+            br = midend.batchRunner.BatchRunner(config)
 
         self.set_processing(False)
 
@@ -349,3 +355,22 @@ def start():
     batch_app = Batch()
     batch_app.show()
     sys.exit(app.exec_())
+
+# Configuration object for doing batch operations on
+class Config:
+    side = None
+    input_directory = None
+    output_directory = None
+    name_min = None
+    name_max = None
+    name_format = None
+    dual_range = None
+    triple_range = None
+    auto_consider_deltas = None
+    cross_consider_deltas = None
+    dual_initial = numpy.array([1, 10, 0, 0, 0], dtype = numpy.float)
+    triple_initial = numpy.array([50, 2, 0], dtype = numpy.float)
+    triple_lim = 32
+    input_type = 'mixed'
+    output_type = 'full'
+    output_numbering = 'none'
