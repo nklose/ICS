@@ -88,7 +88,7 @@ class BatchRunner(object):
         batch.run_2(self.info, self.config)
         batch.run_3(self.info, self.config)
         # Skip run_4, it is file output
-        self.__infoStorage.append(copy.copy(self.info))
+        self.__infoStorage.append(FlyWeightBatchInfo(self.info))
         self.info.cur_files += 1
 
     def runAll(self, interruptFunction=_default_interrupt_function):
@@ -234,3 +234,13 @@ def _customFinish(info, config, fileObject=None):
     fileObject.write(header + '\n')
     np.savetxt(fileObject, info.results, fmt='%9.5f', delimiter='|')
     return True
+
+
+class FlyWeightBatchInfo(object):
+
+    def __init__(self, info):
+        self.cur_files = info.cur_files
+        self.dual_out = info.dual_out
+        self.dual_fit = info.dual_fit
+        self.triple_out = info.triple_out
+        self.triple_fit = info.triple_fit
