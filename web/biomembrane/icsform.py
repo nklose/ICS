@@ -192,7 +192,7 @@ class BatchSettingsForm(forms.Form):
        else:
           return None;
 
-    def cleaned_zipfile(self):
+    def clean_zip_file(self):
         if 'zip_file' in self.cleaned_data:
             zip_file = self.cleaned_data['zip_file']
             if zip_file.content_type != 'application/zip':
