@@ -1,5 +1,6 @@
 """
-This script loads up the local GUI and calls the backend.
+This script provides all functionality for the local GUI by calling
+other project modules.
 
 Code for the basic framework was borrowed from:
 http://www.rkblog.rk.edu.pl/w/p/simple-text-editor-pyqt4/
@@ -24,8 +25,9 @@ from PyQt4 import QtCore, QtGui
 from PIL import Image
 from main_ICS import Ui_Dialog
 from graphzoom import GraphZoom
+from batch import Batch
 
-# Enable backend importing
+# Enable importing of other project modules
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(CUR_DIR)
 sys.path.append(ROOT_DIR)
@@ -143,6 +145,11 @@ class StartQT4(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.stopButton,
                                QtCore.SIGNAL("clicked()"),
                                self.stop)
+
+        # Batch Mode Button
+        QtCore.QObject.connect(self.ui.batchModeButton,
+                               QtCore.SIGNAL("clicked()"),
+                               self.batch_mode)
 
         # Save All Graphs Button
         QtCore.QObject.connect(self.ui.saveAllButton,
@@ -570,6 +577,11 @@ class StartQT4(QtGui.QMainWindow):
         # interrupt main thread
         thread.interrupt_main()
 
+    # Switch interface to batch mode
+    def batch_mode(self):
+        batch = Batch(self)
+        batch.show()
+        self.hide()
 
     ######################################################
     # Interface Input Functions                          #
@@ -2023,6 +2035,7 @@ class StartQT4(QtGui.QMainWindow):
             dest_path = os.path.join(destination, os.path.basename(filepath))
             shutil.copyfile(filepath, dest_path)
 
+# Program loop
 def start():
     app = QtGui.QApplication(sys.argv)
     myapp = StartQT4()
