@@ -1,6 +1,12 @@
 from django import forms
 import formfields
 
+try:
+    from StringIO import cStringIO as StringIO
+except ImportError:
+    from StringIO import StringIO
+import zipfile
+from django.core.files.base import ContentFile
 
 class SampleImageForm(forms.Form):
 
@@ -46,7 +52,7 @@ class RgbSettingsForm(forms.Form):
     deltaCross = forms.BooleanField(required=False)
     deltaAll = forms.BooleanField(required=False)
 
-    userSelected = forms.CharField(required=True,error_messages={'blank': 'Please select a fit'}) # field containing the id of the type of correlation the user selects
+    userSelected = forms.CharField(required=False,error_messages={'blank': 'Please select a fit'}) # field containing the id of the type of correlation the user selects
     rangeAuto = forms.FloatField(required=False, initial=20)  # parameters for auto correlation
     gzeroAuto = forms.FloatField(required=False, initial=10)
     wAuto = forms.FloatField(required=False, initial=0)
@@ -148,6 +154,8 @@ class RgbSettingsForm(forms.Form):
 
 
 class BatchSettingsForm(forms.Form):
+
+    zip_file = forms.FileField(error_messages={'required': 'Select an zip file to upload'})
     imageSize = forms.IntegerField(error_messages={'required': 'Please input the image size of images to be fitted'});
     firstImageIndex = forms.IntegerField(error_messages={'required': 'Please specify the first image to fit'}); # name_min in batch
     lastImageIndex = forms.IntegerField(error_messages={'required': 'Please specify the last image to be fit'}); #  name_max in batch
@@ -183,3 +191,24 @@ class BatchSettingsForm(forms.Form):
           return 64
        else:
           return None;
+
+    def cleaned_zipfile(self):
+        if 'zip_file' in self.cleaned_data:
+            zip_file = self.cleaned_data['zip_file']
+            if zip_file.content_type != 'application/zip':
+                msg = 'Only .ZIP archive files are allowed.'
+                raise forms.ValidationError(msg)
+            else:
+                # Verify that it's a valid zipfile
+                zip = zipfile.ZipFile(StringIO(zip_file.read()))
+                bad_file = zip.testzip()
+                zip.close()
+                del zip
+                if bad_file:
+                    msg = '"%s" in the .ZIP archive is corrupt.' % (bad_file,)
+                    raise forms.ValidationError(msg)
+            return zip_file
+        else:
+            msg = 'Could not upload file'
+            raise forms.ValidationError(msg)
+

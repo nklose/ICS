@@ -47,7 +47,6 @@ def program(request):
         form = RgbSettingsForm(request.POST)
         if form.is_valid():
         # proccess the data in form.cleaned_data
-            print "Valid"
             if form.isAuto():
                 #Auto correlations only forms
                 redChecked = form.cleaned_data['red'];
@@ -81,7 +80,8 @@ def program(request):
             elif form.isTriple():
                 #Triple correlations only
                 #Redirect to tripleSetRes (Triple Sample Resolution)
-                return HttpResponseRedirect('/triple/setRes/') 
+                return HttpResponseRedirect('/triple/setRes/')
+
             elif form.isAll():
                 #All correlations form
                 allChannelsChecked = form.cleaned_data['allChannels']
@@ -99,6 +99,7 @@ def program(request):
                 return HttpResponseRedirect('/triple/setRes/') # see tripleSetRes view function
     else:
          form = RgbSettingsForm()
+
     batch = Batch.objects.get(id=request.session['batch_id'])
     job = Job.objects.get(batch=batch)
     rgbUrl = job.rgb_image.url
@@ -277,6 +278,7 @@ def batch(request):
         if form.is_valid():
            # Proccess the data in form.cleaned_data
            # get the filenameFormat of each image file in the batch from user
+           zipfile =  form.cleaned_zipfile()
            filenameFormat = form.cleaned_data['filenameFormat'];
            imageSize = form.cleaned_data['imageSize']; #get the size of images from the user
            resolutions = form.selectedResolution() #the size to sample for triple correlation
