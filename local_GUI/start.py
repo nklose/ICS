@@ -659,74 +659,97 @@ class StartQT4(QtGui.QMainWindow):
         else:
             return False
 
+    # If a given string is a numeric non-blank value, returns the value as an 
+    # integer; otherwise just returns the string.
+    # Examples:
+    #    "" ==> ""
+    #    "3" ==> 3
+    #    "abc" ==> "abc"
+    def intify(self, num):
+        if num != "":
+            try:
+                num = int(num)
+            except:
+                pass
+        return num
+
+    # Equivalent of intify for float types.
+    def floatify(self, num):
+        if num != "":
+            try:
+                num = float(num)
+            except:
+                pass
+        return num
+
     ## Text inputs
     # Returns inputted Range in AC
     def get_auto_range(self):
-        return int(self.ui.autoRangeTextbox.text())
+        return self.intify(self.ui.autoRangeTextbox.text())
 
     # Returns inputted G(0) in AC
     def get_auto_G0(self):
-        return float(self.ui.autoG0Textbox.text())
+        return self.floatify(self.ui.autoG0Textbox.text())
 
     # Returns inputted W in AC
     def get_auto_W(self):
-        return float(self.ui.autoWTextbox.text())
+        return self.floatify(self.ui.autoWTextbox.text())
 
     # Returns inputted G(Inf) in AC
     def get_auto_Ginf(self):
-        return float(self.ui.autoGinfTextbox.text())
+        return self.floatify(self.ui.autoGinfTextbox.text())
 
     # Returns inputted Range in XC
     def get_cross_range(self):
-        return int(self.ui.crossRangeTextbox.text())
+        return self.intify(self.ui.crossRangeTextbox.text())
 
     # Returns inputted G(0) in XC
     def get_cross_G0(self):
-        return float(self.ui.crossG0Textbox.text())
+        return self.floatify(self.ui.crossG0Textbox.text())
 
     # Returns inputted W in XC
     def get_cross_W(self):
-        return float(self.ui.crossWTextbox.text())
+        return self.floatify(self.ui.crossWTextbox.text())
 
     # Returns inputted G(Inf) in XC
     def get_cross_Ginf(self):
-        return float(self.ui.crossGinfTextbox.text())
+        return self.floatify(self.ui.crossGinfTextbox.text())
 
     # Returns inputted Range in AXC
     def get_all_range(self):
-        return int(self.ui.allAutoCrossRangeTextbox.text())
+        return self.intify(self.ui.allAutoCrossRangeTextbox.text())
 
     # Returns inputted G(0) in AXC
     def get_all_G0(self):
-        return float(self.ui.allAutoCrossG0Textbox.text())
+        return self.floatify(self.ui.allAutoCrossG0Textbox.text())
 
     # Returns inputted W in AXC
     def get_all_W(self):
-        return float(self.ui.allAutoCrossWTextbox.text())
+        return self.floatify(self.ui.allAutoCrossWTextbox.text())
 
     # Returns inputted Ginf in AXC
     def get_all_Ginf(self):
-        return float(self.ui.allAutoCrossGinfTextbox.text())
+        return self.floatify(self.ui.allAutoCrossGinfTextbox.text())
 
     # Returns inputted limit for TC (Output Tab)
     def get_triple_limit(self):
-        return float(self.ui.startingPointInput.text())
+        return self.floatify(self.ui.startingPointInput.text())
 
     # Returns inputted range for TC (Output Tab)
     def get_triple_range(self):
-        return int(self.ui.tripleRangeTextbox.text())
+        return self.intify(self.ui.tripleRangeTextbox.text())
 
     # Returns inputted G(0) for TC (Output Tab)
     def get_triple_G0(self):
-        return float(self.ui.tripleG0Textbox.text())
+        return self.floatify(self.ui.tripleG0Textbox.text())
 
     # Returns inputted W for TC (Output Tab)
     def get_triple_W(self):
-        return float(self.ui.tripleWTextbox.text())
+        return self.floatify(self.ui.tripleWTextbox.text())
 
     # Returns inputted G(Inf) for TC (Output Tab)
     def get_triple_Ginf(self):
-        return float(self.ui.tripleGinfTextbox.text())
+        return self.floatify(self.ui.tripleGinfTextbox.text())
 
     ## Radio buttons
 
