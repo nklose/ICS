@@ -514,10 +514,6 @@ class StartQT4(QtGui.QMainWindow):
 
     # Start button functionality
     def start(self):
-
-        # Enable processing mode
-        self.set_processing(True)
-
         # Find out which correlation to do
         mode = self.get_correlation_tab()
 
@@ -548,9 +544,6 @@ class StartQT4(QtGui.QMainWindow):
 
             else:
                 self.message("Mode error.")
-
-        # Disable processing mode
-        self.set_processing(False)
 
     # Stop button functionality
     def stop(self):
@@ -1005,6 +998,9 @@ class StartQT4(QtGui.QMainWindow):
     
     # Performs an auto-correlation
     def autoCorrelation(self):
+        # enable processing mode
+        self.set_processing(True)
+
         # number of steps for progress tracking
         self.numSteps = 10
 
@@ -1114,10 +1110,16 @@ class StartQT4(QtGui.QMainWindow):
         self.progress(10)
 
         # Change to auto section of output tab
-        self.select_tab("output", "auto")        
+        self.select_tab("output", "auto")    
+
+        # disable processing mode
+        self.set_processing(False)
 
     # Performs a cross-correlation.
     def crossCorrelation(self):
+        # enable processing mode
+        self.set_processing(True)
+
         # number of steps for progress tracking
         self.numSteps = 10
 
@@ -1234,8 +1236,14 @@ class StartQT4(QtGui.QMainWindow):
 
         self.progress(10)
 
+        # disable processing mode
+        self.set_processing(False)
+
     # Performs a triple correlation.
     def tripleCorrelation(self):
+        # enable processing mode
+        self.set_processing(True)
+
         self.numSteps = 14
 
         # Construct string containing channels to be used
@@ -1324,6 +1332,9 @@ class StartQT4(QtGui.QMainWindow):
 
     # Begin triple correlation process (part 2)
     def triple_process(self):
+        # enable processing mode if it isn't already enabled
+        self.set_processing(True)
+
         result = None
 
         # define a path to save the image
@@ -1373,6 +1384,9 @@ class StartQT4(QtGui.QMainWindow):
 
     # Finish off triple correlation process (part 3)
     def triple_complete(self):
+        # enable processing mode if it isn't already enabled
+        self.set_processing(True)
+
         # disable parameter inputs and continue button 2
         self.ui.tripleRangeTextbox.setEnabled(False)
         self.ui.tripleWTextbox.setEnabled(False)
@@ -1414,8 +1428,14 @@ class StartQT4(QtGui.QMainWindow):
 
         self.progress(14)
 
+        # disable processing mode
+        self.set_processing(False)
+
     # Performs all possible correlations
     def allCorrelations(self):
+
+        # enable processing mode
+        self.set_processing(True)
 
         self.numSteps = 12
 
@@ -1800,14 +1820,12 @@ class StartQT4(QtGui.QMainWindow):
     # Sets the program mode as 'processing' or 'not processing', which includes
     #  enabling/disabling of start and stop buttons and other interface features
     def set_processing(self, value):
-        # not working currently
-        pass
-        #self.ui.startButton.setVisible(not value)
-        #self.ui.stopButton.setVisible(value)
-        #self.ui.batchModeButton.setVisible(not value)
-        #self.ui.correlationSettingsGroup.setVisible(not value)
-        #self.ui.imageSettingsGroup.setVisible(not value)
-        #self.ui.progressBar.setVisible(value)
+        self.ui.startButton.setEnabled(not value)
+        self.ui.stopButton.setEnabled(value)
+        self.ui.batchModeButton.setEnabled(not value)
+        self.ui.correlationSettingsGroup.setEnabled(not value)
+        self.ui.imageSettingsGroup.setEnabled(not value)
+        self.ui.progressBar.setEnabled(value)
 
     # Remove paths for any nonexistent images
     def remove_paths(self):
