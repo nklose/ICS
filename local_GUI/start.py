@@ -1878,7 +1878,7 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.batchModeButton.setEnabled(not value)
         self.ui.correlationSettingsGroup.setEnabled(not value)
         self.ui.imageSettingsGroup.setEnabled(not value)
-        self.ui.progressBar.setEnabled(value)
+        self.ui.progressBar.setVisible(value)
 
     # Remove paths for any nonexistent images
     def remove_paths(self):

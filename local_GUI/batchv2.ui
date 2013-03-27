@@ -93,46 +93,6 @@
    <property name="checkable">
     <bool>false</bool>
    </property>
-   <widget class="QGraphicsView" name="imageRGB">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>30</y>
-      <width>192</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="imageRed">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
-      <y>30</y>
-      <width>192</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="imageGreen">
-    <property name="geometry">
-     <rect>
-      <x>530</x>
-      <y>30</y>
-      <width>192</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="imageBlue">
-    <property name="geometry">
-     <rect>
-      <x>780</x>
-      <y>30</y>
-      <width>192</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="labelRGB">
     <property name="geometry">
      <rect>
@@ -205,8 +165,104 @@
      <string>Blue</string>
     </property>
    </widget>
+   <widget class="QLabel" name="imageRgb">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>191</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Panel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="imageRed">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>30</y>
+      <width>191</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Panel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="imageGreen">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>30</y>
+      <width>191</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Panel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="imageBlue">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>30</y>
+      <width>191</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Panel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
-  <widget class="QGroupBox" name="imageSettingsGroup">
+  <widget class="QGroupBox" name="imageParametersGroup">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -221,7 +277,7 @@
     </font>
    </property>
    <property name="title">
-    <string>Image Settings</string>
+    <string>Image Parameters</string>
    </property>
    <widget class="QPushButton" name="loadButton">
     <property name="geometry">
@@ -256,7 +312,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>230</y>
+      <y>250</y>
       <width>141</width>
       <height>21</height>
      </rect>
@@ -284,7 +340,7 @@
      <enum>QFrame::Sunken</enum>
     </property>
     <property name="text">
-     <string>100</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="formatsList">
@@ -293,7 +349,7 @@
       <x>160</x>
       <y>230</y>
       <width>131</width>
-      <height>21</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -303,7 +359,13 @@
      <enum>QFrame::Sunken</enum>
     </property>
     <property name="text">
-     <string>JPG, TIF, BMP</string>
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="rgbCount">
@@ -322,7 +384,7 @@
      <enum>QFrame::Sunken</enum>
     </property>
     <property name="text">
-     <string>100</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="numRgbLabel">
@@ -373,7 +435,7 @@
      <enum>QFrame::Sunken</enum>
     </property>
     <property name="text">
-     <string>100</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="folderLabel">
@@ -397,7 +459,7 @@
      <enum>QFrame::Sunken</enum>
     </property>
     <property name="text">
-     <string>&lt;no file&gt;</string>
+     <string>&lt;no directory loaded&gt;</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
