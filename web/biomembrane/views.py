@@ -308,12 +308,12 @@ def batch(request):
         if form.is_valid():
            # Proccess the data in form.cleaned_data
            # get the filenameFormat of each image file in the batch from user
-           zipfile =  form.cleaned_zipfile()
-           filenameFormat = form.cleaned_data['filenameFormat'];
+           zipfile =  form.cleaned_data['zip_file']
+           filenameFormat = form.cleaned_data['filenameFormat']
            imageSize = form.cleaned_data['imageSize']; #get the size of images from the user
            resolutions = form.selectedResolution() #the size to sample for triple correlation
-           firstImageIndex = form.cleaned_data['firstImageIndex']; #which image file number to start at (suppose they skip some)
-           lastImageIndex = form.cleaned_data['lastImageIndex']; #which image file number to end at
+           firstImageIndex = form.cleaned_data['firstImageIndex'] #which image file number to start at (suppose they skip some)
+           lastImageIndex = form.cleaned_data['lastImageIndex'] #which image file number to end at
 
            # Auto and Cross Parameters
            rangeValue = form.cleaned_data['rangeAutoCross']
