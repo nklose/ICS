@@ -22,6 +22,7 @@ import shutil # used to recursively remove directories
 from PyQt4 import QtCore, QtGui
 from PIL import Image
 from main_ICS import Ui_Dialog
+from graphzoom import GraphZoom
 
 # Enable backend importing
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -38,7 +39,11 @@ import midend.adaptor
 
 # Global constants
 PRECISION = 5      # number of decimal places to show for output values
-
+ZOOM_ICON = "./Images/zoom.png"
+RGB_PLACEHOLDER = "./Images/rgb.png"
+RED_PLACEHOLDER = "./Images/r.png"
+GREEN_PLACEHOLDER = "./Images/g.png"
+BLUE_PLACEHOLDER = "./Images/b.png"
 
 class StartQT4(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -57,11 +62,25 @@ class StartQT4(QtGui.QMainWindow):
         self.bluePath = ""
         self.rgbPath = ""
 
+        # Paths to grapsh
+        self.autoRedGraphPath = ""
+        self.autoGreenGraphPath = ""
+        self.autoBlueGraphPath = ""
+        self.crossRGGraphPath = ""
+        self.crossRBGraphPath = ""
+        self.crossGBGraphPath = ""
+        self.tripleGraph1Path = ""
+        self.tripleGraph2Path = ""
+        self.tripleGraph3Path = ""
+
         # Image channel arrays
         self.redChannel = ""
         self.greenChannel = ""
         self.blueChannel = ""
         self.rgbChannel = ""
+    
+        # Number of steps in a given function, for updating progress bar
+        self.numSteps = 1
 
         # Temporary file directory (used during runtime only, purged each run)
         self.temp_dir = "./ics_tmp"
@@ -72,11 +91,17 @@ class StartQT4(QtGui.QMainWindow):
         # Set the default parameters for the input fields
         self.set_default_parameters()
 
+        # Load the default/placeholder images
+        self.load_default_images()
+
         # Size of the images in pixels (e.g. 64 would mean a 64x64 image)
         self.size = 0
 
         # Result of most recent triple correlation part, used for next part
         self.tripleResult = None
+
+        # Disable processing mode
+        self.set_processing(False)
 
         #######################################################
         # Interface Object Connections                        #
@@ -109,10 +134,15 @@ class StartQT4(QtGui.QMainWindow):
                                QtCore.SIGNAL("clicked()"),
                                self.start)
 
-        # Stop BUtton
+        # Stop Button
         QtCore.QObject.connect(self.ui.stopButton,
                                QtCore.SIGNAL("clicked()"),
                                self.stop)
+
+        # Save All Graphs Button
+        QtCore.QObject.connect(self.ui.saveAllButton,
+                               QtCore.SIGNAL("clicked()"),
+                               self.saveAllGraphs)
 
         # Continue Button 1
         QtCore.QObject.connect(self.ui.continueButton1,
@@ -123,6 +153,51 @@ class StartQT4(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.continueButton2,
                                QtCore.SIGNAL("clicked()"),
                                self.triple_complete)
+
+        # Auto Red Zoom Button
+        QtCore.QObject.connect(self.ui.redGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomRed)
+
+        # Auto Green Zoom Button
+        QtCore.QObject.connect(self.ui.greenGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomGreen)
+        
+        # Auto Blue Zoom Button
+        QtCore.QObject.connect(self.ui.blueGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomBlue)
+
+        # Cross Red-Green Zoom Button
+        QtCore.QObject.connect(self.ui.redGreenGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomRedGreen)
+        
+        # Cross Red-Blue Zoom Button
+        QtCore.QObject.connect(self.ui.redBlueGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomRedBlue)
+
+        # Cross Green-Blue Zoom Button
+        QtCore.QObject.connect(self.ui.greenBlueGraphZoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomGreenBlue)
+
+        # Triple Graph 1 Zoom Button
+        QtCore.QObject.connect(self.ui.tripleGraph1Zoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomTriple1)
+        
+        # Triple Graph 2 Zoom Button
+        QtCore.QObject.connect(self.ui.tripleGraph2Zoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomTriple2)
+        
+        # Triple Graph 3 Zoom Button
+        QtCore.QObject.connect(self.ui.tripleGraph3Zoom,
+                               QtCore.SIGNAL("clicked()"),
+                               self.zoomTriple3)
 
 
     #######################################################
@@ -439,7 +514,8 @@ class StartQT4(QtGui.QMainWindow):
 
     # Start button functionality
     def start(self):
-        # Put the interface into processing mode
+
+        # Enable processing mode
         self.set_processing(True)
 
         # Find out which correlation to do
@@ -473,7 +549,7 @@ class StartQT4(QtGui.QMainWindow):
             else:
                 self.message("Mode error.")
 
-        # Get the interface out of processing mode
+        # Disable processing mode
         self.set_processing(False)
 
     # Stop button functionality
@@ -929,8 +1005,15 @@ class StartQT4(QtGui.QMainWindow):
     
     # Performs an auto-correlation
     def autoCorrelation(self):
+        # number of steps for progress tracking
+        self.numSteps = 10
+
+        self.progress(0)
+
         # Construct message box string and show it
         self.msgAuto()
+        
+        self.progress(1)
 
         # Make list of colors to send to midend
         colorList = []
@@ -941,6 +1024,8 @@ class StartQT4(QtGui.QMainWindow):
         if self.get_blue_checkbox():
             colorList.append('b')
 
+        self.progress(2)
+
         # Get input parameters
         g0 = self.get_auto_G0()
         w = self.get_auto_W()
@@ -948,30 +1033,37 @@ class StartQT4(QtGui.QMainWindow):
         range_val = self.get_auto_range()
         deltas = self.get_auto_deltas_checkbox()
 
+        self.progress(3)
+
         # Run correlation by calling midend
         result = None
         if self.get_num_images() == 1:
             # get PIL form of image from path
             pilImage = PIL.Image.open(self.rgbPath)
+            self.progress(4)
 
             # construct inputs to send to midend
             inputs = (pilImage, colorList, g0, w, ginf, range_val, deltas)
+            self.progress(5)
 
             # call the midend to get the result object
             result = midend.adaptor.run_dual_mixed_image(*inputs)
+            self.progress(6)
 
         elif self.get_num_images() == 3:
             # get PIL form of images from paths
             pilR = PIL.Image.open(self.redPath)
             pilG = PIL.Image.open(self.greenPath)
             pilB = PIL.Image.open(self.bluePath)
+            self.progress(4)
 
             # construct inputs to send to midend
             inputs = (pilR, pilG, pilB, colorList, g0, w, ginf, range_val, deltas)
+            self.progress(5)
 
             # call the midend to get the result object
             result = midend.adaptor.run_dual_separate_image(*inputs)
-
+            self.progress(6)
         else:
             print("Error: number of images is not 1 or 3.")
         # Get individual channel results
@@ -983,6 +1075,8 @@ class StartQT4(QtGui.QMainWindow):
         self.set_auto_W(round(redResult.w,PRECISION))
         self.set_auto_Ginf(round(redResult.ginf,PRECISION))
         self.set_auto_deltas(round(redResult.usedDeltas,PRECISION))
+
+        self.progress(7)
 
         # create and display the graphs
         rPath = os.path.join(self.temp_dir, "r_graph.png")
@@ -1004,21 +1098,35 @@ class StartQT4(QtGui.QMainWindow):
             for line in fileLike.readlines():
                 outFile.write(line)
             outFile.close()
+        
+        self.progress(9)
 
         if self.get_red_checkbox():
             self.ui.imageAutoRed.setPixmap(QtGui.QPixmap(rPath))
+            self.autoRedGraphPath = rPath
         if self.get_green_checkbox():
             self.ui.imageAutoGreen.setPixmap(QtGui.QPixmap(gPath))
+            self.autoGreenGraphPath = gPath
         if self.get_blue_checkbox():
             self.ui.imageAutoBlue.setPixmap(QtGui.QPixmap(bPath))
+            self.autoBlueGraphPath = bPath
+
+        self.progress(10)
 
         # Change to auto section of output tab
         self.select_tab("output", "auto")        
 
     # Performs a cross-correlation.
     def crossCorrelation(self):
+        # number of steps for progress tracking
+        self.numSteps = 10
+
+        self.progress(0)
+
         # Construct message box string and show it
         self.msgCross()
+
+        self.progress(1)
 
         # Make list of colors to send to midend
         colorList = []
@@ -1029,6 +1137,8 @@ class StartQT4(QtGui.QMainWindow):
         if self.get_green_blue_checkbox():
             colorList.append('gb')
 
+        self.progress(2)
+
         # Get input parameters
         g0 = self.get_cross_G0()
         w = self.get_cross_W()
@@ -1036,17 +1146,25 @@ class StartQT4(QtGui.QMainWindow):
         range_val = self.get_cross_range()
         deltas = self.get_cross_deltas_checkbox()
 
+        self.progress(3)
+
         # Run correlation by calling midend
         result = None
         if self.get_num_images() == 1:
             # get PIL form of image from path
             pilImage = PIL.Image.open(self.rgbPath)
+            
+            self.progress(4)
 
             # construct inputs to send to midend
             inputs = (pilImage, colorList, g0, w, ginf, range_val, deltas)
 
+            self.progress(5)
+
             # call the midend to get the result object
             result = midend.adaptor.run_dual_mixed_image(*inputs)
+
+            self.progress(6)
 
         elif self.get_num_images() == 3:
             # get PIL form of images from paths
@@ -1054,11 +1172,17 @@ class StartQT4(QtGui.QMainWindow):
             pilG = PIL.Image.open(self.greenPath)
             pilB = PIL.Image.open(self.bluePath)
 
+            self.progress(4)
+
             # construct inputs to send to midend
             inputs = (pilR, pilG, pilB, colorList, g0, w, ginf, range_val, deltas)
 
+            self.progress(5)
+
             # call the midend to get the result object
             result = midend.adaptor.run_dual_separate_image(*inputs)
+
+            self.progress(6)
 
         # Get individual channel results
         redGreenResult = result[0]
@@ -1074,7 +1198,9 @@ class StartQT4(QtGui.QMainWindow):
         rgPath = os.path.join(self.temp_dir, "rg_graph.png")
         rbPath = os.path.join(self.temp_dir, "rb_graph.png")
         gbPath = os.path.join(self.temp_dir, "gb_graph.png")
-                
+        
+        self.progress(7)
+
         for i, x in enumerate(result):
             fileLike = x.plotToStringIO()
             outFile = None
@@ -1091,20 +1217,31 @@ class StartQT4(QtGui.QMainWindow):
                 outFile.write(line)
             outFile.close()
 
+        self.progress(9)
+
         if self.get_red_green_checkbox():
             self.ui.imageCrossRG.setPixmap(QtGui.QPixmap(rgPath))
+            self.autoRGGraphPath = rgPath
         if self.get_red_blue_checkbox():
             self.ui.imageCrossRB.setPixmap(QtGui.QPixmap(rbPath))
+            self.autoRBGraphPath = rbPath
         if self.get_green_blue_checkbox():
             self.ui.imageCrossGB.setPixmap(QtGui.QPixmap(gbPath))
+            self.autoGBGraphPath = gbPath
 
         # Change to auto section of output tab
         self.select_tab("output", "cross")
 
+        self.progress(10)
+
     # Performs a triple correlation.
     def tripleCorrelation(self):
+        self.numSteps = 14
+
         # Construct string containing channels to be used
         self.msgTriple()
+
+        self.progress(1)
 
         # Change to triple section of output tab
         self.select_tab("output", "triple")
@@ -1132,12 +1269,21 @@ class StartQT4(QtGui.QMainWindow):
         # define a path to save the image
         path = os.path.join(self.temp_dir, "triple_1.png")
 
+        # Save graph path
+        self.tripleGraph1Path = path
+
+        self.progress(2)
+
         if self.get_num_images() == 1:
             # convert the RGB image to a PIL image
             pilImage = PIL.Image.open(self.rgbPath)
+            
+            self.progress(3)
 
             # call the midend to get the result object
             result = midend.adaptor.run_triple_mixed_image_part1(pilImage)
+
+            self.progress(4)
 
         elif self.get_num_images() == 3:
             # convert images to PIL images
@@ -1145,8 +1291,12 @@ class StartQT4(QtGui.QMainWindow):
             pilG = PIL.Image.open(self.greenPath)
             pilB = PIL.Image.open(self.bluePath)
             
+            self.progress(3)
+
             # call the midend to get the result object
             result = midend.adaptor.run_triple_split_image_part1(pilR, pilG, pilB)
+            
+            self.progress(4)
 
         # create the graph
         fileLike = result.plotToStringIO()
@@ -1155,11 +1305,15 @@ class StartQT4(QtGui.QMainWindow):
             outFile.write(line)
         outFile.close()
 
+        self.progress(6)
+
         # show the graph
         self.ui.imageTripleFourier.setPixmap(QtGui.QPixmap(path))
 
         # save result for next part
         self.tripleResult = result
+
+        self.progress(7)
 
         # enable sample resolution radio buttons and continue button 1
         self.ui.resolution16.setEnabled(True)
@@ -1175,6 +1329,9 @@ class StartQT4(QtGui.QMainWindow):
         # define a path to save the image
         path = os.path.join(self.temp_dir, "triple_2.png")
 
+        # Save graph path
+        self.tripleGraph2Path = path
+
          # Read sample resolution (limit)
         limit = self.get_sample_resolution()
 
@@ -1184,6 +1341,8 @@ class StartQT4(QtGui.QMainWindow):
         # save result for next part
         self.tripleResult = result
 
+        self.progress(8)
+
         # create the graph
         fileLike = result.plotToStringIO()
         outFile = open(path, "wb")
@@ -1191,6 +1350,9 @@ class StartQT4(QtGui.QMainWindow):
             outFile.write(line)
         outFile.close()
         
+
+        self.progress(9)
+
         # display the graph
         self.ui.imageTripleCorrelation.setPixmap(QtGui.QPixmap(path))
 
@@ -1207,6 +1369,8 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleGinfTextbox.setEnabled(True)
         self.ui.continueButton2.setEnabled(True)
 
+        self.progress(10)
+
     # Finish off triple correlation process (part 3)
     def triple_complete(self):
         # disable parameter inputs and continue button 2
@@ -1221,16 +1385,23 @@ class StartQT4(QtGui.QMainWindow):
         w = self.get_triple_W()
         gInf = self.get_triple_Ginf()
 
+        self.progress(11)
+
         # call the midend to get the result object
         result = midend.adaptor.run_triple_part3(self.tripleResult, range_val, g0, w, gInf)
         
+        self.progress(12)
+
         # create the fitting curve
         path = os.path.join(self.temp_dir, "triple_3.png")
+        self.tripleGraph3Path = path
         fileLike = result.plotToStringIO()
         outFile = open(path, "wb")
         for line in fileLike.readlines():
             outFile.write(line)
         outFile.close()
+
+        self.progress(13)
 
         # Show fitting curve
         self.ui.imageTripleFittingCurve.setPixmap(QtGui.QPixmap(path))
@@ -1241,8 +1412,15 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleWValue.setText(str(round(result.w,PRECISION)))
         self.ui.tripleGinfValue.setText(str(round(result.ginf,PRECISION)))
 
+        self.progress(14)
+
     # Performs all possible correlations
     def allCorrelations(self):
+
+        self.numSteps = 12
+
+        self.progress(0)
+
         # Make color lists to send to the midend
         autoColors = ['r', 'g', 'b']
         crossColors = ['rg', 'rb', 'gb']
@@ -1254,23 +1432,31 @@ class StartQT4(QtGui.QMainWindow):
         range_val = self.get_all_range()
         deltas = self.get_all_deltas_checkbox()
 
+        self.progress(1)
+
         # Run auto and cross correlations by calling the midend
         autoResult = None
         crossResult = None
         if self.get_num_images() == 1:
             pilImage = PIL.Image.open(self.rgbPath)
+            self.progress(2)
             inputs = (pilImage, autoColors, g0, w, ginf, range_val, deltas)
             autoResult = midend.adaptor.run_dual_mixed_image(*inputs)
+            self.progress(3)
             inputs = (pilImage, crossColors, g0, w, ginf, range_val, deltas)
             crossResult = midend.adaptor.run_dual_mixed_image(*inputs)
+            self.progress(4)
         elif self.get_num_images() == 3:
             pilR = PIL.Image.open(self.redPath)
             pilG = PIL.Image.open(self.greenPath)
             pilB = PIL.Image.open(self.bluePath)
+            self.progress(2)
             inputs = (pilR, pilG, pilB, autoColors, g0, w, ginf, range_val, deltas)
             autoResult = midend.adaptor.run_dual_separate_image(*inputs)
+            self.progress(3)
             inputs = (pilR, pilG, pilB, crossColors, g0, w, ginf, range_val, deltas)
             crossResult = midend.adaptor.run_dual_separate_image(*inputs)
+            self.progress(4)
         else:
             print("Error: number of images is not 1 or 3.")
 
@@ -1281,11 +1467,15 @@ class StartQT4(QtGui.QMainWindow):
         self.set_auto_Ginf(round(autoResult[0].ginf,PRECISION))
         self.set_auto_deltas(autoResult[0].usedDeltas)
 
+        self.progress(5)
+
         self.set_cross_resnorm(round(crossResult[0].resNorm, PRECISION))
         self.set_cross_G0(round(crossResult[0].g0, PRECISION))
         self.set_cross_W(round(crossResult[0].w, PRECISION))
         self.set_cross_Ginf(round(crossResult[0].ginf, PRECISION))
         self.set_cross_deltas(crossResult[0].usedDeltas)
+
+        self.progress(6)
 
         # Create and display the graphs
         rPath = os.path.join(self.temp_dir, "r_graph.png")
@@ -1294,6 +1484,15 @@ class StartQT4(QtGui.QMainWindow):
         rgPath = os.path.join(self.temp_dir, "rg_graph.png")
         rbPath = os.path.join(self.temp_dir, "rb_graph.png")
         gbPath = os.path.join(self.temp_dir, "gb_path.png")
+
+        self.autoRedGraphPath = rPath
+        self.autoGreenGraphPath = gPath
+        self.autoBlueGraphPath = bPath
+        self.crossRGGraphPath = rgPath
+        self.crossRBGraphPath = rbPath
+        self.crossGBGraphPath = gbPath
+
+        self.progress(7)
 
         for i, x in enumerate(autoResult):
             fileLike = x.plotToStringIO()
@@ -1311,6 +1510,8 @@ class StartQT4(QtGui.QMainWindow):
                 outFile.write(line)
             outFile.close()
         
+        self.progress(9)
+
         for i, x in enumerate(crossResult):
             fileLike = x.plotToStringIO()
             outFile = None
@@ -1327,6 +1528,8 @@ class StartQT4(QtGui.QMainWindow):
                 outFile.write(line)
             outFile.close()
 
+        self.progress(11)
+
         self.ui.imageAutoRed.setPixmap(QtGui.QPixmap(rPath))
         self.ui.imageAutoGreen.setPixmap(QtGui.QPixmap(gPath))
         self.ui.imageAutoBlue.setPixmap(QtGui.QPixmap(bPath))
@@ -1336,6 +1539,8 @@ class StartQT4(QtGui.QMainWindow):
 
         # Select triple correlation tab to allow further parameter input
         self.select_tab("output", "triple")
+
+        self.progress(12)
 
         # Show the Fourier transform (red) surface plot
         self.show_fourier()
@@ -1481,6 +1686,37 @@ class StartQT4(QtGui.QMainWindow):
             self.ui.correlationTabWidget.setCurrentIndex(3)
 
     #####################################################
+    # Graph Zoom Functions                              #
+    #####################################################
+    
+    # Zoom functions for individual graphs
+    def zoomRed(self):
+        self.zoomGraph(self.autoRedGraphPath)
+    def zoomGreen(self):
+        self.zoomGraph(self.autoGreenGraphPath)
+    def zoomBlue(self):
+        self.zoomGraph(self.autoBlueGraphPath)
+    def zoomRedGreen(self):
+        self.zoomGraph(self.crossRGGraphPath)
+    def zoomRedBlue(self):
+        self.zoomGraph(self.crossRBGraphPath)
+    def zoomGreenBlue(self):
+        self.zoomGraph(self.crossGBGraphPath)
+    def zoomTriple1(self):
+        self.zoomGraph(self.tripleGraph1Path)
+    def zoomTriple2(self):
+        self.zoomGraph(self.tripleGraph2Path)
+    def zoomTriple3(self):
+        self.zoomGraph(self.tripleGraph3Path)
+
+    # Shows a zoomed-in version of an image at a given path
+    def zoomGraph(self, path):
+        zoomGraph = GraphZoom(self)
+        zoomGraph.show()
+        zoomGraph.load_image(path)
+        
+
+    #####################################################
     # Miscellaneous Functions                           #
     #####################################################
 
@@ -1496,12 +1732,18 @@ class StartQT4(QtGui.QMainWindow):
 
         # If all 3 monochrome images have been loaded, combine them
         if self.redPath != "" and self.greenPath != "" and self.bluePath != "":
+            self.numSteps = 5
+            self.progress(0)
             rgb = numpy.dstack((self.redChannel,self.greenChannel,self.blueChannel))
+            self.progress(1)
             rgb_image = PIL.Image.fromarray(numpy.uint8(rgb))
+            self.progress(2)
             path = os.path.join(self.temp_dir, "rgb_image.png")
+            self.progress(3)
             scipy.misc.imsave(path, rgb_image)
-
+            self.progress(4)
             self.ui.imageRgb.setPixmap(QtGui.QPixmap(path))
+            self.progress(5)
 
     # Removes any images generated by splitting an RGB image.
     def remove_split_images(self):
@@ -1552,26 +1794,20 @@ class StartQT4(QtGui.QMainWindow):
         return sum / num
 
     # Updates the progress bar
-    def progress(self, percent):
-        self.ui.progressBar.setValue(percent)
+    def progress(self, value):
+        self.ui.progressBar.setValue(value * 100 / self.numSteps)
 
     # Sets the program mode as 'processing' or 'not processing', which includes
     #  enabling/disabling of start and stop buttons and other interface features
     def set_processing(self, value):
-        if value:
-            self.ui.startButton.setEnabled(False)
-            self.ui.stopButton.setEnabled(True)
-            self.ui.batchModeButton.setEnabled(False)
-            self.ui.correlationSettingsGroup.setEnabled(False)
-            self.ui.imageSettingsGroup.setEnabled(False)
-            self.ui.progressBar.setEnabled(True)
-        else:
-            self.ui.startButton.setEnabled(True)
-            self.ui.stopButton.setEnabled(False)
-            self.ui.batchModeButton.setEnabled(True)
-            self.ui.correlationSettingsGroup.setEnabled(True)
-            self.ui.imageSettingsGroup.setEnabled(True)
-            self.ui.progressBar.setEnabled(False)
+        # not working currently
+        pass
+        #self.ui.startButton.setVisible(not value)
+        #self.ui.stopButton.setVisible(value)
+        #self.ui.batchModeButton.setVisible(not value)
+        #self.ui.correlationSettingsGroup.setVisible(not value)
+        #self.ui.imageSettingsGroup.setVisible(not value)
+        #self.ui.progressBar.setVisible(value)
 
     # Remove paths for any nonexistent images
     def remove_paths(self):
@@ -1642,6 +1878,60 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.tripleGinfTextbox.setPlaceholderText("0")
         self.ui.tripleWTextbox.setPlaceholderText("10")
         self.ui.tripleG0Textbox.setPlaceholderText("1")
+
+    # Loads the default/placeholder images into the interface
+    def load_default_images(self):
+        self.ui.imageRgb.setPixmap(QtGui.QPixmap(RGB_PLACEHOLDER))
+        self.ui.imageRed.setPixmap(QtGui.QPixmap(RED_PLACEHOLDER))
+        self.ui.imageGreen.setPixmap(QtGui.QPixmap(GREEN_PLACEHOLDER))
+        self.ui.imageBlue.setPixmap(QtGui.QPixmap(BLUE_PLACEHOLDER))
+        self.ui.redGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.greenGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.blueGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.redGreenGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.redBlueGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.greenBlueGraphZoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.tripleGraph1Zoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.tripleGraph2Zoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+        self.ui.tripleGraph3Zoom.setIcon(QtGui.QIcon(ZOOM_ICON))
+
+    # Saves all graphs to a specified folder
+    def saveAllGraphs(self):
+        # get folder from user
+        saveDir = str(QtGui.QFileDialog.getExistingDirectory(self, "Export Graphs"))
+        
+        # enable processing mode
+        self.set_processing(True)
+
+        # export all graphs to that folder
+        self.numSteps = 9
+        self.progress(0)
+        self.exportFile(self.autoRedGraphPath, saveDir)
+        self.progress(1)
+        self.exportFile(self.autoGreenGraphPath, saveDir)
+        self.progress(2)
+        self.exportFile(self.autoBlueGraphPath, saveDir)
+        self.progress(3)
+        self.exportFile(self.crossRGGraphPath, saveDir)
+        self.progress(4)
+        self.exportFile(self.crossRBGraphPath, saveDir)
+        self.progress(5)
+        self.exportFile(self.crossGBGraphPath, saveDir)
+        self.progress(6)
+        self.exportFile(self.tripleGraph1Path, saveDir)
+        self.progress(7)
+        self.exportFile(self.tripleGraph2Path, saveDir)
+        self.progress(8)
+        self.exportFile(self.tripleGraph3Path, saveDir)
+        self.progress(9)
+
+        self.set_processing(False)
+
+    # Saves a specific file into a directory if the file exists
+    def exportFile(self, filepath, destination):
+        if os.path.isfile(filepath):
+            dest_path = os.path.join(destination, os.path.basename(filepath))
+            shutil.copyfile(filepath, dest_path)
 
 def start():
     app = QtGui.QApplication(sys.argv)

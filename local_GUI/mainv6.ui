@@ -39,7 +39,7 @@
   </widget>
   <widget class="QPushButton" name="stopButton">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -82,7 +82,7 @@
      <x>0</x>
      <y>10</y>
      <width>1021</width>
-     <height>601</height>
+     <height>600</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -209,7 +209,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>Images/rgb.png</pixmap>
+       <pixmap>../Images/rgb.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -237,7 +237,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>Images/r.png</pixmap>
+       <pixmap>../Images/r.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -265,7 +265,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>Images/g.png</pixmap>
+       <pixmap>../Images/g.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -293,7 +293,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>Images/b.png</pixmap>
+       <pixmap>../Images/b.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -911,6 +911,9 @@
            <height>31</height>
           </rect>
          </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
+         </property>
         </widget>
         <widget class="QLineEdit" name="autoG0Textbox">
          <property name="geometry">
@@ -920,6 +923,9 @@
            <width>91</width>
            <height>31</height>
           </rect>
+         </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
          </property>
         </widget>
         <widget class="QLineEdit" name="autoWTextbox">
@@ -931,6 +937,9 @@
            <height>31</height>
           </rect>
          </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
+         </property>
         </widget>
         <widget class="QLineEdit" name="autoGinfTextbox">
          <property name="geometry">
@@ -940,6 +949,9 @@
            <width>91</width>
            <height>31</height>
           </rect>
+         </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
          </property>
         </widget>
         <widget class="QCheckBox" name="autoDeltasCheckbox">
@@ -1052,6 +1064,9 @@
            <height>31</height>
           </rect>
          </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
+         </property>
         </widget>
         <widget class="QLineEdit" name="crossG0Textbox">
          <property name="geometry">
@@ -1061,6 +1076,9 @@
            <width>91</width>
            <height>31</height>
           </rect>
+         </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
          </property>
         </widget>
         <widget class="QLineEdit" name="crossWTextbox">
@@ -1072,6 +1090,9 @@
            <height>31</height>
           </rect>
          </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
+         </property>
         </widget>
         <widget class="QLineEdit" name="crossGinfTextbox">
          <property name="geometry">
@@ -1081,6 +1102,9 @@
            <width>91</width>
            <height>31</height>
           </rect>
+         </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
          </property>
         </widget>
        </widget>
@@ -1278,6 +1302,9 @@
            <height>31</height>
           </rect>
          </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
+         </property>
         </widget>
         <widget class="QLineEdit" name="allAutoCrossG0Textbox">
          <property name="geometry">
@@ -1287,6 +1314,9 @@
            <width>91</width>
            <height>31</height>
           </rect>
+         </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
          </property>
         </widget>
         <widget class="QLineEdit" name="allAutoCrossWTextbox">
@@ -1298,6 +1328,9 @@
            <height>31</height>
           </rect>
          </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
+         </property>
         </widget>
         <widget class="QLineEdit" name="allAutoCrossGinfTextbox">
          <property name="geometry">
@@ -1307,6 +1340,9 @@
            <width>91</width>
            <height>31</height>
           </rect>
+         </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhFormattedNumbersOnly</set>
          </property>
         </widget>
         <widget class="QCheckBox" name="allDeltasCheckbox">
@@ -1372,9 +1408,9 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>20</y>
        <width>1001</width>
-       <height>551</height>
+       <height>541</height>
       </rect>
      </property>
      <property name="currentIndex">
@@ -1695,6 +1731,57 @@
         <bool>false</bool>
        </property>
       </widget>
+      <widget class="QPushButton" name="redGraphZoom">
+       <property name="geometry">
+        <rect>
+         <x>290</x>
+         <y>280</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>local_gui/images/zoom.png</normaloff>local_gui/images/zoom.png</iconset>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="greenGraphZoom">
+       <property name="geometry">
+        <rect>
+         <x>610</x>
+         <y>280</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>local_gui/images/zoom.png</normaloff>local_gui/images/zoom.png</iconset>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="blueGraphZoom">
+       <property name="geometry">
+        <rect>
+         <x>930</x>
+         <y>280</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>local_gui/images/zoom.png</normaloff>local_gui/images/zoom.png</iconset>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="crossOutputTab">
       <attribute name="title">
@@ -2011,6 +2098,57 @@
         <bool>false</bool>
        </property>
       </widget>
+      <widget class="QPushButton" name="redGreenGraphZoom">
+       <property name="geometry">
+        <rect>
+         <x>290</x>
+         <y>280</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>local_gui/images/zoom.png</normaloff>local_gui/images/zoom.png</iconset>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="redBlueGraphZoom">
+       <property name="geometry">
+        <rect>
+         <x>610</x>
+         <y>280</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>local_gui/images/zoom.png</normaloff>local_gui/images/zoom.png</iconset>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="greenBlueGraphZoom">
+       <property name="geometry">
+        <rect>
+         <x>930</x>
+         <y>280</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>images/zoom.png</normaloff>images/zoom.png</iconset>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tripleOutputTab">
       <attribute name="title">
@@ -2094,7 +2232,7 @@
        <property name="geometry">
         <rect>
          <x>730</x>
-         <y>410</y>
+         <y>400</y>
          <width>161</width>
          <height>21</height>
         </rect>
@@ -2115,7 +2253,7 @@
        <property name="geometry">
         <rect>
          <x>640</x>
-         <y>440</y>
+         <y>430</y>
          <width>91</width>
          <height>31</height>
         </rect>
@@ -2131,7 +2269,7 @@
        <property name="geometry">
         <rect>
          <x>740</x>
-         <y>440</y>
+         <y>430</y>
          <width>101</width>
          <height>31</height>
         </rect>
@@ -2158,7 +2296,7 @@
        <property name="geometry">
         <rect>
          <x>650</x>
-         <y>50</y>
+         <y>40</y>
          <width>61</width>
          <height>31</height>
         </rect>
@@ -2206,7 +2344,7 @@
        <property name="geometry">
         <rect>
          <x>770</x>
-         <y>50</y>
+         <y>40</y>
          <width>91</width>
          <height>31</height>
         </rect>
@@ -2266,7 +2404,7 @@
        <property name="geometry">
         <rect>
          <x>670</x>
-         <y>139</y>
+         <y>130</y>
          <width>281</width>
          <height>271</height>
         </rect>
@@ -2365,7 +2503,7 @@
        <property name="geometry">
         <rect>
          <x>870</x>
-         <y>90</y>
+         <y>80</y>
          <width>81</width>
          <height>41</height>
         </rect>
@@ -2391,7 +2529,7 @@
        <property name="geometry">
         <rect>
          <x>740</x>
-         <y>480</y>
+         <y>470</y>
          <width>101</width>
          <height>31</height>
         </rect>
@@ -2418,7 +2556,7 @@
        <property name="geometry">
         <rect>
          <x>640</x>
-         <y>480</y>
+         <y>470</y>
          <width>91</width>
          <height>31</height>
         </rect>
@@ -2434,7 +2572,7 @@
        <property name="geometry">
         <rect>
          <x>860</x>
-         <y>440</y>
+         <y>430</y>
          <width>21</width>
          <height>31</height>
         </rect>
@@ -2450,7 +2588,7 @@
        <property name="geometry">
         <rect>
          <x>890</x>
-         <y>440</y>
+         <y>430</y>
          <width>101</width>
          <height>31</height>
         </rect>
@@ -2477,7 +2615,7 @@
        <property name="geometry">
         <rect>
          <x>890</x>
-         <y>480</y>
+         <y>470</y>
          <width>101</width>
          <height>31</height>
         </rect>
@@ -2504,7 +2642,7 @@
        <property name="geometry">
         <rect>
          <x>850</x>
-         <y>480</y>
+         <y>470</y>
          <width>31</width>
          <height>31</height>
         </rect>
@@ -2525,15 +2663,21 @@
          <height>31</height>
         </rect>
        </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhFormattedNumbersOnly</set>
+       </property>
       </widget>
       <widget class="QLineEdit" name="tripleG0Textbox">
        <property name="geometry">
         <rect>
          <x>720</x>
-         <y>50</y>
+         <y>40</y>
          <width>91</width>
          <height>31</height>
         </rect>
+       </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhFormattedNumbersOnly</set>
        </property>
       </widget>
       <widget class="QLineEdit" name="tripleWTextbox">
@@ -2545,24 +2689,94 @@
          <height>31</height>
         </rect>
        </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhFormattedNumbersOnly</set>
+       </property>
       </widget>
       <widget class="QLineEdit" name="tripleGinfTextbox">
        <property name="geometry">
         <rect>
          <x>870</x>
-         <y>50</y>
+         <y>40</y>
          <width>91</width>
          <height>31</height>
         </rect>
        </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhFormattedNumbersOnly</set>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="tripleGraph1Zoom">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>380</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>images/zoom.png</normaloff>images/zoom.png</iconset>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="tripleGraph2Zoom">
+       <property name="geometry">
+        <rect>
+         <x>590</x>
+         <y>380</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>images/zoom.png</normaloff>images/zoom.png</iconset>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="tripleGraph3Zoom">
+       <property name="geometry">
+        <rect>
+         <x>920</x>
+         <y>370</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>images/zoom.png</normaloff>images/zoom.png</iconset>
+       </property>
       </widget>
      </widget>
+    </widget>
+    <widget class="QPushButton" name="saveAllButton">
+     <property name="geometry">
+      <rect>
+       <x>657</x>
+       <y>6</y>
+       <width>351</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Save All Results</string>
+     </property>
     </widget>
    </widget>
   </widget>
   <widget class="QProgressBar" name="progressBar">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
