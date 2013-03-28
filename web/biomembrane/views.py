@@ -31,6 +31,11 @@ import icsform
 import models
 import image_utils
 import model_utils
+try:
+    from StringIO import cStringIO as StringIO
+except ImportError:
+    from StringIO import StringIO
+import zipfile
 
 
 @login_required(login_url='/accounts/login/')
@@ -308,7 +313,6 @@ def batch(request):
         if form.is_valid():
            # Proccess the data in form.cleaned_data
            # get the filenameFormat of each image file in the batch from user
-           zipfile =  form.cleaned_data['zip_file']
            filenameFormat = form.cleaned_data['filenameFormat']
            imageSize = form.cleaned_data['imageSize']; #get the size of images from the user
            resolutions = form.selectedResolution() #the size to sample for triple correlation
@@ -328,8 +332,22 @@ def batch(request):
            wTripleValue = form.cleaned_data['wTriple']
            ginfTripleValue = form.cleaned_data['ginfTriple']
 
+           # Take upload as zip file
+           zipdata = form.cleaned_data['zip_file']
            # Run Batch with settings
 
+           # Reading each file in the zip file
+           myzip = zipfile.ZipFile(StringIO(zipdata).read())
+           for filename in zip.namelist():
+               # Do something here with each file in the .ZIP archive.
+               #
+               # For example, if you expect the archive to contain image
+               # files, you could process each one with PIL, then create
+               # and create jobs for each.
+            data = myzip.read(filename)
+            pass
+           zip.close()
+            
            # Redirect to batch result
            
            return HttpResponseRedirect('/results/') # redirect after post

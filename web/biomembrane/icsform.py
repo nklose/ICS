@@ -6,7 +6,6 @@ try:
 except ImportError:
     from StringIO import StringIO
 import zipfile
-from django.core.files.base import ContentFile
 
 class SampleImageForm(forms.Form):
 
