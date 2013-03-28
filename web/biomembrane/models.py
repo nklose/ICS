@@ -70,12 +70,12 @@ class Job(models.Model):
 class Correlation(models.Model):
     R, G, B, RG, RB, GB, RGB = 'r', 'g', 'b', 'rg', 'rb', 'gb', 'rgb'
     COLORS = (
-        (R, u'Red'),        
-        (G, u'Green'),        
-        (B, u'Blue'),        
-        (RG, u'Red/Green'),        
-        (RB, u'Red/Blue'),        
-        (GB, u'Green/Blue'),        
+        (R, u'Red'),
+        (G, u'Green'),
+        (B, u'Blue'),
+        (RG, u'Red/Green'),
+        (RB, u'Red/Blue'),
+        (GB, u'Green/Blue'),
         (RGB, u'Red/Green/Blue')
     )
 
