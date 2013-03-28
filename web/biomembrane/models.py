@@ -21,13 +21,20 @@ signing of this agreement.
 """
 from django.db import models
 from django.contrib.auth.models import User
-import os
 
 
-def generate_file_path(instance, filename):
+def generate_image_path(instance, filename):
     id = instance.batch.id
     number = instance.number
     path = '/'.join([unicode(id), unicode(number), filename])
+    return path
+
+
+def generate_result_path(instance, filename):
+    id = instance.job.batch.id
+    number = instance.job.number
+    color = instance.correlation.color
+    path = '/'.join([unicode(id), unicode(number), 'results', color, filename])
     return path
 
 
@@ -50,50 +57,48 @@ class Job(models.Model):
 
     number = models.IntegerField()
     state = models.CharField(max_length=1, choices=JOB_STATES)
-    red = models.TextField()
-    green = models.TextField()
-    blue = models.TextField()
-    red_image = models.ImageField(upload_to=generate_file_path)
-    green_image = models.ImageField(upload_to=generate_file_path)
-    blue_image = models.ImageField(upload_to=generate_file_path)
-    rgb_image = models.ImageField(upload_to=generate_file_path)
+    red_image = models.ImageField(upload_to=generate_image_path)
+    green_image = models.ImageField(upload_to=generate_image_path)
+    blue_image = models.ImageField(upload_to=generate_image_path)
+    rgb_image = models.ImageField(upload_to=generate_image_path)
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
         return unicode(self.number)
 
 
-class Parameters(models.Model):
-    AUTO, CROSS, TRIPLE = u'a', u'c', u't'
-    CORRELATION_TYPES = (
-        (AUTO, u'Auto'),
-        (CROSS, u'Cross'),
-        (TRIPLE, u'Triple')
+class Correlation(models.Model):
+    R, G, B, RG, RB, GB, RGB = 'r', 'g', 'b', 'rg', 'rb', 'gb', 'rgb'
+    COLORS = (
+        (R, u'Red'),
+        (G, u'Green'),
+        (B, u'Blue'),
+        (RG, u'Red/Green'),
+        (RB, u'Red/Blue'),
+        (GB, u'Green/Blue'),
+        (RGB, u'Red/Green/Blue')
     )
 
-    correlationType = models.CharField(max_length=1, choices=CORRELATION_TYPES)
-    red = models.BooleanField()
-    green = models.BooleanField()
-    blue = models.BooleanField()
+    color = models.CharField(max_length=3, choices=COLORS)
+    batch = models.ForeignKey(Batch)
+
+
+class DualParameters(models.Model):
     range_val = models.FloatField(null=True, blank=True)
     g0 = models.FloatField(null=True, blank=True)
     w = models.FloatField(null=True, blank=True)
     ginf = models.FloatField(null=True, blank=True)
-    limit = models.FloatField(null=True, blank=True)
     use_deltas = models.BooleanField(blank=True)
-    resolution = models.IntegerField(null=True, blank=True)
     batch = models.ForeignKey(Batch)
 
-    def __unicode__(self):
-        return self.correlationType
+
+class TripleParamaters(DualParameters):
+    limit = models.IntegerField()
 
 
-class Results(models.Model):
-    par = models.TextField()
-    out = models.TextField()
-    fit = models.TextField()
-    fit_before_reshape = models.TextField(blank=True)
-    res_norm = models.TextField()
-    used_deltas = models.TextField(blank=True)
-    params = models.ForeignKey(Parameters)
+class Result(models.Model):
+    data_file = models.FileField(upload_to=generate_result_path)
+    fit_file = models.FileField(upload_to=generate_result_path)
+    graph_image = models.ImageField(upload_to=generate_result_path)
+    correlation = models.ForeignKey(Correlation)
     job = models.ForeignKey(Job)
