@@ -5,6 +5,9 @@ Requirements
 * django-celery
 * django-registration
 * sqlite3
+* matplotlib
+* pil
+* numpy
 * rabbitmq-server 
 
 Installation
