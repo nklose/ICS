@@ -20,23 +20,21 @@ the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponseServerError, HttpResponseForbidden, Http404, HttpResponse
+from django.http import HttpResponseRedirect 
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from pickle import dumps
 from icsform import RgbSettingsForm, BatchSettingsForm;
-from models import Batch, Job, Parameters
+from models import Batch, Job, DualParameters, TripleParamaters, Correlation
 import scipy.misc
 import icsform
 import models
 import image_utils
-import model_utils
 try:
     from StringIO import cStringIO as StringIO
 except ImportError:
     from StringIO import StringIO
 import zipfile
-
 
 @login_required(login_url='/accounts/login/')
 def program(request):
@@ -63,17 +61,19 @@ def program(request):
                 greenChecked = form.cleaned_data['green']
                 considerDeltas = form.cleaned_data['deltaAuto']
 
-                rangeValue = form.cleaned_data['rangeAuto']
-                gzeroValue = form.cleaned_data['gzeroAuto']
-                wValue = form.cleaned_data['wAuto']
-                ginfValue = form.cleaned_data['ginfAuto']
+                rangeVal = form.cleaned_data['rangeAuto']
+                gzero = form.cleaned_data['gzeroAuto']
+                w = form.cleaned_data['wAuto']
+                ginf = form.cleaned_data['ginfAuto']
+
+                DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, use_deltas=considerDeltas).save()
 
                 if redChecked:
-                    model_utils.create_params_auto(batch, model_utils.Colors.RED, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
-                if blueChecked:
-                    model_utils.create_params_auto(batch, model_utils.Colors.GREEN, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                    Correlation(batch=batch, color=Correlation.R).save()
                 if greenChecked:
-                    model_utils.create_params_auto(batch, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                    Correlation(batch=batch, color=Correlation.G).save()
+                if blueChecked:
+                    Correlation(batch=batch, color=Correlation.B).save()
 
                 #Do Auto with parameters above
                 return HttpResponseRedirect('/results/') #redirect results view
@@ -85,17 +85,19 @@ def program(request):
                 greenblueChecked = form.cleaned_data['greenblue']
                 considerDeltas = form.cleaned_data['deltaCross'] #check this boolean
 
-                rangeValue = form.cleaned_data['rangeCross']
-                gzeroValue = form.cleaned_data['gzeroCross']
-                wValue = form.cleaned_data['wCross']
-                ginfValue = form.cleaned_data['ginfCross']
+                rangeVal = form.cleaned_data['rangeCross']
+                gzero = form.cleaned_data['gzeroCross']
+                w = form.cleaned_data['wCross']
+                ginf = form.cleaned_data['ginfCross']
+
+                DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, use_deltas=considerDeltas).save()
 
                 if redgreenChecked:
-                    model_utils.create_params_cross(batch, model_utils.Colors.RED, model_utils.Colors.GREEN, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                    Correlation(batch=batch, color=Correlation.RG).save()
                 if redblueChecked:
-                    model_utils.create_params_cross(batch, model_utils.Colors.RED, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                    Correlation(batch=batch, color=Correlation.RB).save()
                 if greenblueChecked:
-                    model_utils.create_params_cross(batch, model_utils.Colors.GREEN, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                    Correlation(batch=batch, color=Correlation.GB).save()
 
                 #Do Cross Correlation with above parameters
                 return HttpResponseRedirect('/results/') #redirect results view
@@ -103,24 +105,27 @@ def program(request):
             elif form.isTriple():
                 #Triple correlations only
                 #Redirect to tripleSetRes (Triple Sample Resolution)
+                Correlation(batch=batch, color=Correlation.RGB).save()
                 return HttpResponseRedirect('/triple/setRes/')
 
             elif form.isAll():
                 #All correlations form
-                allChannelsChecked = form.cleaned_data['allChannels']
                 considerDeltas = form.cleaned_data['deltaAll']
 
-                rangeValue = form.cleaned_data['rangeAutoCrossAll']
-                gzeroValue = form.cleaned_data['gzeroAutoCrossAll']
-                wValue = form.cleaned_data['wAutoCrossAll']
-                ginfValue = form.cleaned_data['gzeroAutoCrossAll']
+                rangeVal = form.cleaned_data['rangeAutoCrossAll']
+                gzero = form.cleaned_data['gzeroAutoCrossAll']
+                w = form.cleaned_data['wAutoCrossAll']
+                ginf = form.cleaned_data['gzeroAutoCrossAll']
 
-                model_utils.create_params_auto(batch, model_utils.Colors.RED, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
-                model_utils.create_params_auto(batch, model_utils.Colors.GREEN, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
-                model_utils.create_params_auto(batch, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
-                model_utils.create_params_cross(batch, model_utils.Colors.RED, model_utils.Colors.GREEN, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
-                model_utils.create_params_cross(batch, model_utils.Colors.RED, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
-                model_utils.create_params_cross(batch, model_utils.Colors.GREEN, model_utils.Colors.BLUE, rangeValue, gzeroValue, wValue, ginfValue, considerDeltas)
+                DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, use_deltas=considerDeltas).save()
+
+                Correlation(batch=batch, color=Correlation.R).save()
+                Correlation(batch=batch, color=Correlation.G).save()
+                Correlation(batch=batch, color=Correlation.B).save()
+                Correlation(batch=batch, color=Correlation.RG).save()
+                Correlation(batch=batch, color=Correlation.RB).save()
+                Correlation(batch=batch, color=Correlation.GB).save()
+                Correlation(batch=batch, color=Correlation.RGB).save()
 
                 #Redirect to tripleSetRes (Ask User for Triple's Sample Resolution)
                 return HttpResponseRedirect('/triple/setRes/') # see tripleSetRes view function
@@ -164,8 +169,7 @@ def tripleSetRes(request):
         if form.is_valid():
             resolution = form.selectedResolution() #get the sample resolution as 16,32,64
             batch = Batch.objects.get(id=request.session['batch_id'])
-            params = Parameters(batch=batch, correlationType=Parameters.TRIPLE, resolution=resolution)
-            params.save()
+            TripleParamaters(batch=batch, limit=resolution).save()
             #Redirect to tripleSetParams (Triple Parameters)
             return HttpResponseRedirect('/triple/setParams/') 
     else:
@@ -191,17 +195,16 @@ def tripleSetParams(request):
         form = RgbSettingsForm(request.POST, request.FILES)
         if form.is_valid():
             # Update Triple Correlation Parameters Here
-            rangeValue = form.cleaned_data['rangeTriple']
-            gzeroValue = form.cleaned_data['gzeroTriple']
-            wValue = form.cleaned_data['wTriple']
-            ginfValue = form.cleaned_data['ginfTriple']
+            rangeVal = form.cleaned_data['rangeTriple']
+            gzero= form.cleaned_data['gzeroTriple']
+            w= form.cleaned_data['wTriple']
+            ginf= form.cleaned_data['ginfTriple']
             batch = Batch.objects.get(id=request.session['batch_id'])
-            params = Parameters.objects.get(batch=batch, correlationType=Parameters.TRIPLE)
-            params.range_val = rangeValue
-            params.g0 = gzeroValue
-            params.w = wValue
-            params.ginf = ginfValue
-            params.save()
+            params = TripleParamaters.objects.get(batch=batch)
+            params.range_val = rangeVal
+            params.g0 = gzero
+            params.w = w
+            params.ginf = ginf
             return HttpResponseRedirect('/results/') # redirect after post
     else:
         form = RgbSettingsForm()
@@ -239,12 +242,7 @@ def rgb_upload(request):
                 r, g, b = image_utils.get_channels(rgb) # generate the three channels
                 redImage, greenImage, blueImage = image_utils.create_images(r, g, b) #create the images
                 
-                singleJob = models.Job(number=1,
-                                       batch=batch,
-                                       state=models.Job.UPLOADING,
-                                       red=dumps(r),
-                                       green=dumps(g),
-                                       blue=dumps(b))
+                singleJob = models.Job(number=1, batch=batch, state=models.Job.UPLOADING)
                 singleJob.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
                 singleJob.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
                 singleJob.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))
@@ -262,12 +260,7 @@ def rgb_upload(request):
                 b = scipy.misc.fromimage(blueImage)
                 rgbImage = image_utils.create_image(r, g, b)
 
-                singleJob = models.Job(number=1,
-                                       batch=batch,
-                                       state=models.Job.UPLOADING, 
-                                       red=dumps(r),
-                                       green=dumps(g),
-                                       blue=dumps(b))
+                singleJob = models.Job(number=1, batch=batch, state=models.Job.UPLOADING) 
                 singleJob.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
                 singleJob.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
                 singleJob.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))
