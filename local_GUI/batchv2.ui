@@ -472,7 +472,7 @@
      <x>340</x>
      <y>270</y>
      <width>671</width>
-     <height>221</height>
+     <height>251</height>
     </rect>
    </property>
    <property name="font">
@@ -483,950 +483,419 @@
    <property name="title">
     <string>Correlation Settings</string>
    </property>
-   <widget class="QTabWidget" name="correlationTabWidget">
+   <widget class="QGroupBox" name="allTripleParametersGroup">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>30</y>
+      <width>311</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Triple Parameters</string>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <widget class="QLabel" name="tripleRangeLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Range:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="tripleG0Label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>g(0):</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="tripleWLabel">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>30</y>
+       <width>21</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>w:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="tripleGinfLabel">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>70</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>gInf:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="tripleRange">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>30</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhFormattedNumbersOnly</set>
+     </property>
+     <property name="cursorPosition">
+      <number>0</number>
+     </property>
+     <property name="cursorMoveStyle">
+      <enum>Qt::VisualMoveStyle</enum>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="tripleG0">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>70</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhFormattedNumbersOnly</set>
+     </property>
+     <property name="cursorMoveStyle">
+      <enum>Qt::VisualMoveStyle</enum>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="tripleW">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>30</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhFormattedNumbersOnly</set>
+     </property>
+     <property name="cursorPosition">
+      <number>0</number>
+     </property>
+     <property name="cursorMoveStyle">
+      <enum>Qt::VisualMoveStyle</enum>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="tripleGinf">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>70</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhFormattedNumbersOnly</set>
+     </property>
+     <property name="cursorPosition">
+      <number>0</number>
+     </property>
+     <property name="cursorMoveStyle">
+      <enum>Qt::VisualMoveStyle</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="tripleG0Label_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>100</y>
+       <width>151</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Sample Resolution:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="resolution16">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>130</y>
+       <width>116</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>16 x 16</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="resolution32">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>150</y>
+       <width>116</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>32 x 32</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="resolution64">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>170</y>
+       <width>116</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>64 x 64</string>
+     </property>
+    </widget>
+    <zorder>tripleRangeLabel</zorder>
+    <zorder>tripleG0Label</zorder>
+    <zorder>tripleWLabel</zorder>
+    <zorder>tripleGinfLabel</zorder>
+    <zorder>tripleRange</zorder>
+    <zorder>tripleG0</zorder>
+    <zorder>tripleW</zorder>
+    <zorder>tripleGinf</zorder>
+    <zorder>dualGinf</zorder>
+    <zorder>dualW</zorder>
+    <zorder>dualG0</zorder>
+    <zorder>dualRange</zorder>
+    <zorder>tripleG0Label_2</zorder>
+    <zorder>resolution16</zorder>
+    <zorder>resolution32</zorder>
+    <zorder>resolution64</zorder>
+   </widget>
+   <widget class="QGroupBox" name="allAutoCrossGroup">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>651</width>
-      <height>181</height>
+      <width>311</width>
+      <height>201</height>
      </rect>
     </property>
-    <property name="currentIndex">
-     <number>0</number>
+    <property name="title">
+     <string>Auto/Cross Parameters</string>
     </property>
-    <widget class="QWidget" name="autoCorrelationTab">
-     <attribute name="title">
-      <string>Auto-Correlation</string>
-     </attribute>
-     <widget class="QGroupBox" name="autoChannelsGroup">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>121</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Channels</string>
-      </property>
-      <widget class="QCheckBox" name="redCheckbox">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>70</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Red</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="greenCheckbox">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>60</y>
-         <width>70</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Green</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="blueCheckbox">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>90</y>
-         <width>70</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Blue</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QGroupBox" name="autoGroup">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>10</y>
-        <width>341</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Auto-Correlation Parameters</string>
-      </property>
-      <property name="flat">
-       <bool>false</bool>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-      <widget class="QLabel" name="autoRangeLabel">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>61</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Range:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="autoG0Label">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>70</y>
-         <width>61</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>g(0):</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="autoWLabel">
-       <property name="geometry">
-        <rect>
-         <x>200</x>
-         <y>30</y>
-         <width>21</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>w:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="autoGinfLabel">
-       <property name="geometry">
-        <rect>
-         <x>180</x>
-         <y>70</y>
-         <width>41</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>gInf:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="autoRangeTextbox">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>30</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="autoG0Textbox">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>70</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="autoWTextbox">
-       <property name="geometry">
-        <rect>
-         <x>230</x>
-         <y>30</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="autoGinfTextbox">
-       <property name="geometry">
-        <rect>
-         <x>230</x>
-         <y>70</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="autoDeltasCheckbox">
-       <property name="geometry">
-        <rect>
-         <x>150</x>
-         <y>110</y>
-         <width>171</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Consider Deltas</string>
-       </property>
-      </widget>
-     </widget>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <widget class="QLabel" name="dualRangeLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Range:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
     </widget>
-    <widget class="QWidget" name="crossCorrelationTab">
-     <attribute name="title">
-      <string>Cross-Correlation</string>
-     </attribute>
-     <widget class="QGroupBox" name="crossGroup">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>10</y>
-        <width>341</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Cross-Correlation Parameters</string>
-      </property>
-      <property name="flat">
-       <bool>false</bool>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-      <widget class="QLabel" name="crossRangeLabel">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>61</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Range:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="crossG0Label">
-       <property name="geometry">
-        <rect>
-         <x>-20</x>
-         <y>70</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>g(0):</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="crossWLabel">
-       <property name="geometry">
-        <rect>
-         <x>190</x>
-         <y>30</y>
-         <width>31</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>w:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="crossGinfLabel">
-       <property name="geometry">
-        <rect>
-         <x>180</x>
-         <y>70</y>
-         <width>41</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>gInf:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="crossRangeTextbox">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>30</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="crossG0Textbox">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>70</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="crossWTextbox">
-       <property name="geometry">
-        <rect>
-         <x>230</x>
-         <y>30</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="crossGinfTextbox">
-       <property name="geometry">
-        <rect>
-         <x>230</x>
-         <y>70</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QGroupBox" name="crossChannelsGroup">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>121</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Channels</string>
-      </property>
-      <widget class="QCheckBox" name="redGreenCheckbox">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>111</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Red-Green</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="redBlueCheckbox">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>60</y>
-         <width>91</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Red-Blue</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="greenBlueCheckbox">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>90</y>
-         <width>111</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Green-Blue</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QCheckBox" name="crossDeltasCheckbox">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>120</y>
-        <width>171</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Consider Deltas</string>
-      </property>
-     </widget>
+    <widget class="QLabel" name="dualG0Label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>g(0):</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
     </widget>
-    <widget class="QWidget" name="tripleCorrelationTab">
-     <attribute name="title">
-      <string>Triple-Correlation</string>
-     </attribute>
-     <widget class="QGroupBox" name="tripleParametersGroup">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>10</y>
-        <width>311</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Triple Parameters</string>
-      </property>
-      <property name="flat">
-       <bool>false</bool>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-      <widget class="QLabel" name="tripleRangeLabel">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Range:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="tripleG0Label">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>70</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>g(0):</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="tripleWLabel">
-       <property name="geometry">
-        <rect>
-         <x>180</x>
-         <y>30</y>
-         <width>21</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>w:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="tripleGinfLabel">
-       <property name="geometry">
-        <rect>
-         <x>150</x>
-         <y>70</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>gInf:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="tripleRangeTextbox">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>30</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="tripleG0Textbox">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>70</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="tripleWTextbox">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>30</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="tripleGinfTextbox">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>70</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QFrame" name="frame">
-      <property name="geometry">
-       <rect>
-        <x>470</x>
-        <y>10</y>
-        <width>161</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
-      </property>
-      <widget class="QLabel" name="sampleResolutionLabel">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>141</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Sample Resolution:</string>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="resolution16">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>50</y>
-         <width>82</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>16 x 16</string>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="resolution32">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>70</y>
-         <width>82</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>32 x 32</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="resolution64">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>90</y>
-         <width>82</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>64 x 64</string>
-       </property>
-      </widget>
-     </widget>
+    <widget class="QLabel" name="dualWLabel">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>30</y>
+       <width>21</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>w:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
     </widget>
-    <widget class="QWidget" name="allCorrelationsTab">
-     <attribute name="title">
-      <string>All</string>
-     </attribute>
-     <widget class="QGroupBox" name="allAutoCrossGroup">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>311</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Auto/Cross Parameters</string>
-      </property>
-      <property name="flat">
-       <bool>false</bool>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-      <widget class="QLabel" name="allAutoCrossRangeLabel">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Range:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="allAutoCrossG0Label">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>70</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>g(0):</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="allAutoCrossWLabel">
-       <property name="geometry">
-        <rect>
-         <x>180</x>
-         <y>30</y>
-         <width>21</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>w:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="allAutoCrossGinfLabel">
-       <property name="geometry">
-        <rect>
-         <x>150</x>
-         <y>70</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>gInf:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="allAutoCrossRangeTextbox">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>30</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="allAutoCrossG0Textbox">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>70</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="allAutoCrossWTextbox">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>30</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="allAutoCrossGinfTextbox">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>70</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="allDeltasCheckbox">
-       <property name="geometry">
-        <rect>
-         <x>150</x>
-         <y>110</y>
-         <width>171</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Consider Deltas</string>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QGroupBox" name="allTripleParametersGroup">
-      <property name="geometry">
-       <rect>
-        <x>320</x>
-        <y>10</y>
-        <width>311</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Triple Parameters</string>
-      </property>
-      <property name="flat">
-       <bool>false</bool>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-      <widget class="QLabel" name="allTripleRangeLabel">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Range:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="allTripleG0Label">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>70</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>g(0):</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="allTripleWLabel">
-       <property name="geometry">
-        <rect>
-         <x>180</x>
-         <y>30</y>
-         <width>21</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>w:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLabel" name="allTripleGinfLabel">
-       <property name="geometry">
-        <rect>
-         <x>150</x>
-         <y>70</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>gInf:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="allTripleRangeTextbox">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>30</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="allTripleG0Textbox">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>70</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="allTripleWTextbox">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>30</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="allTripleGinfTextbox">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>70</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhFormattedNumbersOnly</set>
-       </property>
-      </widget>
-     </widget>
+    <widget class="QLabel" name="dualGinfLabel">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>70</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>gInf:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="considerAutoDeltas">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>110</y>
+       <width>301</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Consider Autocorrelation Deltas</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="considerCrossDeltas">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>140</y>
+       <width>301</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Consider Cross-correlation Deltas</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="dualRange">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>30</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhFormattedNumbersOnly</set>
+     </property>
+     <property name="cursorPosition">
+      <number>0</number>
+     </property>
+     <property name="cursorMoveStyle">
+      <enum>Qt::VisualMoveStyle</enum>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="dualG0">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>70</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhFormattedNumbersOnly</set>
+     </property>
+     <property name="cursorPosition">
+      <number>0</number>
+     </property>
+     <property name="cursorMoveStyle">
+      <enum>Qt::VisualMoveStyle</enum>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="dualW">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>30</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhFormattedNumbersOnly</set>
+     </property>
+     <property name="cursorPosition">
+      <number>0</number>
+     </property>
+     <property name="cursorMoveStyle">
+      <enum>Qt::VisualMoveStyle</enum>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="dualGinf">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>70</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhFormattedNumbersOnly</set>
+     </property>
+     <property name="cursorPosition">
+      <number>0</number>
+     </property>
+     <property name="cursorMoveStyle">
+      <enum>Qt::VisualMoveStyle</enum>
+     </property>
     </widget>
    </widget>
   </widget>
@@ -1434,7 +903,7 @@
    <property name="geometry">
     <rect>
      <x>340</x>
-     <y>500</y>
+     <y>530</y>
      <width>671</width>
      <height>81</height>
     </rect>

@@ -59,6 +59,7 @@ class Batch(QtGui.QMainWindow):
         self.numSteps = 0     # number of steps in current process
         self.rgbCount = 0     # number of RGB images in current directory
         self.monoCount = 0    # number of monochrome images in current directory
+        self.size = 0         # length in pixels of one size of an image
 
         # Track parent window
         self.parent = parent
@@ -88,8 +89,18 @@ class Batch(QtGui.QMainWindow):
             self.message("Beginning batch correlation process.")
             
             # create config object
-            config = Config()
-            br = midend.batchRunner.BatchRunner(config)
+            mixedBR = None
+            splitBR = None
+
+            if len(self.rgbImages) != 0:
+                mixedConfig = self.get_config(True)
+                mixedBR = midend.batchRunner.BatchRunner(mixedConfig)
+                mixedBR.run()
+
+            if len(self.monoImages) != 0:
+                splitConfig = self.get_config(False)                
+                splitBR = midend.batchRunner.BatchRunner(splitConfig)
+                splitBR.run()
 
         self.set_processing(False)
 
@@ -100,6 +111,8 @@ class Batch(QtGui.QMainWindow):
     # Loads a folder into the interface
     def load(self):
         self.set_processing(True)
+        
+        self.size = 0
 
         self.message("Loading directory and detecting images.")
 
@@ -115,6 +128,9 @@ class Batch(QtGui.QMainWindow):
     
             # iterate through all files
             for image in files:
+                if self.size == 0:
+                    i = PIL.Image.open(os.path.join(self.path,str(image)))
+                    self.size = i.size[0]
                 image = str(image)
                 channels = self.get_channels(image)
                 if channels == "rgb":
@@ -169,30 +185,15 @@ class Batch(QtGui.QMainWindow):
         
     # Shows default parameters on all input fields
     def set_default_parameters(self):
-        self.ui.autoRangeTextbox.setPlaceholderText("20")
-        self.ui.autoGinfTextbox.setPlaceholderText("0")
-        self.ui.autoWTextbox.setPlaceholderText("10")
-        self.ui.autoG0Textbox.setPlaceholderText("1")
+        self.ui.dualRange.setPlaceholderText("20")
+        self.ui.dualGinf.setPlaceholderText("0")
+        self.ui.dualW.setPlaceholderText("10")
+        self.ui.dualG0.setPlaceholderText("1")
         
-        self.ui.crossRangeTextbox.setPlaceholderText("20")
-        self.ui.crossGinfTextbox.setPlaceholderText("0")
-        self.ui.crossWTextbox.setPlaceholderText("10")
-        self.ui.crossG0Textbox.setPlaceholderText("1")
-
-        self.ui.allAutoCrossRangeTextbox.setPlaceholderText("20")
-        self.ui.allAutoCrossGinfTextbox.setPlaceholderText("0")
-        self.ui.allAutoCrossWTextbox.setPlaceholderText("10")
-        self.ui.allAutoCrossG0Textbox.setPlaceholderText("1")
-
-        self.ui.allTripleRangeTextbox.setPlaceholderText("20")
-        self.ui.allTripleGinfTextbox.setPlaceholderText("0")
-        self.ui.allTripleWTextbox.setPlaceholderText("10")
-        self.ui.allTripleG0Textbox.setPlaceholderText("1")
-
-        self.ui.tripleRangeTextbox.setPlaceholderText("20")
-        self.ui.tripleGinfTextbox.setPlaceholderText("0")
-        self.ui.tripleWTextbox.setPlaceholderText("10")
-        self.ui.tripleG0Textbox.setPlaceholderText("1")
+        self.ui.tripleRange.setPlaceholderText("20")
+        self.ui.tripleGinf.setPlaceholderText("0")
+        self.ui.tripleW.setPlaceholderText("10")
+        self.ui.tripleG0.setPlaceholderText("1")
 
     # Shows default placeholder images
     def load_default_images(self):
@@ -264,91 +265,75 @@ class Batch(QtGui.QMainWindow):
 
     # Validates input parameters. Returns True only if parameters are valid.
     def validate_input(self):
-        mode = self.get_correlation_tab()
-        # auto, cross, and triple-correlation parameters
-        mode = self.get_correlation_tab()
-        range_val = None
-        g0 = None
-        w = None
-        ginf = None
-        none_checked = True
-        # all correlations - extra parameters
-        range_val2 = None
-        g02 = None
-        w2 = None
-        ginf = None
-        # get input depending on current mode
-        if mode == "auto":
-            if self.ui.redCheckbox.isChecked():
-                none_checked = False
-            elif self.ui.greenCheckbox.isChecked():
-                none_checked = False
-            elif self.ui.blueCheckbox.isChecked():
-                none_checked = False
-            range_val = str(self.ui.autoRangeTextbox.text())
-            g0 = str(self.ui.autoG0Textbox.text())
-            w = str(self.ui.autoWTextbox.text())
-            ginf = str(self.ui.autoGinfTextbox.text())
-        elif mode == "cross":
-            if self.ui.redGreenCheckbox.isChecked():
-                none_checked = False
-            elif self.ui.redBlueCheckbox.isChecked():
-                none_checked = False
-            elif self.ui.greenBlueCheckbox.isChecked():
-                none_checked = False
-            range_val = str(self.ui.crossRangeTextbox.text())
-            g0 = str(self.ui.crossG0Textbox.text())
-            w = str(self.ui.crossWTextbox.text())
-            ginf = str(self.ui.crossGinfTextbox.text())
-        elif mode == "triple":
-            none_checked = False
-            range_val = str(self.ui.tripleRangeTextbox.text())
-            g0 = str(self.ui.tripleG0Textbox.text())
-            w = str(self.ui.tripleWTextbox.text())
-            ginf = str(self.ui.tripleGinfTextbox.text())
-        elif mode == "all":
-            none_checked = False
-            range_val = str(self.ui.allAutoCrossRangeTextbox.text())
-            g0 = str(self.ui.allAutoCrossG0Textbox.text())
-            w = str(self.ui.allAutoCrossWTextbox.text())
-            ginf = str(self.ui.allAutoCrossGinfTextbox.text())
-            range_val2 = str(self.ui.allTripleRangeTextbox.text())
-            g02 = str(self.ui.allTripleG0Textbox.text())
-            w2 = str(self.ui.allTripleWTextbox.text())
-            ginf2 = str(self.ui.allTripleGinfTextbox.text())
-        # Check if input is valid
+        # read values from inputs
+        dual_range = str(self.ui.dualRange.text())
+        dual_g0 = str(self.ui.dualG0.text())
+        dual_w = str(self.ui.dualW.text())
+        dual_ginf = str(self.ui.dualGinf.text())
+        triple_range = str(self.ui.tripleRange.text())
+        triple_g0 = str(self.ui.tripleG0.text())
+        triple_w = str(self.ui.tripleW.text())
+        triple_ginf = str(self.ui.tripleGinf.text())
+
         validInput = True
-        if none_checked:
-            self.message("At least one checkbox is needed; aborting.")
-            validInput = False
-        elif range_val == "" or g0 == "" or ginf == "" or w == "":
+
+        # Check if input is valid
+        if dual_range == "" or dual_g0 == "" or dual_w == "" or dual_ginf == "" or triple_range == "" or triple_g0 == "" or triple_w == "" or triple_ginf == "":
             self.message("Some parameters are missing; aborting.")
             validInput = False
         else:
             try:
-                int(range_val)
-                float(g0)
-                float(w)
-                float(ginf)
+                int(dual_range)
+                int(triple_range)
+                float(dual_g0)
+                float(triple_g0)
+                float(dual_w)
+                float(triple_w)
+                float(dual_ginf)
+                float(triple_ginf)
             except ValueError:
                 validInput = False
                 self.message("Some parameters are non-numeric; aborting.")
-            if mode == "all":
-                if range_val2 == "" or g02 == "" or ginf2 == "" or w2 == "":
-                    self.message("Some parameters are missing; aborting.")
-                    validInput = False
-                else:
-                    try:
-                        int(range_val2)
-                        float(g02)
-                        float(w2)
-                        float(ginf2)
-                    except ValueError:
-                        validInput = False
-                        self.message("Some parameters are non-numeric; aborting.")
-
         return validInput
-                          
+    
+    # Creates a mixed image config object for BatchRunner using the current program 
+    # state. If the mixed input parameter is true, the config object will be set up 
+    # for single RGB images; otherwise, split monochrome images will be used.
+    def get_config(self, mixed):
+        config = Config()
+        config.side = self.size
+        config.input_directory = self.path
+        config.output_directory = os.path.join(self.path, "output/")
+        config.name_min = 1
+        config.name_max = 1
+        config.dual_range = int(self.ui.dualRange.text())
+        config.triple_range = int(self.ui.tripleRange.text())
+        config.auto_consider_deltas = bool(self.ui.considerAutoDeltas.isChecked())
+        config.cross_consider_deltas = bool(self.ui.considerCrossDeltas.isChecked())
+        config.dual_initial = numpy.array([self.ui.dualG0.text(),
+                                           self.ui.dualW.text(),
+                                           self.ui.dualGinf.text(),0,0], dtype = numpy.float)
+        config.triple_initial = numpy.array([self.ui.tripleG0.text(),
+                                             self.ui.tripleW.text(),
+                                             self.ui.tripleGinf.text()], dtype = numpy.float)
+        if bool(self.ui.resolution16.isChecked()):
+            config.triple_lim = 16
+        elif bool(self.ui.resolution32.isChecked()):
+            config.triple_lim = 32
+        else:
+            config.triple_lim = 64
+        if mixed:
+            config.input_type = "mixed"
+            config.name_format = "rgb_{:03d}.bmp"
+            config.output_type = "full"
+        else:
+            config.input_type = "split"
+            config.name_format = "{:s}_{:03d}.bmp"
+            config.output_type = "summary"
+        config.output_numbering = "none"
+
+        return config
+        
 # Program loop
 def start():
     app = QtGui.QApplication(sys.argv)
