@@ -337,16 +337,16 @@ def batch(request):
            # Run Batch with settings
 
            # Reading each file in the zip file
-           myzip = zipfile.ZipFile(StringIO(zipdata).read())
-           for filename in zip.namelist():
+           myzip = zipfile.ZipFile(zipdata)
+           for filename in myzip.namelist():
                # Do something here with each file in the .ZIP archive.
                #
                # For example, if you expect the archive to contain image
                # files, you could process each one with PIL, then create
                # and create jobs for each.
-            data = myzip.read(filename)
-            pass
-           zip.close()
+               data = myzip.read(filename)
+               
+           myzip.close()
             
            # Redirect to batch result
            
