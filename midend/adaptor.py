@@ -132,7 +132,6 @@ def __run_all_dual(r, g, b, colorList, g0, w, ginf, range_val, consider_deltas):
     initial_val = np.array([g0, w, ginf, deltaX, deltaY], dtype=np.float64)
     p = [(r, None, None), (g, None, None), (b, None, None), (r, g, None),
          (r, b, None), (g, b, None), (r, g, b)]
-    consider_deltas = False
     results = []
     for color in colorList:
         i = list.index(ALL_COLORS, color)
