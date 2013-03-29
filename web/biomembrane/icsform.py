@@ -34,23 +34,23 @@ class SampleImageForm(forms.Form):
         cleaned_data = super(SampleImageForm, self).clean()
         if self.isSingleUpload():
            if cleaned_data.get("mixedImg") == None:
-               msg = 'Please specify a mixed image to upload'
+               msg = u"Please specify a mixed image to upload"
                self._errors["mixedImg"] = self.error_class([msg])
                del cleaned_data["mixedImg"]
 
         if self.isMultipleUpload():
            if cleaned_data.get("redImg") == None:
-               msg = 'Please specify a red image to upload'
+               msg = u"Please specify a red image to upload"
                self._errors["redImg"] = self.error_class([msg])
                del cleaned_data["redImg"]
 
            if cleaned_data.get("greenImg") == None:
-               msg = 'Please specify a green image to upload'
+               msg = u"Please specify a green image to upload"
                self._errors["greenImg"] = self.error_class([msg])
                del cleaned_data["greenImg"]
 
            if cleaned_data.get("blueImg") == None:
-               msg = 'Please specify a blue image to upload'
+               msg = u"Please specify a blue image to upload"
                self._errors["blueImg"] = self.error_class([msg])
                del cleaned_data["blueImg"]
 
@@ -175,7 +175,99 @@ class RgbSettingsForm(forms.Form):
         else:
            return False
 
+    def clean(self):
+        cleaned_data = super(RgbSettingsForm, self).clean()
+        
+        if self.isAuto():
 
+           if cleaned_data.get("rangeAuto"):
+              msg = u"Must specifiy a range value for auto correlation"
+              self._errors["rangeAuto"] = self.error_class([msg])
+              del cleaned_data["rangeAuto"]
+
+           if cleaned_data.get("gzeroAuto"):
+              msg = u"Must specifiy a g(0) value for auto correlation"
+              self._errors["gzeroAuto"] = self.error_class([msg])
+              del cleaned_data["gzeroAuto"]
+
+           if cleaned_data.get("wAuto"):
+              msg = u"Must specifiy a w value for auto correlation"
+              self._errors["wAuto"] = self.error_class([msg])
+              del cleaned_data["wAuto"]
+
+           if cleaned_data.get("ginfAuto"):
+              msg = u"Must specifiy a ginf value for auto correlation"
+              self._errors["ginfAuto"] = self.error_class([msg])
+              del cleaned_data["ginfAuto"]
+
+        elif self.isCorss():
+
+           if cleaned_data.get("rangeCross"):
+              msg = u"Must specifiy a range value for cross correlation"
+              self._errors["rangeCross"] = self.error_class([msg])
+              del cleaned_data["rangeCross"]
+
+           if cleaned_data.get("gzeroCross"):
+              msg = u"Must specifiy a g(0) value for cross correlation"
+              self._errors["gzeroCross"] = self.error_class([msg])
+              del cleaned_data["gzeroCross"]
+
+           if cleaned_data.get("wCross"):
+              msg = u"Must specifiy a w value for cross correlation"
+              self._errors["wCross"] = self.error_class([msg])
+              del cleaned_data["wCross"]
+
+           if cleaned_data.get("ginfCross"):
+              msg = u"Must specifiy a ginf value for cross correlation"
+              self._errors["ginfCross"] = self.error_class([msg])
+              del cleaned_data["ginfCross"]
+
+        elif self.isTriple():
+
+           if cleaned_data.get("rangeTriple"):
+              msg = u"Must specifiy a range value for triple correlation"
+              self._errors["rangeTriple"] = self.error_class([msg])
+              del cleaned_data["rangeTriple"]
+
+           if cleaned_data.get("gzeroTriple"):
+              msg = u"Must specifiy a g(0) value for triple correlation"
+              self._errors["gzeroTriple"] = self.error_class([msg])
+              del cleaned_data["gzeroTriple"]
+
+           if cleaned_data.get("wTriple"):
+              msg = u"Must specifiy a w value for triple correlation"
+              self._errors["wTriple"] = self.error_class([msg])
+              del cleaned_data["wTriple"]
+
+           if cleaned_data.get("ginfTriple"):
+              msg = u"Must specifiy a ginf value for triple correlation"
+              self._errors["ginfTriple"] = self.error_class([msg])
+              del cleaned_data["ginfTriple"]
+
+        elif self.isAll():
+
+           if cleaned_data.get("rangeAutoCrossAll"):
+              msg = u"Must specifiy a range value for the auto and cross correlation"
+              self._errors["rangeAutoCrossAll"] = self.error_class([msg])
+              del cleaned_data["rangeAutoCrossAll"]
+
+           if cleaned_data.get("gzeroAutoCrossAll"):
+              msg = u"Must specifiy a g(0) value for the auto and corss correlation"
+              self._errors["gzeroAutoCrossAll"] = self.error_class([msg])
+              del cleaned_data["gzeroAutoCrossAll"]
+
+           if cleaned_data.get("wAutoCrossAll"):
+              msg = u"Must specifiy a w value for auto and cross correlation"
+              self._errors["wAutoCrossAll"] = self.error_class([msg])
+              del cleaned_data["wAutoCrossAll"]
+
+           if cleaned_data.get("ginfAutoCrossAll"):
+              msg = u"Must specifiy a ginf value for auto and cross correlation"
+              self._errors["ginfAutoCrossAll"] = self.error_class([msg])
+              del cleaned_data["ginfAutoCrossAll"]
+
+        return cleaned_data
+          
 class BatchSettingsForm(forms.Form):
 
     zip_file = forms.FileField(error_messages={'required': 'Select an zip file to upload'})
