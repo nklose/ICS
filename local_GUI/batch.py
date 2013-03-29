@@ -60,6 +60,13 @@ class Batch(QtGui.QMainWindow):
         self.rgbCount = 0     # number of RGB images in current directory
         self.monoCount = 0    # number of monochrome images in current directory
         self.size = 0         # length in pixels of one size of an image
+        self.numImages = 0    # total number of images to run
+        self.numProcessed = 0 # number of images processed so far
+        self.imageType = None # current type of image being processed
+        self.splitMin = None  # minimum image number for split images
+        self.splitMax = None  # maximum image number for split images
+        self.mixedMin = None  # minimum image number for mixed images
+        self.mixedMax = None  # maximum image number for mixed images
 
         # Track parent window
         self.parent = parent
@@ -93,14 +100,18 @@ class Batch(QtGui.QMainWindow):
             splitBR = None
 
             if len(self.rgbImages) != 0:
+                self.imageType = "mixed"
                 mixedConfig = self.get_config(True)
                 mixedBR = midend.batchRunner.BatchRunner(mixedConfig)
-                mixedBR.run()
+                mixedBR.runAll(self.update_batch_progress)
+                mixedBR.outputAllFiles()
 
             if len(self.monoImages) != 0:
+                self.imageType = "split"
                 splitConfig = self.get_config(False)                
                 splitBR = midend.batchRunner.BatchRunner(splitConfig)
-                splitBR.run()
+                splitBR.runAll(self.update_batch_progress)
+                splitBR.outputAllFiles()
 
         self.set_processing(False)
 
@@ -113,6 +124,8 @@ class Batch(QtGui.QMainWindow):
         self.set_processing(True)
         
         self.size = 0
+        self.numProcessed = 0
+        self.numImages = 0
 
         self.message("Loading directory and detecting images.")
 
@@ -125,6 +138,11 @@ class Batch(QtGui.QMainWindow):
             self.rgbImages = []
             self.monoImages = []
             self.extensions = []
+
+            self.mixedMin = None
+            self.mixedMax = None
+            self.splitMin = None
+            self.splitMax = None
     
             # iterate through all files
             for image in files:
@@ -135,14 +153,33 @@ class Batch(QtGui.QMainWindow):
                 channels = self.get_channels(image)
                 if channels == "rgb":
                     self.rgbImages.append(image)
-                elif channels == "r":
-                    self.monoImages.append(image)
-                elif channels == "g":
-                    self.monoImages.append(image)
-                elif channels == "b":
-                    self.monoImages.append(image)
+                    if self.mixedMin == None:
+                        self.mixedMin = self.get_number(image)
+                    elif self.mixedMax == None:
+                        self.mixedMax = self.get_number(image)
+                    else:
+                        if self.get_number(image) < self.mixedMin:
+                            self.mixedMin = self.get_number(image)
+                        if self.get_number(image) > self.mixedMax:
+                            self.mixedMax = self.get_number(image)
                 else:
-                    self.message("Warning: improperly formatted filename(s) found.")
+                    if self.splitMin == None:
+                        self.splitMin = self.get_number(image)
+                    elif self.splitMax == None:
+                        self.splitMax = self.get_number(image)
+                    else:
+                        if self.get_number(image) < self.splitMin:
+                            self.splitMin = self.get_number(image)
+                        if self.get_number(image) > self.splitMax:
+                            self.splitMax = self.get_number(image)
+                    if channels == "r":
+                        self.monoImages.append(image)
+                    elif channels == "g":
+                        self.monoImages.append(image)
+                    elif channels == "b":
+                        self.monoImages.append(image)
+                    else:
+                        self.message("Warning: improperly formatted filename(s) found.")
                 if str(os.path.splitext(image)[1]) not in self.extensions:
                     self.extensions.append(str(os.path.splitext(image)[1]))
 
@@ -150,6 +187,8 @@ class Batch(QtGui.QMainWindow):
             self.ui.rgbCount.setText(str(len(self.rgbImages)))
             self.ui.monoCount.setText(str(len(self.monoImages)) + " (" + str(len(self.monoImages)/3) + ")")
             self.ui.fileCount.setText(str(len(self.rgbImages) + len(self.monoImages)))
+
+            self.numImages = (len(self.monoImages) / 3) + len(self.rgbImages)
 
             # convert extension list to string and display it
             extList = ""
@@ -169,6 +208,18 @@ class Batch(QtGui.QMainWindow):
     #######################################################
     # Miscellaneous Functions                             #
     #######################################################
+
+    # Updates the progress bar to reflect the current batch state
+    def update_batch_progress(self, numFinished, numTotal):
+        outputString = "Running " + str(numFinished) + " of " + str(numTotal)
+        if self.imageType == "mixed":
+            outputString += " mixed images."
+        elif self.imageType == "split":
+            outputString += " split images."
+        self.message(outputString)
+        self.numSteps = self.numImages
+        self.numProcessed += 1
+        self.progress(self.numProcessed)
 
     # Runs any functions needed upon program startup
     def initialize(self):
@@ -238,7 +289,7 @@ class Batch(QtGui.QMainWindow):
     #  for example, a filename of b_003.png will return 3 as an integer.
     def get_number(self, filename):
         number = False
-        file_number = 0
+        file_number = ""
         for c in filename:
             if number:
                 file_number += c
@@ -247,7 +298,7 @@ class Batch(QtGui.QMainWindow):
             elif c == ".":
                 number = False
 
-        return int(file_number)
+        return int(file_number[:-1])
  
     # Returns the selected correlation mode by reading which tab the user has open
     def get_correlation_tab(self):
@@ -303,9 +354,8 @@ class Batch(QtGui.QMainWindow):
         config = Config()
         config.side = self.size
         config.input_directory = self.path
-        config.output_directory = os.path.join(self.path, "output/")
-        config.name_min = 1
-        config.name_max = 1
+        config.output_directory = os.path.join("..", 
+                                               os.path.basename(self.path) + "_output")
         config.dual_range = int(self.ui.dualRange.text())
         config.triple_range = int(self.ui.tripleRange.text())
         config.auto_consider_deltas = bool(self.ui.considerAutoDeltas.isChecked())
@@ -326,11 +376,15 @@ class Batch(QtGui.QMainWindow):
             config.input_type = "mixed"
             config.name_format = "rgb_{:03d}.bmp"
             config.output_type = "full"
+            config.name_min = self.mixedMin
+            config.name_max = self.mixedMax
         else:
             config.input_type = "split"
             config.name_format = "{:s}_{:03d}.bmp"
-            config.output_type = "summary"
-        config.output_numbering = "none"
+            config.output_type = "full"
+            config.name_min = self.splitMin
+            config.name_max = self.splitMax
+        config.output_numbering = "{:03d}"
 
         return config
         
