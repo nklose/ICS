@@ -125,7 +125,7 @@ def program(request):
                 Correlation(batch=batch, color=Correlation.RB).save()
                 Correlation(batch=batch, color=Correlation.GB).save()
                 Correlation(batch=batch, color=Correlation.RGB).save()
-
+                
                 #Redirect to tripleSetRes (Ask User for Triple's Sample Resolution)
                 return HttpResponseRedirect('/triple/setRes/') # see tripleSetRes view function
     else:
@@ -133,19 +133,16 @@ def program(request):
     
     batch = Batch.objects.get(id=request.session['batch_id'])
     job = Job.objects.get(batch=batch)
-    rgbUrl = job.rgb_image.url
-    redUrl = job.red_image.url
-    greenUrl = job.green_image.url
-    blueUrl = job.blue_image.url
     images = {}
     images['RGB'] = {}
-    images['RGB']['url'] = rgbUrl
+    images['RGB']['url'] = job.rgb_image.url
     images['Red'] = {}
-    images['Red']['url'] = redUrl
+    images['Red']['url'] = job.red_image.url
     images['Green'] = {}
-    images['Green']['url'] = greenUrl
+    images['Green']['url'] = job.green_image.url
     images['Blue'] = {}
-    images['Blue']['url'] = blueUrl
+    images['Blue']['url'] = job.blue_image.url
+
     temp = {"sec_title": "Image Correlation Spectroscopy Program","form": form, "rgbimgs": images}
     return render(request, 'icslayout.html', temp)
 
@@ -241,12 +238,12 @@ def rgb_upload(request):
                 r, g, b = image_utils.get_channels(rgb) # generate the three channels
                 redImage, greenImage, blueImage = image_utils.create_images(r, g, b) #create the images
                 
-                singleJob = models.Job(number=1, batch=batch, state=models.Job.UPLOADING)
-                singleJob.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
-                singleJob.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
-                singleJob.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))
-                singleJob.rgb_image.save('rgb.png', ContentFile(image_utils.image_to_string_io(rgbImage).read()))
-                singleJob.save()
+                job = models.Job(number=1, batch=batch, state=models.Job.UPLOADING)
+                job.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
+                job.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
+                job.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))
+                job.rgb_image.save('rgb.png', ContentFile(image_utils.image_to_string_io(rgbImage).read()))
+                job.save()
 
                 return HttpResponseRedirect('/program/')
             else:
@@ -259,12 +256,12 @@ def rgb_upload(request):
                 b = scipy.misc.fromimage(blueImage)
                 rgbImage = image_utils.create_image(r, g, b)
 
-                singleJob = models.Job(number=1, batch=batch, state=models.Job.UPLOADING) 
-                singleJob.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
-                singleJob.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
-                singleJob.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))
-                singleJob.rgb_image.save('rgb.png', ContentFile(image_utils.image_to_string_io(rgbImage).read()))
-                singleJob.save()
+                job = models.Job(number=1, batch=batch, state=models.Job.UPLOADING) 
+                job.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
+                job.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
+                job.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))
+                job.rgb_image.save('rgb.png', ContentFile(image_utils.image_to_string_io(rgbImage).read()))
+                job.save()
 
                 return HttpResponseRedirect('/program/')
     else:

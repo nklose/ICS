@@ -42,9 +42,9 @@ def __save_result(correlation, job, ics_result):
 
 @task()
 def run_dual(job):
-    params = DualParameters.ojects.get(batch=job.batch)
+    params = DualParameters.objects.get(batch=job.batch)
     correlations = Correlation.objects.filter(batch=job.batch).exclude(color=Correlation.RGB)
-    image = PIL.Image.open(job.rgb_image.open())
+    image = PIL.Image.open(job.rgb_image.path)
 
     for correlation in correlations:
        result = adaptor.run_dual_mixed_image(image, correlation.color, params.g0, params.w, params.ginf, params.range_val, params.use_deltas)
@@ -52,7 +52,7 @@ def run_dual(job):
 
 
 def run_triple1(job):
-    image = PIL.Image.open(job.rgb_image.open())
+    image = PIL.Image.open(job.rgb_image.path)
     result = adaptor.run_triple_mixed_image_part1(image)
     return result
 
