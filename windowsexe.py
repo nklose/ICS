@@ -29,7 +29,8 @@ ICON_FILE = os.path.join(ROOT_PATH, "icon.ico")
 LOCAL_IMAGES = [os.path.join(IMAGE_PATH, "r.png"),
                 os.path.join(IMAGE_PATH, "g.png"),
                 os.path.join(IMAGE_PATH, "b.png"),
-                os.path.join(IMAGE_PATH, "rgb.png")]
+                os.path.join(IMAGE_PATH, "rgb.png"),
+                os.path.join(IMAGE_PATH, "zoom.png")]
 
 AUTHOR = "CMPUT 401 - Biomembranes Team"
 VERSION = "1.0"
