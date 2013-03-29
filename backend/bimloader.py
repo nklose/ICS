@@ -69,11 +69,9 @@ def convertWandtoScipy(wandImage, mixed):
     conv_pil = "RGB"
     data = img.make_blob(conv_wand)
     pilimage = Image.fromstring(conv_pil, img.size, data)
-    if mixed:
-        array = scipy.misc.fromimage(pilimage)
     if not mixed:
         pilimage = pilimage.convert("L")
-        array = scipy.misc.fromimage(pilimage)
+    array = scipy.misc.fromimage(pilimage)
     return array
 
 

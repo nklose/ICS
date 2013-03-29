@@ -47,8 +47,8 @@ self.outputDirName and self.inFilePath.")
         if (os.path.exists(self.output)):
             shutil.rmtree(self.output)
 
-    def assertIsSimiliar(self, oldFile, newFile):
-        self.assertTrue(ics_similar(oldFile, newFile))
+    def assertIsSimiliar(self, oldFile, newFile, msg=None):
+        self.assertTrue(ics_similar(oldFile, newFile), msg=msg)
 
     def test_ics_output(self):
         self.call_script()

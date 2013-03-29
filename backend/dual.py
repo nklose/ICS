@@ -134,10 +134,13 @@ def _get_deltas(par, xdata, ydata, initial_val):
         using_deltas: [bool] Whether deltas are being used
     """
     using_deltas = True
-    (par, _) = scipy.optimize.curve_fit(butils.gauss_2d_deltas, xdata, ydata,
-                                        initial_val)
-    if par[3] > initial_val[1] or par[4] > initial_val[1]:
-        using_deltas = False
+    try:
+        (par, _) = scipy.optimize.curve_fit(butils.gauss_2d_deltas, xdata, ydata,
+                                            initial_val)
+        if par[3] > initial_val[1] or par[4] > initial_val[1]:
+            using_deltas = False
+    except RuntimeError:
+        return par, False
     return par, using_deltas
 
 

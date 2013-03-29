@@ -25,6 +25,7 @@ import numpy as np
 
 import ics_batch
 import ics_single_base
+import ics_seperate_base
 
 IN_PATH_ACC = ics_single_base.get_acceptance_path()
 IN_PATH_IN = os.path.join(IN_PATH_ACC, "inputs")
@@ -58,18 +59,47 @@ class TestICSBadData(ics_batch.TestBatch):
         self.outputDirName = "badData"
 
     def validate_output(self):
-        fnames = ['ACb', 'ACg', 'ACr', 'XCrg', 'XCrb', 'XCrg']
+        fnames = ['ACb', 'ACg', 'ACr', 'XCrg', 'XCrb', 'XCrg', 'TripleCrgb']
         fname_old = fname_new = None
-        for i in range(10):
+        errorMsg = "Expected %s different then %s"
+        for i in range(self.config.name_min, self.config.name_max + 1):
             for fname in fnames:
                 fname_old = os.path.join(self.expectedOutput,
-                                         '%03d_%s.txt' % (i + 1, fname))
+                                         '%03d_%s.txt' % (i, fname))
                 fname_new = os.path.join(self.config.output_directory,
-                                         '%03d_%s.txt' % (i + 1, fname))
-                self.assertIsSimiliar(fname_old, fname_new)
+                                         '%03d_%s.txt' % (i, fname))
+                self.assertIsSimiliar(fname_old, fname_new,
+                                      msg=errorMsg % (fname_old, fname_new))
 
                 fname_old = os.path.join(self.expectedOutput,
-                                         '%03d_%sFit.txt' % (i + 1, fname))
+                                         '%03d_%sFit.txt' % (i, fname))
                 fname_new = os.path.join(self.config.output_directory,
-                                         '%03d_%sFit.txt' % (i + 1, fname))
-                self.assertIsSimiliar(fname_old, fname_new)
+                                         '%03d_%sFit.txt' % (i, fname))
+                self.assertIsSimiliar(fname_old, fname_new,
+                                      msg=errorMsg % (fname_old, fname_new))
+
+
+class TestICSBadDataSingle(ics_seperate_base.TestBackendSeperateImage):
+    def set_vars(self):
+        self.d_range = 20
+        self.inFilePathR = os.path.join("badData", "r_000.bmp")
+        self.inFilePathG = os.path.join("badData", "g_000.bmp")
+        self.inFilePathB = os.path.join("badData", "b_000.bmp")
+        self.outputDirName = "badData"
+
+    def validate_output(self):
+        fnames = ['ACb', 'ACg', 'ACr', 'XCrg', 'XCrb', 'XCrg']
+        errorMsg = "Expected %s different then %s"
+        fname_old = fname_new = None
+        for fname in fnames:
+            fname_old = os.path.join(self.expectedOutput,
+                                     '001_%s.txt' % (fname))
+            fname_new = os.path.join(self.output, '%s.txt' % fname)
+            self.assertIsSimiliar(fname_old, fname_new,
+                                  msg=errorMsg % (fname_old, fname_new))
+
+            fname_old = os.path.join(self.expectedOutput,
+                                     '001_%sFit.txt' % (fname))
+            fname_new = os.path.join(self.output, '%sFit.txt' % fname)
+            self.assertIsSimiliar(fname_old, fname_new,
+                                  msg=errorMsg % (fname_old, fname_new))
