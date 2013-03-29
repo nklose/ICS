@@ -28,6 +28,14 @@
    width: 180px;
 }
 
+.sortableGraph {
+    display: block;
+}
+
+.sortableGraph img {
+    width: 600px;
+}
+
 .sortableImgList ul {
     list-style-type: none;
     width: 100%;
