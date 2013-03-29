@@ -8,13 +8,14 @@
   <form method="post">{% csrf_token %}
  <div class="rgbimg-background">
   <div class="row-fluid">
+     <p>Input Parameters for Auto and Cross Correlations Below:</p>
      <div class="span4">
       <fieldset>
       <legend>Paramters:</legend>
-      <div class="control-group">{{ form.rangeTriple.errors }}<label for="{{form.rangeTriple.auto_id}}" class="control-label">Range:</label>{{ form.rangeTriple }}</div>
-      <div class="control-group">{{ form.gzeroTriple.errors }}<label for="{{form.gzeroTriple.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroTriple}}</div>
-      <div class="control-group">{{ form.wTriple.errors }}<label for="{{form.wTriple.auto_id}}" class="control-label">    w:</label>{{ form.wTriple }}</div>
-      <div class="control-group">{{ form.ginfTriple.errors }}<label for="{{form.ginfTriple.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfTriple }}</div>
+      <div class="control-group {% if form.rangeTriple.errors %}error{% endif %}">{{ form.rangeTriple.errors }}<label for="{{form.rangeTriple.auto_id}}" class="control-label">Range:</label>{{ form.rangeTriple }}</div>
+      <div class="control-group {% if form.gzeroTriple.errors %}error{% endif %}">{{ form.gzeroTriple.errors }}<label for="{{form.gzeroTriple.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroTriple}}</div>
+      <div class="control-group {% if form.wTriple.errors %}error{% endif %}">{{ form.wTriple.errors }}<label for="{{form.wTriple.auto_id}}" class="control-label">    w:</label>{{ form.wTriple }}</div>
+      <div class="control-group {% if form.ginfTriple.errors %}error{% endif %}">{{ form.ginfTriple.errors }}<label for="{{form.ginfTriple.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfTriple }}</div>
       </fieldset>
      </div> <!-- span4 -->
      </div> <!-- row -->
