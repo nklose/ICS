@@ -27,8 +27,9 @@ Changes since Beta V1
 Installation
 ============
 1. Run the provided setup.exe, and complete the steps listed.
-2. When the Microsoft Visual C++ 2008 Redistributable setup starts, install it as well.
-3. Run the Image Correlation Spectroscopy from the start menu.
+2. If the Microsoft Visual C++ 2008 Redistributable setup starts, install it as well.
+3. ImageMagick install will start. Please install only if ImageMagick is not installed on your machine.
+4. Run the Image Correlation Spectroscopy from the start menu.
 
 Working Features
 ================
