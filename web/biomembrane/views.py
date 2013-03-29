@@ -166,6 +166,7 @@ def tripleSetRes(request):
 
     if request.method == 'POST':  #form has been submitted
         form = RgbSettingsForm(request.POST, request.FILES)
+        form.paramsSettingState = False # Don't require triple correlation parameters from user at this point/state
         if form.is_valid():
             resolution = form.selectedResolution() #get the sample resolution as 16,32,64
             TripleParameters(batch=batch, limit=resolution).save()
@@ -198,6 +199,7 @@ def tripleSetParams(request):
 
     if request.method == 'POST':  #form has been submitted
         form = RgbSettingsForm(request.POST, request.FILES)
+        form.paramsSettingState = True # require triple correlation parameters from users at this state
         if form.is_valid():
             # Update Triple Correlation Parameters Here
             rangeVal = form.cleaned_data['rangeTriple']

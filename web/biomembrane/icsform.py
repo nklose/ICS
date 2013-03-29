@@ -74,6 +74,7 @@ class RgbSettingsForm(forms.Form):
     deltaAuto = forms.BooleanField(required=False)
     deltaCross = forms.BooleanField(required=False)
     deltaAll = forms.BooleanField(required=False)
+    paramsSettingState = False;
 
     userSelected = forms.CharField(required=False,error_messages={'blank': 'Please select a fit'}) # field containing the id of the type of correlation the user selects
     rangeAuto = forms.FloatField(required=False, initial=20)  # parameters for auto correlation
@@ -175,6 +176,14 @@ class RgbSettingsForm(forms.Form):
         else:
            return False
 
+    def isTripleParamsRequired(self):
+        """ Look at if the user has reached the state where Triple Correlation Parameter must be set
+        """
+        if self.paramsSettingState:
+           return True
+        else:
+            return False
+
     def clean(self):
         cleaned_data = super(RgbSettingsForm, self).clean()
         
@@ -205,7 +214,7 @@ class RgbSettingsForm(forms.Form):
               self._errors["ginfAuto"] = self.error_class([msg])
               del cleaned_data["ginfAuto"]
 
-        elif self.isCorss():
+        elif self.isCross():
 
            if cleaned_data.get("rangeCross") == None:
               msg = u"Must specifiy a range value for cross correlation"
@@ -221,17 +230,17 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a w value for cross correlation"
               self._errors["wCross"] = self.error_class([msg])
               del cleaned_data["wCross"]
-           elif cleaned_data.get("wAutoCross") == 0:
+           elif cleaned_data.get("wCross") == 0:
               msg = u"w value cannot be zero for cross correlation"
-              self._errors["wAutoCross"] = self.error_class([msg])
-              del cleaned_data["wAutoCross"]
+              self._errors["wCross"] = self.error_class([msg])
+              del cleaned_data["wCross"]
 
            if cleaned_data.get("ginfCross") == None:
               msg = u"Must specifiy a ginf value for cross correlation"
               self._errors["ginfCross"] = self.error_class([msg])
               del cleaned_data["ginfCross"]
 
-        elif self.isTriple():
+        elif self.isTripleParamsRequired():
 
            if cleaned_data.get("rangeTriple") == None:
               msg = u"Must specifiy a range value for triple correlation"
@@ -247,15 +256,20 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a w value for triple correlation"
               self._errors["wTriple"] = self.error_class([msg])
               del cleaned_data["wTriple"]
-           elif cleaned_data.get("wAutoTriple") == 0:
+           elif cleaned_data.get("wTriple") == 0:
               msg = u"w value cannot be zero for triple correlation"
               self._errors["wTriple"] = self.error_class([msg])
-              del cleaned_data["wAutoTriple"]  
+              del cleaned_data["wTriple"]  
 
            if cleaned_data.get("ginfTriple") == None:
               msg = u"Must specifiy a ginf value for triple correlation"
               self._errors["ginfTriple"] = self.error_class([msg])
               del cleaned_data["ginfTriple"]
+
+           if cleaned_data.get("rangeTriple") > self.selectedResolution():
+              msg = u"Range value must not be larger than the sample resolution for triple correlation"
+              self._errors["rangeTriple"] = self.error_class([msg])
+              del cleaned_data["rangeTriple"]
 
         elif self.isAll():
 
@@ -343,4 +357,23 @@ class BatchSettingsForm(forms.Form):
         else:
             msg = 'Could not upload file'
             raise forms.ValidationError(msg)
+
+    def clean(self):
+        cleaned_data = super(BatchSettingsForm, self).clean()
+        if cleaned_data.get("rangeTriple") > self.selectedResolution():
+              msg = u"Range value must not be larger than the sample resolution for triple correlation"
+              self._errors["rangeTriple"] = self.error_class([msg])
+              del cleaned_data["rangeTriple"]
+
+        if cleaned_data.get("wTriple") == 0:
+              msg = u"w value cannot be zero for triple correlation"
+              self._errors["wTriple"] = self.error_class([msg])
+              del cleaned_data["wTriple"]
+
+        if cleaned_data.get("wAutoCross") == 0:
+              msg = u"w value cannot be zero for auto and cross correlation"
+              self._errors["wAutoCross"] = self.error_class([msg])
+              del cleaned_data["wAutoCross"]
+
+        return cleaned_data
 
