@@ -21,9 +21,9 @@ signing of this agreement.
 from celery import task
 from models import Correlation, DualParameters, TripleParameters, Result
 from django.core.files.base import ContentFile
+from StringIO import StringIO
 from midend import adaptor
 import PIL.Image
-import StringIO
 
 
 def __save_result(correlation, job, ics_result):
@@ -47,8 +47,8 @@ def run_dual(job):
     image = PIL.Image.open(job.rgb_image.path)
 
     for correlation in correlations:
-       result = adaptor.run_dual_mixed_image(image, correlation.color, params.g0, params.w, params.ginf, params.range_val, params.use_deltas)
-       __save_result(correlation, job, result)
+        result = adaptor.run_dual_mixed_image(image, [correlation.color], params.g0, params.w, params.ginf, params.range_val, params.use_deltas)[0]
+        __save_result(correlation, job, result)
 
 
 def run_triple1(job):

@@ -53,24 +53,24 @@ class RgbSettingsForm(forms.Form):
 
     userSelected = forms.CharField(required=False,error_messages={'blank': 'Please select a fit'}) # field containing the id of the type of correlation the user selects
     rangeAuto = forms.FloatField(required=False, initial=20)  # parameters for auto correlation
-    gzeroAuto = forms.FloatField(required=False, initial=10)
-    wAuto = forms.FloatField(required=False, initial=0)
-    ginfAuto = forms.FloatField(required=False, initial=20)
+    gzeroAuto = forms.FloatField(required=False, initial=1)
+    wAuto = forms.FloatField(required=False, initial=10)
+    ginfAuto = forms.FloatField(required=False, initial=0)
 
     rangeCross = forms.FloatField(required=False, initial=20) # parameters when only the cross correlation option is selected
-    gzeroCross  = forms.FloatField(required=False, initial=20)
-    wCross = forms.FloatField(required=False, initial=0)
-    ginfCross= forms.FloatField(required=False, initial=10)
+    gzeroCross  = forms.FloatField(required=False, initial=1)
+    wCross = forms.FloatField(required=False, initial=10)
+    ginfCross= forms.FloatField(required=False, initial=0)
 
     rangeTriple = forms.FloatField(required=False, initial=20) # parameters when only triple correlation when option is selected
-    gzeroTriple = forms.FloatField(required=False, initial=20)
-    wTriple = forms.FloatField(required=False, initial=0)
-    ginfTriple = forms.FloatField(required=False, initial=10)
+    gzeroTriple = forms.FloatField(required=False, initial=1)
+    wTriple = forms.FloatField(required=False, initial=10)
+    ginfTriple = forms.FloatField(required=False, initial=0)
 
     rangeAutoCrossAll = forms.FloatField(required=False, initial=20) # parameters for auto and cross when the "all correlation" option is selected
-    ginfAutoCrossAll = forms.FloatField(required=False, initial=10)
-    wAutoCrossAll = forms.FloatField(required=False, initial=0)
-    gzeroAutoCrossAll = forms.FloatField(required=False, initial=20)
+    ginfAutoCrossAll = forms.FloatField(required=False, initial=0)
+    wAutoCrossAll = forms.FloatField(required=False, initial=10)
+    gzeroAutoCrossAll = forms.FloatField(required=False, initial=1)
 
     SIXTEEN, THIRTYTWO, SIXTYFOUR = u'16x16', u'32x32', u'64x64'
     RESOLUTIONS  = (     # set options for the user to specify sample for triple correlation
@@ -163,13 +163,13 @@ class BatchSettingsForm(forms.Form):
     considerDeltaForCross = forms.BooleanField(required=False, initial=False)
 
     rangeAutoCross = forms.FloatField(initial=20) # parameters for auto and cross
-    ginfAutoCross = forms.FloatField(initial=10)
-    wAutoCross = forms.FloatField(initial=0)
-    gzeroAutoCross = forms.FloatField(initial=20)
+    ginfAutoCross = forms.FloatField(initial=0)
+    wAutoCross = forms.FloatField(initial=10)
+    gzeroAutoCross = forms.FloatField(initial=1)
 
-    rangeTriple = forms.FloatField(initial=15) # parameters for triple when the "all correlation" option is selected.
-    gzeroTriple = forms.FloatField(initial=0)
-    wTriple = forms.FloatField(initial=0)
+    rangeTriple = forms.FloatField(initial=20) # parameters for triple when the "all correlation" option is selected.
+    gzeroTriple = forms.FloatField(initial=1)
+    wTriple = forms.FloatField(initial=10)
     ginfTriple = forms.FloatField(initial=0)
 
     SIXTEEN, THIRTYTWO, SIXTYFOUR = u'16x16', u'32x32', u'64x64'

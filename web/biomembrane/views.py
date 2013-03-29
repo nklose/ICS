@@ -114,7 +114,7 @@ def program(request):
                 rangeVal = form.cleaned_data['rangeAutoCrossAll']
                 gzero = form.cleaned_data['gzeroAutoCrossAll']
                 w = form.cleaned_data['wAutoCrossAll']
-                ginf = form.cleaned_data['gzeroAutoCrossAll']
+                ginf = form.cleaned_data['ginfAutoCrossAll']
 
                 DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, use_deltas=considerDeltas).save()
 
@@ -125,7 +125,7 @@ def program(request):
                 Correlation(batch=batch, color=Correlation.RB).save()
                 Correlation(batch=batch, color=Correlation.GB).save()
                 Correlation(batch=batch, color=Correlation.RGB).save()
-                
+
                 #Redirect to tripleSetRes (Ask User for Triple's Sample Resolution)
                 return HttpResponseRedirect('/triple/setRes/') # see tripleSetRes view function
     else:
