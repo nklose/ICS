@@ -23,9 +23,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect 
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
-from pickle import dumps
 from icsform import RgbSettingsForm, BatchSettingsForm;
-from models import Batch, Job, DualParameters, TripleParamaters, Correlation
+from models import Batch, Job, DualParameters, TripleParameters, Correlation
 import scipy.misc
 import icsform
 import models
@@ -169,7 +168,7 @@ def tripleSetRes(request):
         if form.is_valid():
             resolution = form.selectedResolution() #get the sample resolution as 16,32,64
             batch = Batch.objects.get(id=request.session['batch_id'])
-            TripleParamaters(batch=batch, limit=resolution).save()
+            TripleParameters(batch=batch, limit=resolution).save()
             #Redirect to tripleSetParams (Triple Parameters)
             return HttpResponseRedirect('/triple/setParams/') 
     else:
@@ -200,7 +199,7 @@ def tripleSetParams(request):
             w= form.cleaned_data['wTriple']
             ginf= form.cleaned_data['ginfTriple']
             batch = Batch.objects.get(id=request.session['batch_id'])
-            params = TripleParamaters.objects.get(batch=batch)
+            params = TripleParameters.objects.get(batch=batch)
             params.range_val = rangeVal
             params.g0 = gzero
             params.w = w

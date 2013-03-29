@@ -92,7 +92,7 @@ class DualParameters(models.Model):
     batch = models.ForeignKey(Batch)
 
 
-class TripleParamaters(DualParameters):
+class TripleParameters(DualParameters):
     limit = models.IntegerField()
 
 
