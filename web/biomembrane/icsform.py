@@ -180,88 +180,105 @@ class RgbSettingsForm(forms.Form):
         
         if self.isAuto():
 
-           if cleaned_data.get("rangeAuto"):
+           if cleaned_data.get("rangeAuto") == None:
               msg = u"Must specifiy a range value for auto correlation"
               self._errors["rangeAuto"] = self.error_class([msg])
               del cleaned_data["rangeAuto"]
 
-           if cleaned_data.get("gzeroAuto"):
+           if cleaned_data.get("gzeroAuto") == None:
               msg = u"Must specifiy a g(0) value for auto correlation"
               self._errors["gzeroAuto"] = self.error_class([msg])
               del cleaned_data["gzeroAuto"]
 
-           if cleaned_data.get("wAuto"):
+           if cleaned_data.get("wAuto") == None:
               msg = u"Must specifiy a w value for auto correlation"
               self._errors["wAuto"] = self.error_class([msg])
               del cleaned_data["wAuto"]
+           elif cleaned_data.get("wAuto") == 0:
+              msg = u"w value cannot be zero for auto correlation"
+              self._errors["wAuto"] = self.error_class([msg])
+              del cleaned_data["wAuto"]
 
-           if cleaned_data.get("ginfAuto"):
+
+           if cleaned_data.get("ginfAuto") == None:
               msg = u"Must specifiy a ginf value for auto correlation"
               self._errors["ginfAuto"] = self.error_class([msg])
               del cleaned_data["ginfAuto"]
 
         elif self.isCorss():
 
-           if cleaned_data.get("rangeCross"):
+           if cleaned_data.get("rangeCross") == None:
               msg = u"Must specifiy a range value for cross correlation"
               self._errors["rangeCross"] = self.error_class([msg])
               del cleaned_data["rangeCross"]
 
-           if cleaned_data.get("gzeroCross"):
+           if cleaned_data.get("gzeroCross") == None:
               msg = u"Must specifiy a g(0) value for cross correlation"
               self._errors["gzeroCross"] = self.error_class([msg])
               del cleaned_data["gzeroCross"]
 
-           if cleaned_data.get("wCross"):
+           if cleaned_data.get("wCross") == None:
               msg = u"Must specifiy a w value for cross correlation"
               self._errors["wCross"] = self.error_class([msg])
               del cleaned_data["wCross"]
+           elif cleaned_data.get("wAutoCross") == 0:
+              msg = u"w value cannot be zero for cross correlation"
+              self._errors["wAutoCross"] = self.error_class([msg])
+              del cleaned_data["wAutoCross"]
 
-           if cleaned_data.get("ginfCross"):
+           if cleaned_data.get("ginfCross") == None:
               msg = u"Must specifiy a ginf value for cross correlation"
               self._errors["ginfCross"] = self.error_class([msg])
               del cleaned_data["ginfCross"]
 
         elif self.isTriple():
 
-           if cleaned_data.get("rangeTriple"):
+           if cleaned_data.get("rangeTriple") == None:
               msg = u"Must specifiy a range value for triple correlation"
               self._errors["rangeTriple"] = self.error_class([msg])
               del cleaned_data["rangeTriple"]
 
-           if cleaned_data.get("gzeroTriple"):
+           if cleaned_data.get("gzeroTriple") == None:
               msg = u"Must specifiy a g(0) value for triple correlation"
               self._errors["gzeroTriple"] = self.error_class([msg])
               del cleaned_data["gzeroTriple"]
 
-           if cleaned_data.get("wTriple"):
+           if cleaned_data.get("wTriple") == None:
               msg = u"Must specifiy a w value for triple correlation"
               self._errors["wTriple"] = self.error_class([msg])
               del cleaned_data["wTriple"]
+           elif cleaned_data.get("wAutoTriple") == 0:
+              msg = u"w value cannot be zero for triple correlation"
+              self._errors["wTriple"] = self.error_class([msg])
+              del cleaned_data["wAutoTriple"]  
 
-           if cleaned_data.get("ginfTriple"):
+           if cleaned_data.get("ginfTriple") == None:
               msg = u"Must specifiy a ginf value for triple correlation"
               self._errors["ginfTriple"] = self.error_class([msg])
               del cleaned_data["ginfTriple"]
 
         elif self.isAll():
 
-           if cleaned_data.get("rangeAutoCrossAll"):
+           if cleaned_data.get("rangeAutoCrossAll") == None:
               msg = u"Must specifiy a range value for the auto and cross correlation"
               self._errors["rangeAutoCrossAll"] = self.error_class([msg])
               del cleaned_data["rangeAutoCrossAll"]
 
-           if cleaned_data.get("gzeroAutoCrossAll"):
+           if cleaned_data.get("gzeroAutoCrossAll") == None:
               msg = u"Must specifiy a g(0) value for the auto and corss correlation"
               self._errors["gzeroAutoCrossAll"] = self.error_class([msg])
               del cleaned_data["gzeroAutoCrossAll"]
 
-           if cleaned_data.get("wAutoCrossAll"):
+           if cleaned_data.get("wAutoCrossAll") == None:
               msg = u"Must specifiy a w value for auto and cross correlation"
               self._errors["wAutoCrossAll"] = self.error_class([msg])
               del cleaned_data["wAutoCrossAll"]
+           elif cleaned_data.get("wAutoCrossAll") == 0:
+              msg = u"w value cannot be zero for auto and cross correlation"
+              self._errors["wAutoCrossAll"] = self.error_class([msg])
+              del cleaned_data["wAutoCrossAll"]               
 
-           if cleaned_data.get("ginfAutoCrossAll"):
+           if cleaned_data.get("ginfAutoCrossAll") == None:
               msg = u"Must specifiy a ginf value for auto and cross correlation"
               self._errors["ginfAutoCrossAll"] = self.error_class([msg])
               del cleaned_data["ginfAutoCrossAll"]
