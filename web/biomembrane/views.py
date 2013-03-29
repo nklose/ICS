@@ -23,6 +23,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect 
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
+from django.conf import settings
 from icsform import RgbSettingsForm, BatchSettingsForm;
 from models import Batch, Job, DualParameters, TripleParameters, Correlation
 import scipy.misc
@@ -34,6 +35,7 @@ try:
 except ImportError:
     from StringIO import StringIO
 import zipfile
+import tasks
 
 @login_required(login_url='/accounts/login/')
 def program(request):
@@ -160,18 +162,22 @@ def tripleSetRes(request):
          Context parameters (ie, keys in the dictionary passed to the template):
         - sec_ title: The title of the section.
     """
+    batch = Batch.objects.get(id=request.session['batch_id'])
+
     if request.method == 'POST':  #form has been submitted
         form = RgbSettingsForm(request.POST, request.FILES)
         if form.is_valid():
             resolution = form.selectedResolution() #get the sample resolution as 16,32,64
-            batch = Batch.objects.get(id=request.session['batch_id'])
             TripleParameters(batch=batch, limit=resolution).save()
             #Redirect to tripleSetParams (Triple Parameters)
             return HttpResponseRedirect('/triple/setParams/') 
     else:
         form = RgbSettingsForm()
+        job = Job.objects.get(batch=batch)
+        triple1 = tasks.run_triple1(job)
+        request.session['triple1'] = triple1 
 
-    temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Resolution To Sample", "form": form,}
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Resolution To Sample", "form": form }
     return render(request, 'tripleSetResolution.html', temp)
 
 @login_required(login_url='/accounts/login/')
@@ -187,6 +193,9 @@ def tripleSetParams(request):
          Context parameters (ie, keys in the dictionary passed to the template):
         - sec_ title: The title of the section.
     """
+    batch = Batch.objects.get(id=request.session['batch_id'])
+    job = Job.objects.get(batch=batch)
+
     if request.method == 'POST':  #form has been submitted
         form = RgbSettingsForm(request.POST, request.FILES)
         if form.is_valid():
@@ -195,15 +204,18 @@ def tripleSetParams(request):
             gzero= form.cleaned_data['gzeroTriple']
             w= form.cleaned_data['wTriple']
             ginf= form.cleaned_data['ginfTriple']
-            batch = Batch.objects.get(id=request.session['batch_id'])
             params = TripleParameters.objects.get(batch=batch)
             params.range_val = rangeVal
             params.g0 = gzero
             params.w = w
             params.ginf = ginf
+            params.save()
+            tasks.run_triple3.delay(job, request.session['triple2'])
             return HttpResponseRedirect('/results/') # redirect after post
     else:
         form = RgbSettingsForm()
+        triple1 = request.session['triple1']
+        request.session['triple2'] = tasks.run_triple2(job, triple1)
 
     temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Parameters", "form": form,}
     return render(request, 'tripleSetParameters.html', temp)

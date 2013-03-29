@@ -26,7 +26,7 @@ from midend import adaptor
 import PIL.Image
 
 
-def __save_result(correlation, job, ics_result):
+def _save_result(correlation, job, ics_result):
     color = correlation.color
     data = StringIO()
     fit = StringIO()
@@ -49,7 +49,7 @@ def run_dual(job):
 
     for correlation in correlations:
         result = adaptor.run_dual_mixed_image(image, [correlation.color], params.g0, params.w, params.ginf, params.range_val, params.use_deltas)[0]
-        __save_result(correlation, job, result)
+        _save_result(correlation, job, result)
 
 
 def run_triple1(job):
@@ -60,12 +60,14 @@ def run_triple1(job):
 
 def run_triple2(job, part1_result):
     params = TripleParameters.objects.get(batch=job.batch)
+    print params.limit
     result = adaptor.run_triple_part2(part1_result, params.limit)
     return result
 
 
+@task()
 def run_triple3(job, part2_result):
     params = TripleParameters.objects.get(batch=job.batch)
-    correlation = Correlation.object.get(batch=job.batch, color=Correlation.RGB)
+    correlation = Correlation.objects.get(batch=job.batch, color=Correlation.RGB)
     result = adaptor.run_triple_part3(part2_result, params.range_val, params.g0, params.w, params.ginf)
-    __save_result(correlation, job, result)
+    _save_result(correlation, job, result)

@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">
 {% endblock stylesheet %}
 {% block content-main %}
-<div class="rgbimg-background"></div>
+<div class="rgbimg-background"><img src={{ graph_path }}/></div>
 <div class="rgbimg-background">
  <form method="post">{% csrf_token %}
  <div class="alert alert-info" id="notice"><strong>Note: </strong>Please select the image resolution to sample from</div>
