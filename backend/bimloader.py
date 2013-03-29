@@ -110,6 +110,8 @@ def load_image_pil_mixed(pilImage):
     Exceptions:
         ImageFormatException
     """
+    if (pilImage.format == "GIF"):
+        pilImage = pilImage.convert("RGB")
     raw_image = scipy.misc.fromimage(pilImage)
     r = raw_image[:, :, 0].astype(np.float)
     g = raw_image[:, :, 1].astype(np.float)
