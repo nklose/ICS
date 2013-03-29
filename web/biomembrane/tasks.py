@@ -27,6 +27,7 @@ import PIL.Image
 
 
 def __save_result(correlation, job, ics_result):
+    color = correlation.color
     data = StringIO()
     fit = StringIO()
     ics_result.saveDataFileLike(data, fit)
@@ -34,9 +35,9 @@ def __save_result(correlation, job, ics_result):
     fit.seek(0)
     graph = ics_result.plotToStringIO()
     result = Result(correlation=correlation, job=job)
-    result.data_file.save('data.txt', ContentFile(data.read()))
-    result.fit_file.save('fit.txt', ContentFile(fit.read()))
-    result.graph_image.save('graph.png', ContentFile(graph.read()))
+    result.data_file.save(color+'.txt', ContentFile(data.read()))
+    result.fit_file.save(color+'_fit.txt', ContentFile(fit.read()))
+    result.graph_image.save(color+'_graph.png', ContentFile(graph.read()))
     result.save()
 
 

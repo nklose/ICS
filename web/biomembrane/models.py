@@ -23,18 +23,16 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-def generate_image_path(instance, filename):
+def _generate_image_path(instance, filename):
     id = instance.batch.id
     number = instance.number
-    path = '/'.join([unicode(id), unicode(number), filename])
+    path = '/'.join([str(id), str(number), filename])
     return path
 
 
-def generate_result_path(instance, filename):
-    id = instance.job.batch.id
-    number = instance.job.number
-    color = instance.correlation.color
-    path = '/'.join([unicode(id), unicode(number), 'results', color, filename])
+def _generate_result_path(instance, filename):
+    batch = instance.job.batch
+    path = '/'.join([batch.get_results_path(), filename])
     return path
 
 
@@ -42,6 +40,9 @@ class Batch(models.Model):
     id = models.AutoField(primary_key=True)
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User)
+
+    def get_results_path(self):
+        return '/'.join([str(self.id), 'results'])
 
     def __unicode__(self):
         return unicode(self.date.__str__())
@@ -57,10 +58,10 @@ class Job(models.Model):
 
     number = models.IntegerField()
     state = models.CharField(max_length=1, choices=JOB_STATES)
-    red_image = models.ImageField(upload_to=generate_image_path)
-    green_image = models.ImageField(upload_to=generate_image_path)
-    blue_image = models.ImageField(upload_to=generate_image_path)
-    rgb_image = models.ImageField(upload_to=generate_image_path)
+    red_image = models.ImageField(upload_to=_generate_image_path)
+    green_image = models.ImageField(upload_to=_generate_image_path)
+    blue_image = models.ImageField(upload_to=_generate_image_path)
+    rgb_image = models.ImageField(upload_to=_generate_image_path)
     batch = models.ForeignKey(Batch)
 
     def __unicode__(self):
@@ -97,8 +98,8 @@ class TripleParameters(DualParameters):
 
 
 class Result(models.Model):
-    data_file = models.FileField(upload_to=generate_result_path)
-    fit_file = models.FileField(upload_to=generate_result_path)
-    graph_image = models.ImageField(upload_to=generate_result_path)
+    data_file = models.FileField(upload_to=_generate_result_path)
+    fit_file = models.FileField(upload_to=_generate_result_path)
+    graph_image = models.ImageField(upload_to=_generate_result_path)
     correlation = models.ForeignKey(Correlation)
     job = models.ForeignKey(Job)
