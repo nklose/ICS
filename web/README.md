@@ -9,15 +9,17 @@ Requirements
 * pil
 * numpy
 * rabbitmq-server 
+* ImageMagick
+* PythonMagick
 
 Installation
 ============
 
-1. Configure RabbitMQ
+1. Configure RabbitMQ (modify web/settings.py with credentials)
 
-        sudo rabbitmqctl add_user biomembrane
-        sudo rabbitmqctl add_vhost biomembrane
-        sudo rabbitmqctl set_permissions -p biomembrane biomembrane ".*" ".*" ".*"
+        sudo rabbitmqctl add_user <user> <password>
+        sudo rabbitmqctl add_vhost <vhost>
+        sudo rabbitmqctl set_permissions -p <vhost> <user> ".*" ".*" ".*"
 
 2. Create the sqlite database at web/biomembrane.db (modify web/settings.py to change location)
 

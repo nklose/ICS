@@ -9,7 +9,11 @@ PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 # Configure celery
 djcelery.setup_loader()
-BROKER_URL = 'amqp://biomembrane:biomembrane@localhost:5672/'
+BROKER_HOST = 'localhost'
+BROKER_PORT = 5672
+BROKER_USER = 'ics_user'
+BROKER_PASSWORD = 'ics_password'
+BROKER_VHOST = 'ics_vhost'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
