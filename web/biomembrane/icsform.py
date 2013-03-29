@@ -376,4 +376,3 @@ class BatchSettingsForm(forms.Form):
               del cleaned_data["wAutoCross"]
 
         return cleaned_data
-
