@@ -82,9 +82,9 @@ class TestICSBadData(ics_batch.TestBatch):
 class TestICSBadDataSingle(ics_seperate_base.TestBackendSeperateImage):
     def set_vars(self):
         self.d_range = 20
-        self.inFilePathR = os.path.join("badData", "r_000.bmp")
-        self.inFilePathG = os.path.join("badData", "g_000.bmp")
-        self.inFilePathB = os.path.join("badData", "b_000.bmp")
+        self.inFilePathR = os.path.join("badData", "r_001.bmp")
+        self.inFilePathG = os.path.join("badData", "g_001.bmp")
+        self.inFilePathB = os.path.join("badData", "b_001.bmp")
         self.outputDirName = "badData"
 
     def validate_output(self):
