@@ -58,8 +58,8 @@ class TestICSRGBtempGif(ics_single_base.TestBackendSingleImage):
     """
 
     def set_vars(self):
-        self.inFilePath = os.path.join("RGBtemp", "rgb_001.gif")
-        self.outputDirName = "RGBtemp"
+        self.inFilePath = os.path.join("RGBtemp_gif", "rgb_001.gif")
+        self.outputDirName = "RGBtemp_gif"
 
 
 class TestICSRGBtempJpeg(ics_single_base.TestBackendSingleImage):
