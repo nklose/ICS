@@ -30,7 +30,31 @@ class SampleImageForm(forms.Form):
         else:
            return False
 
+    def clean(self):
+        cleaned_data = super(SampleImageForm, self).clean()
+        if self.isSingleUpload():
+           if cleaned_data.get("mixedImg") == None:
+               msg = 'Please specify a mixed image to upload'
+               self._errors["mixedImg"] = self.error_class([msg])
+               del cleaned_data["mixedImg"]
 
+        if self.isMultipleUpload():
+           if cleaned_data.get("redImg") == None:
+               msg = 'Please specify a red image to upload'
+               self._errors["redImg"] = self.error_class([msg])
+               del cleaned_data["redImg"]
+
+           if cleaned_data.get("greenImg") == None:
+               msg = 'Please specify a green image to upload'
+               self._errors["greenImg"] = self.error_class([msg])
+               del cleaned_data["greenImg"]
+
+           if cleaned_data.get("blueImg") == None:
+               msg = 'Please specify a blue image to upload'
+               self._errors["blueImg"] = self.error_class([msg])
+               del cleaned_data["blueImg"]
+
+        return cleaned_data
 
 class RgbSettingsForm(forms.Form):
 
