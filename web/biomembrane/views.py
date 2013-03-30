@@ -326,6 +326,9 @@ def results(request):
         - sec_ title: The title of the section
         - copyrightdate: The year of copyright.
     """
+    if 'batch_id' not in request.session:
+        return HttpResponseRedirect('/rgb_upload/')
+    
     temp = {"sec_title": "Results", "copyrightdate": 2013,}
     return render(request, 'results.html', temp)
 
