@@ -50,6 +50,15 @@ def create_images(red, green, blue):
     return (red_image, green_image, blue_image)
 
 
+def get_intensities(rgb_image):
+    array = np.asarray(rgb_image)
+    r, g, b = get_channels(array)
+    red_int = np.average(r)
+    green_int = np.average(g)
+    blue_int = np.average(b)
+    return (red_int, green_int, blue_int)
+
+
 def image_to_string_io(image):
     """ Convert PIL image to StringIO object """
     io = StringIO.StringIO()

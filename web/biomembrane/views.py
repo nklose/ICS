@@ -150,8 +150,15 @@ def program(request):
     batch = Batch.objects.get(id=request.session['batch_id'])
     job = Job.objects.get(batch=batch)
     images = [job.rgb_image.url, job.red_image.url, job.green_image.url, job.blue_image.url]
+    imageAttrs = {}
+    image = PIL.Image.open(job.rgb_image.path)
+    intensities = image_utils.get_intensities(image)
+    imageAttrs['size'] = str(image.size[0]) + 'x' + str(image.size[1])
+    imageAttrs['red'] = intensities[0]
+    imageAttrs['green'] = intensities[1]
+    imageAttrs['blue'] = intensities[2]
 
-    temp = {"sec_title": "Image Correlation Spectroscopy Program","form": form, "rgbimgs": images}
+    temp = {"sec_title": "Image Correlation Spectroscopy Program","form": form, "rgbimgs": images, "imgAttrs": imageAttrs}
     return render(request, 'icslayout.html', temp)
 
 @login_required(login_url='/accounts/login/')
@@ -325,8 +332,8 @@ def results(request):
         - sec_ title: The title of the section
         - copyrightdate: The year of copyright.
     """
-    if 'batch_id' not in request.session:
-        return HttpResponseRedirect('/rgb_upload/')
+    #if 'batch_id' not in request.session:
+        #return HttpResponseRedirect('/rgb_upload/')
     
     temp = {"sec_title": "Results", "copyrightdate": 2013,}
     return render(request, 'results.html', temp)
@@ -400,3 +407,16 @@ def batch(request):
 
     temp = {"sec_title": "Image Correlation Spectroscopy Program | Batch Mode", "form": form}
     return render(request, 'batch.html', temp)
+
+def help(request):
+    """ Renders a documentation help page view.
+         Template: /web/web/templates/help.html
+
+         Request parameters (ie, parameters in the request object):
+         - None
+
+         Context parameters (ie, keys in the dictionary passed to the template):
+        - sec_ title: The title of the section
+    """
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Documentation",}
+    return render(request, 'help.html', temp)
