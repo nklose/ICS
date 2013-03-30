@@ -22,6 +22,7 @@ Installation
         sudo rabbitmqctl set_permissions -p <vhost> <user> ".*" ".*" ".*"
         
 Dev Settings
+
         sudo rabbitmqctl add_user ics_user ics_password
         sudo rabbitmqctl add_vhost ics_vhost
         sudo rabbitmqctl set_permissions -p ics_vhost ics_user ".*" ".*" ".*"
