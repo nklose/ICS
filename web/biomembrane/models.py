@@ -103,17 +103,23 @@ class Correlation(models.Model):
     batch = models.ForeignKey(Batch)
 
 
-class DualParameters(models.Model):
+class Parameters(models.Model):
     range_val = models.FloatField(null=True, blank=True)
     g0 = models.FloatField(null=True, blank=True)
     w = models.FloatField(null=True, blank=True)
     ginf = models.FloatField(null=True, blank=True)
-    auto_deltas = models.BooleanField(blank=True)
-    cross_deltas = models.BooleanField(blank=True)
     batch = models.ForeignKey(Batch)
 
+    class Meta:
+        abstract = True
 
-class TripleParameters(DualParameters):
+
+class DualParameters(Parameters):
+    auto_deltas = models.BooleanField(blank=True)
+    cross_deltas = models.BooleanField(blank=True)
+
+
+class TripleParameters(Parameters):
     limit = models.IntegerField()
 
 

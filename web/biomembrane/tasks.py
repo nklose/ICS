@@ -21,8 +21,10 @@ signing of this agreement.
 from celery import task
 from models import Batch, Correlation, DualParameters, TripleParameters, Result
 from django.core.files.base import ContentFile
+from django.conf import settings
 from StringIO import StringIO
 from midend import adaptor, batchRunner
+import os.path
 import PIL.Image
 import numpy
 
@@ -100,13 +102,15 @@ def run_triple3(job, part2_result):
 def run_batch(batch):
     dual_params = DualParameters.objects.get(batch=batch)
     triple_params = TripleParameters.objects.get(batch=batch)
+    input_dir = os.path.join(settings.MEDIA_ROOT, batch.get_inputs_path())
+    output_dir = os.path.join(settings.MEDIA_ROOT, batch.get_results_path())
     config = Config()
     config.side = batch.image_size
-    config.input_directory = batch.get_inputs_path()
-    config.output_directory = batch.get_results_path()
+    config.input_directory = input_dir
+    config.output_directory = output_dir
     config.name_min = batch.start
     config.name_max = batch.stop
-    config.name_format = batch.name_format
+    config.name_format = str(batch.name_format)
     config.dual_range = dual_params.range_val
     config.triple_range = triple_params.range_val
     config.auto_consider_deltas = dual_params.auto_deltas
@@ -121,6 +125,7 @@ def run_batch(batch):
 
     batch_runner = batchRunner.BatchRunner(config)
     batch_runner.runAll()
+    batch_runner.outputAllFiles()
 
     batch.state =  Batch.COMPLETE
     batch.save()

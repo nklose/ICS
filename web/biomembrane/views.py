@@ -23,9 +23,13 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect 
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
+from django.conf import settings
 from icsform import RgbSettingsForm, BatchSettingsForm;
 from models import Batch, Job, DualParameters, TripleParameters, Correlation, TempResult
+from os import listdir
+import os.path
 import scipy.misc
+import PIL.Image
 import icsform
 import models
 import image_utils
@@ -379,22 +383,24 @@ def batch(request):
  
             DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, auto_deltas=deltaAuto, cross_deltas=deltaCross).save()
             TripleParameters(batch=batch, range_val=rangeTriple, g0=gzeroTriple, w=wTriple, ginf=ginfTriple, limit=resolution).save()
- 
+
             # Take upload as zip file
             zipdata = form.cleaned_data['zip_file']
-            # Run Batch with settings
  
             # Reading each file in the zip file
-            myzip = zipfile.ZipFile(zipdata)
-            jobNo = 1
-            for filename in myzip.namelist():
-                data = myzip.read(filename)
-                #job = Job(batch=batch, number=jobNo)
-                
-            myzip.close()
+            with zipfile.ZipFile(zipdata) as zipf:
+                path = os.path.join(settings.MEDIA_ROOT, batch.get_inputs_path())
+                zipf.extractall(path)
+                image_path = os.path.join(path, listdir(path)[0])
+                image = PIL.Image.open(image_path)
+                if len(image.getbands()) == 3:
+                    batch.image_type = Batch.MIXED
+                else:
+                    batch.image_type = Batch.SINGLE
+                batch.save()
+
+            tasks.run_batch.delay(batch)
              
-            # Redirect to batch result
-            
             return HttpResponseRedirect('/results/') # redirect after post
     else:
         form = BatchSettingsForm()
