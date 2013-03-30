@@ -5,15 +5,15 @@
 {% endblock stylesheet %}
 {% block script %}{{ block.super}}{% endblock script %}
 {% block content-main %}
-<h3>Single Image Correlation Results</h3>
+<h3>Correlation Results</h3>
 <div class="rgbimg-background">
 <div class="img-displayblock">
     <ul class="sortableImgList" id="sortable-graphs"> 
-    {% for key, val in graphImgs.items %}
-    <li><span class="sortableGraph"><img src="{{val.url}}" alt="{{key}}"/></span>{{key}}</li>
+    {% for result in results %}
+    <li><span class="sortableGraph"><img src="{{result.graph_image.url}}"/></span></li>
     {% endfor %}
     </ul>
 </div>
 </div>
-<div><a class="btn btn-primary" href="{{ export_link }}">Download Results</a></div>
+<div class="rgbimg-background"><a class="btn btn-primary" href="{{export_link}}">Download Results</a></div>
 {% endblock content-main %}

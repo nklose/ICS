@@ -63,7 +63,6 @@ def _save_result(correlation, job, ics_result):
     result.save()
 
 
-@task()
 def run_dual(job):
     params = DualParameters.objects.get(batch=job.batch)
     correlations = Correlation.objects.filter(batch=job.batch).exclude(color=Correlation.RGB)
@@ -90,7 +89,6 @@ def run_triple2(job, part1_result):
     return result
 
 
-@task()
 def run_triple3(job, part2_result):
     params = TripleParameters.objects.get(batch=job.batch)
     correlation = Correlation.objects.get(batch=job.batch, color=Correlation.RGB)
