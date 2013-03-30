@@ -334,19 +334,37 @@ class Batch(QtGui.QMainWindow):
             validInput = False
         else:
             try:
-                int(dual_range)
-                int(triple_range)
-                float(dual_g0)
-                float(triple_g0)
-                float(dual_w)
-                float(triple_w)
-                float(dual_ginf)
-                float(triple_ginf)
+                dr = int(dual_range)
+                tr = int(triple_range)
+                dg0 = float(dual_g0)
+                tg0 = float(triple_g0)
+                dw = float(dual_w)
+                tw = float(triple_w)
+                dginf = float(dual_ginf)
+                tginf = float(triple_ginf)
+                if dr < 0 or tr < 0 or dg0 < 0 or tg0 < 0 or dginf < 0 or tginf < 0:
+                    validInput = False
+                    self.message("Some parameters are negative; aborting.")
+                elif dw <= 0 or tw <= 0:
+                    validInput = False
+                    self.message("W parmeter must be greater than 0; aborting.")
+                elif tr > self.get_limit():
+                    self.message("Triple range cannot be larger than the sample resolution.")
+                    validInput = False
             except ValueError:
                 validInput = False
                 self.message("Some parameters are non-numeric; aborting.")
         return validInput
     
+    # Returns the selected limit for triple correlations.
+    def get_limit(self):
+        if bool(self.ui.resolution16.isChecked()):
+            return 16
+        elif bool(self.ui.resolution64.isChecked()):
+            return 64
+        else:
+            return 32
+
     # Creates a mixed image config object for BatchRunner using the current program 
     # state. If the mixed input parameter is true, the config object will be set up 
     # for single RGB images; otherwise, split monochrome images will be used.
@@ -366,12 +384,7 @@ class Batch(QtGui.QMainWindow):
         config.triple_initial = numpy.array([self.ui.tripleG0.text(),
                                              self.ui.tripleW.text(),
                                              self.ui.tripleGinf.text()], dtype = numpy.float)
-        if bool(self.ui.resolution16.isChecked()):
-            config.triple_lim = 16
-        elif bool(self.ui.resolution32.isChecked()):
-            config.triple_lim = 32
-        else:
-            config.triple_lim = 64
+        config.triple_lim = self.get_limit()
         if mixed:
             config.input_type = "mixed"
             config.name_format = "rgb_{:03d}.bmp"
