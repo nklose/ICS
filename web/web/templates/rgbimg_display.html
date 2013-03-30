@@ -4,8 +4,8 @@
 <div class="alert alert-info" id="notice"><strong>Note: </strong>Reorder the image placement by clicking a particular image then Drag and Drop it into new location</div>
  <div class="img-displayblock">
     <ul class="sortableImgList" id="sortable-img">
-    {% for key, val in rgbimgs.items %}
-    <li><span class="sortableImg"><img src="{{val.url}}" alt="{{key}}"/></span>{{key}}</li>
+    {% for img in rgbimgs %}
+    <li><span class="sortableImg"><img src="{{img}}"/></span></li>
     {% empty %}
     <li><span class="sortableImg"><img src="{{ STATIC_URL }}img/no_img.png" alt="Image not loaded"/></span>All Channels</li>
     <li><span class="sortableImg"><img src="{{ STATIC_URL }}img/no_img.png" alt="Image not loaded"/></span>Red</li>

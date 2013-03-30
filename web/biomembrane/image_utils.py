@@ -40,8 +40,12 @@ def create_image(red, green, blue):
 
 def create_images(red, green, blue):
     """ Creates separate images for each color channel """
+    zeros = np.zeros(red.shape)
+    red = np.dstack((red, zeros, zeros))
     red_image = PIL.Image.fromarray(np.uint8(red))
+    green = np.dstack((zeros, green, zeros))
     green_image = PIL.Image.fromarray(np.uint8(green))
+    blue = np.dstack((zeros, zeros, blue))
     blue_image = PIL.Image.fromarray(np.uint8(blue))
     return (red_image, green_image, blue_image)
 

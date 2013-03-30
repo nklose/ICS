@@ -149,15 +149,7 @@ def program(request):
     
     batch = Batch.objects.get(id=request.session['batch_id'])
     job = Job.objects.get(batch=batch)
-    images = {}
-    images['RGB'] = {}
-    images['RGB']['url'] = job.rgb_image.url
-    images['Red'] = {}
-    images['Red']['url'] = job.red_image.url
-    images['Green'] = {}
-    images['Green']['url'] = job.green_image.url
-    images['Blue'] = {}
-    images['Blue']['url'] = job.blue_image.url
+    images = [job.rgb_image.url, job.red_image.url, job.green_image.url, job.blue_image.url]
 
     temp = {"sec_title": "Image Correlation Spectroscopy Program","form": form, "rgbimgs": images}
     return render(request, 'icslayout.html', temp)
@@ -304,6 +296,7 @@ def rgb_upload(request):
                 g = scipy.misc.fromimage(greenImage)
                 b = scipy.misc.fromimage(blueImage)
                 rgbImage = image_utils.create_image(r, g, b)
+                redImage, greenImage, blueImage = image_utils.create_images(r, g, b)
 
                 job = models.Job(number=1, batch=batch) 
                 job.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
