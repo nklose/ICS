@@ -3,9 +3,13 @@
 {{ block.super }}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">
 {% endblock stylesheet %}
+{% block script %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/ics_scripts/ics.js"></script>
+{{ block.super }}
+{% endblock %}
 {% block content-main %}
 <div class="rgbimg-background"><img src={{ graph_path }}/></div>
-  <form method="post">{% csrf_token %}
+  <form id="settings-form" method="post">{% csrf_token %}
  <div class="rgbimg-background">
 {% if form.errors %}
 <div class="alert alert-error">
@@ -30,7 +34,9 @@
      </div> <!-- row -->
  </div>
  <div class="rgbimg-background">
-  <input class="btn btn-primary" type="submit" value="Next"/>
+   <div class="progress">
+ <div class="bar" style="width: 75%">Progress 75%</div></div>
+   <button type="button" id="start" class="btn" data-loading-text="Loading...">Next</button>
   <input class="btn" type="button" onclick="window.location='/program/'" value="Cancel"/>
   </form>
  </div>

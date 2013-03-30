@@ -23,14 +23,10 @@
       $('#'+lastTab).tab('show');
   }
 
-  $('#start').button();
-   $('#start').click(function() {
-    $(this).button('loading');
-    // Then whatever you actually want to do i.e. submit form
-    // After that has finished, reset the button state using
-    $('#settings-form').submit();
-    $(this).button('reset');
-  });
+ $('#start').on('click', function () {
+  $(this).button('loading')
+  $('#settings-form').submit();
+  })
 
   function showSelected(value)
   {

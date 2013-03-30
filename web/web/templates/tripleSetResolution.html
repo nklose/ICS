@@ -3,10 +3,14 @@
 {{ block.super }}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">
 {% endblock stylesheet %}
+{% block script %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/ics_scripts/ics.js"></script>
+{{ block.super }}
+{% endblock %}
 {% block content-main %}
 <div class="rgbimg-background"><img src={{ graph_path }}/></div>
 <div class="rgbimg-background">
- <form method="post">{% csrf_token %}
+ <form id="settings-form" method="post">{% csrf_token %}
  <div class="alert alert-info" id="notice"><strong>Note: </strong>Please select the image resolution to sample from</div>
  {{ form.resolutions.errors }}
      <fieldset>
@@ -15,7 +19,9 @@
       </fieldset>
 </div>
 <div class="rgbimg-background">
- <input class="btn btn-primary" type="submit" value="Next"/>
+   <div class="progress">
+ <div class="bar" style="width: 50%">Progress 50%</div></div>
+  <button type="button" id="start" class="btn" data-loading-text="Loading...">Next</button>
  <input class="btn" type="button" onclick="window.location='/program/'" value="Cancel"/>
  </form>
 </div>

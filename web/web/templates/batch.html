@@ -1,6 +1,12 @@
 {% extends "generic.html" %}
-{% block stylesheet %}{{ block.super }}{% endblock stylesheet %}
-{% block script %}{{ block.super}}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">{% endblock script %}
+{% block stylesheet %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">
+{% endblock stylesheet %}
+{% block script %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/ics_scripts/ics.js"></script>
+{{ block.super }}
+{% endblock %}
 {% block content-main %}
 <h5>Image Correlation Spectroscopy Batch Mode</h5>
 {% if form.errors %}
@@ -22,7 +28,7 @@
 {{ form.zip_file.errors }}
 </div>
 {% endif %} 
-<form name="batchform" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} method="post">{% csrf_token %}
+<form name="batchform" id="settings-form" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} method="post">{% csrf_token %}
   <div class="row-fluid">
     <div class="span4">
      <fieldset>
@@ -63,8 +69,8 @@
    </div> <!-- row -->
 <div class="rgbimg-background">
  <div id="batchcontrols">
-  <div class="alert alert-info" id="userNotice"><strong>Note: </strong>When ready click <strong>Next</strong> to Proceed to Batch File Upload</div>
-  <input type="submit" id="batchStart" class="btn" value="Next">
+  <div class="alert alert-info" id="userNotice"><strong>Note: </strong>When ready click <strong>Start</strong> to Proceed to Batch File Upload</div>
+  <button type="button" id="start" class="btn" data-loading-text="Loading...">Start</button>
   <button type="button" id="batchCancel" class="btn" data-toggle="button" onclick="window.location='../rgb_upload'">Swtich to Single Mode</button>
  </div>
 </div>
