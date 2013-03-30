@@ -21,6 +21,11 @@ signing of this agreement.
 """
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+import shutil
+import os.path
 
 
 def _generate_image_path(instance, filename):
@@ -73,6 +78,12 @@ class Batch(models.Model):
 
     def __unicode__(self):
         return unicode(self.date.__str__())
+
+
+@receiver(pre_delete, sender=Batch)
+def on_batch_delete(sender, instance, **kwargs):
+    path = os.path.join(settings.MEDIA_ROOT, str(instance.id))
+    shutil.rmtree(path)
 
 
 class Job(models.Model):
