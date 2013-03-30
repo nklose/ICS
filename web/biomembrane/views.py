@@ -84,7 +84,7 @@ def program(request):
                 if blueChecked:
                     Correlation(batch=batch, color=Correlation.B).save()
 
-                tasks.run_dual.delay(job)
+                tasks.run_dual(job)
 
                 #Do Auto with parameters above
                 return HttpResponseRedirect('/results/') #redirect results view
@@ -110,7 +110,7 @@ def program(request):
                 if greenblueChecked:
                     Correlation(batch=batch, color=Correlation.GB).save()
 
-                tasks.run_dual.delay(job)
+                tasks.run_dual(job)
 
                 #Do Cross Correlation with above parameters
                 return HttpResponseRedirect('/results/') #redirect results view
@@ -140,7 +140,7 @@ def program(request):
                 Correlation(batch=batch, color=Correlation.GB).save()
                 Correlation(batch=batch, color=Correlation.RGB).save()
 
-                tasks.run_dual.delay(job)
+                tasks.run_dual(job)
 
                 #Redirect to tripleSetRes (Ask User for Triple's Sample Resolution)
                 return HttpResponseRedirect('/triple/setRes/') # see tripleSetRes view function
@@ -241,7 +241,7 @@ def tripleSetParams(request):
             params.w = w
             params.ginf = ginf
             params.save()
-            tasks.run_triple3.delay(job, request.session['triple2'])
+            tasks.run_triple3(job, request.session['triple2'])
             return HttpResponseRedirect('/results/') # redirect after post
     else:
         form = RgbSettingsForm()
@@ -402,10 +402,22 @@ def results(request):
         - sec_ title: The title of the section
         - copyrightdate: The year of copyright.
     """
-    #if 'batch_id' not in request.session:
-        #return HttpResponseRedirect('/rgb_upload/')
-    
-    temp = {"sec_title": "Image Correlation Spectroscopy Program | Results", "copyrightdate": 2013,}
+    if 'batch_id' not in request.session:
+        return HttpResponseRedirect('/rgb_upload/')
+
+    batch = Batch.objects.get(id=request.session['batch_id'])
+    resultsPath = os.path.join(settings.MEDIA_ROOT, batch.get_results_path())
+    pathLen = len(resultsPath) + 1
+    zipPath = os.path.join(settings.MEDIA_ROOT, str(batch.id), 'results.zip')
+    with zipfile.ZipFile(zipPath, 'w') as zipf:
+        for base, dirs, files in os.walk(resultsPath):
+            for file in files:
+                filename = os.path.join(base, file)
+                zipf.write(filename, filename[pathLen:])
+
+    export_link = os.path.join(settings.MEDIA_URL, str(batch.id), 'results.zip')
+    results = batch.job_set.all()[0].result_set.all()
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Results", "copyrightdate": 2013, "results": results, "export_link": export_link}
     return render(request, 'results.html', temp)
 
 
