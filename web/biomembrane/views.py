@@ -71,7 +71,7 @@ def program(request):
                 w = form.cleaned_data['wAuto']
                 ginf = form.cleaned_data['ginfAuto']
 
-                DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, use_deltas=considerDeltas).save()
+                DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, auto_deltas=considerDeltas).save()
 
                 if redChecked:
                     Correlation(batch=batch, color=Correlation.R).save()
@@ -97,7 +97,7 @@ def program(request):
                 w = form.cleaned_data['wCross']
                 ginf = form.cleaned_data['ginfCross']
 
-                DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, use_deltas=considerDeltas).save()
+                DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, cross_deltas=considerDeltas).save()
 
                 if redgreenChecked:
                     Correlation(batch=batch, color=Correlation.RG).save()
@@ -126,7 +126,7 @@ def program(request):
                 w = form.cleaned_data['wAutoCrossAll']
                 ginf = form.cleaned_data['ginfAutoCrossAll']
 
-                DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, use_deltas=considerDeltas).save()
+                DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, auto_deltas=considerDeltas, cross_deltas=considerDeltas).save()
 
                 Correlation(batch=batch, color=Correlation.R).save()
                 Correlation(batch=batch, color=Correlation.G).save()
@@ -348,46 +348,54 @@ def batch(request):
     if request.method == 'POST':  #form has been submitted
         form = BatchSettingsForm(request.POST, request.FILES)
         if form.is_valid():
-           # Proccess the data in form.cleaned_data
-           # get the filenameFormat of each image file in the batch from user
-           filenameFormat = form.cleaned_data['filenameFormat']
-           imageSize = form.cleaned_data['imageSize']; #get the size of images from the user
-           resolutions = form.selectedResolution() #the size to sample for triple correlation
-           firstImageIndex = form.cleaned_data['firstImageIndex'] #which image file number to start at (suppose they skip some)
-           lastImageIndex = form.cleaned_data['lastImageIndex'] #which image file number to end at
-
-           # Auto and Cross Parameters
-           rangeValue = form.cleaned_data['rangeAutoCross']
-           gzeroValue = form.cleaned_data['gzeroAutoCross']
-           wValue = form.cleaned_data['wAutoCross']
-           ginfValue = form.cleaned_data['ginfAutoCross']
-           deltaAuto = form.cleaned_data['considerDeltaForAuto'] #check this boolean
-           deltaCross = form.cleaned_data['considerDeltaForCross'] #check this boolean
-
-           rangeTripleValue = form.cleaned_data['rangeTriple']
-           gzeroTripleValue = form.cleaned_data['gzeroTriple']
-           wTripleValue = form.cleaned_data['wTriple']
-           ginfTripleValue = form.cleaned_data['ginfTriple']
-
-           # Take upload as zip file
-           zipdata = form.cleaned_data['zip_file']
-           # Run Batch with settings
-
-           # Reading each file in the zip file
-           myzip = zipfile.ZipFile(zipdata)
-           for filename in myzip.namelist():
-               # Do something here with each file in the .ZIP archive.
-               #
-               # For example, if you expect the archive to contain image
-               # files, you could process each one with PIL, then create
-               # and create jobs for each.
-               data = myzip.read(filename)
-               
-           myzip.close()
+            # Proccess the data in form.cleaned_data
+            # get the filenameFormat of each image file in the batch from user
+            filenameFormat = form.cleaned_data['filenameFormat']
+            imageSize = form.cleaned_data['imageSize']; #get the size of images from the user
+            resolution = form.selectedResolution() #the size to sample for triple correlation
+            firstImageIndex = form.cleaned_data['firstImageIndex'] #which image file number to start at (suppose they skip some)
+            lastImageIndex = form.cleaned_data['lastImageIndex'] #which image file number to end at
+ 
+            # Auto and Cross Parameters
+            rangeVal = form.cleaned_data['rangeAutoCross']
+            gzero = form.cleaned_data['gzeroAutoCross']
+            w = form.cleaned_data['wAutoCross']
+            ginf = form.cleaned_data['ginfAutoCross']
+            deltaAuto = form.cleaned_data['considerDeltaForAuto'] #check this boolean
+            deltaCross = form.cleaned_data['considerDeltaForCross'] #check this boolean
+ 
+            rangeTriple = form.cleaned_data['rangeTriple']
+            gzeroTriple = form.cleaned_data['gzeroTriple']
+            wTriple = form.cleaned_data['wTriple']
+            ginfTriple = form.cleaned_data['ginfTriple']
+ 
+            batch = Batch(user=request.user, state=Batch.UPLOADING)
+            batch.image_type = Batch.MIXED
+            batch.image_size = imageSize
+            batch.start = firstImageIndex
+            batch.stop = lastImageIndex
+            batch.name_format = filenameFormat
+            batch.save()
+ 
+            DualParameters(batch=batch, range_val=rangeVal, g0=gzero, w=w, ginf=ginf, auto_deltas=deltaAuto, cross_deltas=deltaCross).save()
+            TripleParameters(batch=batch, range_val=rangeTriple, g0=gzeroTriple, w=wTriple, ginf=ginfTriple, limit=resolution).save()
+ 
+            # Take upload as zip file
+            zipdata = form.cleaned_data['zip_file']
+            # Run Batch with settings
+ 
+            # Reading each file in the zip file
+            myzip = zipfile.ZipFile(zipdata)
+            jobNo = 1
+            for filename in myzip.namelist():
+                data = myzip.read(filename)
+                #job = Job(batch=batch, number=jobNo)
+                
+            myzip.close()
+             
+            # Redirect to batch result
             
-           # Redirect to batch result
-           
-           return HttpResponseRedirect('/results/') # redirect after post
+            return HttpResponseRedirect('/results/') # redirect after post
     else:
         form = BatchSettingsForm()
 

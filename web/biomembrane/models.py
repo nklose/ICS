@@ -108,7 +108,8 @@ class DualParameters(models.Model):
     g0 = models.FloatField(null=True, blank=True)
     w = models.FloatField(null=True, blank=True)
     ginf = models.FloatField(null=True, blank=True)
-    use_deltas = models.BooleanField(blank=True)
+    auto_deltas = models.BooleanField(blank=True)
+    cross_deltas = models.BooleanField(blank=True)
     batch = models.ForeignKey(Batch)
 
 

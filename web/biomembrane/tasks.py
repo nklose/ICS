@@ -68,7 +68,11 @@ def run_dual(job):
     image = PIL.Image.open(job.rgb_image.path)
 
     for correlation in correlations:
-        result = adaptor.run_dual_mixed_image(image, [correlation.color], params.g0, params.w, params.ginf, params.range_val, params.use_deltas)[0]
+        if len(correlation.color) == 1:
+            use_deltas = params.auto_deltas
+        else:
+            use_deltas = params.cross_deltas
+        result = adaptor.run_dual_mixed_image(image, [correlation.color], params.g0, params.w, params.ginf, params.range_val, use_deltas)[0]
         _save_result(correlation, job, result)
 
 
@@ -105,8 +109,8 @@ def run_batch(batch):
     config.name_format = batch.name_format
     config.dual_range = dual_params.range_val
     config.triple_range = triple_params.range_val
-    config.auto_consider_deltas = dual_params.use_deltas
-    config.cross_consider_deltas = dual_params.use_deltas
+    config.auto_consider_deltas = dual_params.auto_deltas
+    config.cross_consider_deltas = dual_params.cross_deltas
     config.dual_initial = numpy.array([dual_params.g0, dual_params.w, dual_params.ginf, 0, 0], dtype=numpy.float)
     config.triple_initial = numpy.array([triple_params.g0, triple_params.w, triple_params.ginf], dtype=numpy.float)
     config.triple_lim = triple_params.limit
