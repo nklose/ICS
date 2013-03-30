@@ -1619,7 +1619,7 @@ class StartQT4(QtGui.QMainWindow):
         bPath = os.path.join(self.temp_dir, "b_graph.png")
         rgPath = os.path.join(self.temp_dir, "rg_graph.png")
         rbPath = os.path.join(self.temp_dir, "rb_graph.png")
-        gbPath = os.path.join(self.temp_dir, "gb_path.png")
+        gbPath = os.path.join(self.temp_dir, "gb_graph.png")
 
         self.autoRedGraphPath = rPath
         self.autoGreenGraphPath = gPath
