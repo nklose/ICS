@@ -14,15 +14,17 @@
 </div>
 {% endif %}
  <ul class="nav nav-tabs">
-   <li><a href="#singleRGB" data-toggle="tab" id="id_singleRGB">Single RGB Image</a></li>
-   <li><a href="#threeRGB" data-toggle="tab" id="id_threeRGB">Three Channel Images</a></li>
+   <li><a href="#singleRGB" data-toggle="tab" id="id_singleRGB">Single Image</a></li>
+   <li><a href="#threeRGB" data-toggle="tab" id="id_threeRGB">Separate Images</a></li>
  </ul>
  <div class="tab-content">
-   <div class="tab-pane" id="singleRGB"><p>Single Channel<p>
-      <a href="#singleUploadModal" role="button" class="btn" data-toggle="modal">Upload a Single RGB Image</a>
+   <div class="tab-pane" id="singleRGB">
+      <div class="alert alert-info">Upload a single RGB image.</div>
+      <a href="#singleUploadModal" role="button" class="btn btn-primary" data-toggle="modal">Upload Single Image</a>
    </div>
-   <div class="tab-pane" id="threeRGB"><p>Three Channel RGB Image</p>
-      <a href="#multiuploadModal" role="button" class="btn" data-toggle="modal">Upload Three Channels</a>
+   <div class="tab-pane" id="threeRGB">
+      <div class="alert alert-info">Upload separate images for each channel. Images should be grayscale.</div>
+      <a href="#multiuploadModal" role="button" class="btn btn-primary" data-toggle="modal">Upload Separate Images</a>
  </div>
 </div>
 
