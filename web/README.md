@@ -20,6 +20,12 @@ Installation
         sudo rabbitmqctl add_user <user> <password>
         sudo rabbitmqctl add_vhost <vhost>
         sudo rabbitmqctl set_permissions -p <vhost> <user> ".*" ".*" ".*"
+        
+Dev Settings
+        sudo rabbitmqctl add_user ics_user ics_password
+        sudo rabbitmqctl add_vhost ics_vhost
+        sudo rabbitmqctl set_permissions -p ics_vhost ics_user ".*" ".*" ".*"
+
 
 2. Create the sqlite database at web/biomembrane.db (modify web/settings.py to change location)
 
