@@ -40,7 +40,7 @@ def plot(gnew, gfit, color, ginf):
 
     __plot(plotFit, plotNew, color, rangeVal)
 
-    pp.axis([0, rangeVal, min(0, lowerBound), upperBound])
+    pp.axis([0, rangeVal, lowerBound, upperBound])
     pp.savefig(graphString)
     graphString.seek(0)
     return graphString
