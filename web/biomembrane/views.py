@@ -23,9 +23,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect 
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
-from django.conf import settings
 from icsform import RgbSettingsForm, BatchSettingsForm;
-from models import Batch, Job, DualParameters, TripleParameters, Correlation
+from models import Batch, Job, DualParameters, TripleParameters, Correlation, TempResult
 import scipy.misc
 import icsform
 import models
@@ -182,11 +181,18 @@ def tripleSetRes(request):
             return HttpResponseRedirect('/triple/setParams/') 
     else:
         form = RgbSettingsForm()
-        job = Job.objects.get(batch=batch)
+
+    job = Job.objects.get(batch=batch)
+    try:
+        temp = TempResult.objects.get(job=job)
+    except TempResult.DoesNotExist: 
         triple1 = tasks.run_triple1(job)
         request.session['triple1'] = triple1 
+        temp = TempResult(job=job)
+        temp.first_graph.save('triple1.png', ContentFile(triple1.plotToStringIO().read()))
+        temp.save()
 
-    temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Resolution To Sample", "form": form }
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Resolution To Sample", "form": form, "graph_path": temp.first_graph.url}
     return render(request, 'tripleSetResolution.html', temp)
 
 @login_required(login_url='/accounts/login/')
@@ -227,12 +233,17 @@ def tripleSetParams(request):
             return HttpResponseRedirect('/results/') # redirect after post
     else:
         form = RgbSettingsForm()
+
+    temp = TempResult.objects.get(job=job)
+    if temp.second_graph == '':
         triple1 = request.session['triple1']
-        request.session['triple2'] = tasks.run_triple2(job, triple1)
+        triple2 = tasks.run_triple2(job, triple1)
+        request.session['triple2'] = triple2 
+        temp.second_graph.save('triple2.png', ContentFile(triple2.plotToStringIO().read()))
+        temp.save()
 
-    temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Parameters", "form": form,}
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Triple Correlation Set Parameters", "form": form, "graph_path": temp.second_graph.url}
     return render(request, 'tripleSetParameters.html', temp)
-
 
 def home(request):
     """ Renders a home  view.

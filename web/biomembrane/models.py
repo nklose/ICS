@@ -30,6 +30,10 @@ def _generate_image_path(instance, filename):
     return path
 
 
+def _generate_temp_path(instance, filename):
+    return _generate_image_path(instance.job, filename)
+
+
 def _generate_result_path(instance, filename):
     batch = instance.job.batch
     path = '/'.join([batch.get_results_path(), filename])
@@ -95,6 +99,12 @@ class DualParameters(models.Model):
 
 class TripleParameters(DualParameters):
     limit = models.IntegerField()
+
+
+class TempResult(models.Model):
+    first_graph = models.ImageField(upload_to=_generate_temp_path)
+    second_graph = models.ImageField(upload_to=_generate_temp_path)
+    job = models.ForeignKey(Job)
 
 
 class Result(models.Model):

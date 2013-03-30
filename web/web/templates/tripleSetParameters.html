@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">
 {% endblock stylesheet %}
 {% block content-main %}
-<div class="rgbimg-background"></div>
+<div class="rgbimg-background"><img src={{ graph_path }}/></div>
   <form method="post">{% csrf_token %}
  <div class="rgbimg-background">
   <div class="row-fluid">

@@ -246,6 +246,10 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a range value for triple correlation"
               self._errors["rangeTriple"] = self.error_class([msg])
               del cleaned_data["rangeTriple"]
+           #elif cleaned_data.get("rangeTriple") > self.selectedResolution():
+           #   msg = u"Range value must not be larger than the sample resolution for triple correlation"
+           #   self._errors["rangeTriple"] = self.error_class([msg])
+           #   del cleaned_data["rangeTriple"]
 
            if cleaned_data.get("gzeroTriple") == None:
               msg = u"Must specifiy a g(0) value for triple correlation"
@@ -265,11 +269,6 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a ginf value for triple correlation"
               self._errors["ginfTriple"] = self.error_class([msg])
               del cleaned_data["ginfTriple"]
-
-           if cleaned_data.get("rangeTriple") > self.selectedResolution():
-              msg = u"Range value must not be larger than the sample resolution for triple correlation"
-              self._errors["rangeTriple"] = self.error_class([msg])
-              del cleaned_data["rangeTriple"]
 
         elif self.isAll():
 
