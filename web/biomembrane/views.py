@@ -49,6 +49,10 @@ def program(request):
          Context parameters (ie, keys in the dictionary passed to the template):
         - sec_ title: The title of the section.
     """
+
+    if 'batch_id' not in request.session:
+        return HttpResponseRedirect('/rgb_upload/')
+        
     batch = Batch.objects.get(id=request.session['batch_id'])
 
     if request.method == 'POST':  #form has been submitted
@@ -162,6 +166,10 @@ def tripleSetRes(request):
          Context parameters (ie, keys in the dictionary passed to the template):
         - sec_ title: The title of the section.
     """
+
+    if 'batch_id' not in request.session:
+        return HttpResponseRedirect('/rgb_upload/')
+
     batch = Batch.objects.get(id=request.session['batch_id'])
 
     if request.method == 'POST':  #form has been submitted
@@ -194,6 +202,9 @@ def tripleSetParams(request):
          Context parameters (ie, keys in the dictionary passed to the template):
         - sec_ title: The title of the section.
     """
+    if 'batch_id' not in request.session:
+        return HttpResponseRedirect('/rgb_upload/')
+
     batch = Batch.objects.get(id=request.session['batch_id'])
     job = Job.objects.get(batch=batch)
 
