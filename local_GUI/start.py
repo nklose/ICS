@@ -47,6 +47,7 @@ RGB_PLACEHOLDER = "./Images/rgb.png"
 RED_PLACEHOLDER = "./Images/r.png"
 GREEN_PLACEHOLDER = "./Images/g.png"
 BLUE_PLACEHOLDER = "./Images/b.png"
+TEMP_DIR = "./ics_tmp"
 
 class StartQT4(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -1449,42 +1450,95 @@ class StartQT4(QtGui.QMainWindow):
         # enable processing mode if it isn't already enabled
         self.set_processing(True)
 
-        range_val = int(self.get_triple_range())
-        g0 = self.get_triple_G0()
-        w = self.get_triple_W()
-        gInf = self.get_triple_Ginf()
+        # input validation
+        validInput = True
+        if str(self.ui.tripleRangeTextbox.text()) == "":
+            self.ui.tripleRangeTextbox.setFocus()
+            self.message("Triple-correlation range parameter is blank.")
+            validInput = False
+        elif str(self.ui.tripleG0Textbox.text()) == "":
+            self.ui.tripleG0Textbox.setFocus()
+            self.message("Triple-correlation g(0) parameter is blank.")
+            validInput = False
+        elif str(self.ui.tripleWTextbox.text()) == "":
+            self.ui.tripleWTextbox.setFocus()
+            self.message("Triple-correlation w parameter is blank.")
+            validInput = False
+        elif str(self.ui.tripleGinfTextbox.text()) == "":
+            self.ui.tripleGinfTextbox.setFocus()
+            self.message("Triple-correlation gInf parameter is blank.")
+            validInput = False
+        else:
+            try:
+                int(self.ui.tripleRangeTextbox.text())
+            except:
+                self.message("Triple-correlation range parameter is non-numeric.")
+                self.ui.tripleRangeTextbox.clear()
+                self.ui.tripleRangeTextbox.setFocus()
+                validInput = False
+            try:
+                float(self.ui.tripleG0Textbox.text())
+            except:
+                self.message("Triple-correlation g(0) parameter is non-numeric.")
+                self.ui.tripleG0Textbox.clear()
+                self.ui.tripleG0Textbox.setFocus()
+                validInput = False
+            try:
+                float(self.ui.tripleWTextbox.text())
+            except:
+                self.message("Triple-correlation w parameter is non-numeric.")
+                self.ui.tripleWTextbox.clear()
+                self.ui.tripleWTextbox.setFocus()
+                validInput = False
+            try:
+                float(self.ui.tripleGinfTextbox.text())
+            except:
+                self.message("Triple-correlation gInf parameter is non-numeric.")
+                self.ui.tripleGinfTextbox.clear()
+                self.ui.tripleWTextbox.clear()
+                validInput = False
+            if self.get_sample_resolution() < int(self.ui.tripleRangeTextbox.text()):
+                self.message("Sample resolution must be larger than range.")
+                self.ui.tripleRangeTextbox.clear()
+                self.ui.tripleRangeTextbox.setFocus()
 
-        self.progress(11)
+        if validInput:
+            range_val = int(self.get_triple_range())
+            g0 = float(self.get_triple_G0())
+            w = float(self.get_triple_W())
+            gInf = float(self.get_triple_Ginf())
 
-        # call the midend to get the result object
-        result = midend.adaptor.run_triple_part3(self.tripleResult2, range_val, g0, w, gInf)
+            self.progress(11)
+
+            # call the midend to get the result object
+            result = midend.adaptor.run_triple_part3(self.tripleResult2, range_val, g0, w, gInf)
         
-        # save the result object
-        self.tripleResult3 = result
+            # save the result object
+            self.tripleResult3 = result
 
-        self.progress(12)
+            self.progress(12)
 
-        # create the fitting curve
-        path = os.path.join(self.temp_dir, "triple_3.png")
-        self.tripleGraph3Path = path
-        fileLike = result.plotToStringIO()
-        outFile = open(path, "wb")
-        for line in fileLike.readlines():
-            outFile.write(line)
-        outFile.close()
+            # create the fitting curve
+            path = os.path.join(self.temp_dir, "triple_3.png")
+            self.tripleGraph3Path = path
+            fileLike = result.plotToStringIO()
+            outFile = open(path, "wb")
+            for line in fileLike.readlines():
+                outFile.write(line)
+            outFile.close()
 
-        self.progress(13)
+            self.progress(13)
 
-        # Show fitting curve
-        self.ui.imageTripleFittingCurve.setPixmap(QtGui.QPixmap(path))
+            # Show fitting curve
+            self.ui.imageTripleFittingCurve.setPixmap(QtGui.QPixmap(path))
 
-        # Show updated parameters
-        self.ui.tripleResNormValue.setText(str(round(result.resNorm,PRECISION)))
-        self.ui.tripleG0Value.setText(str(round(result.g0,PRECISION)))
-        self.ui.tripleWValue.setText(str(round(result.w,PRECISION)))
-        self.ui.tripleGinfValue.setText(str(round(result.ginf,PRECISION)))
+            # Show updated parameters
+            self.ui.tripleResNormValue.setText(str(round(result.resNorm,PRECISION)))
+            self.ui.tripleG0Value.setText(str(round(result.g0,PRECISION)))
+            self.ui.tripleWValue.setText(str(round(result.w,PRECISION)))
+            self.ui.tripleGinfValue.setText(str(round(result.ginf,PRECISION)))
 
-        self.progress(14)
+            self.progress(14)
 
         # disable processing mode
         self.set_processing(False)
@@ -1945,7 +1999,7 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.allAutoCrossWTextbox.setPlaceholderText("10")
         self.ui.allAutoCrossG0Textbox.setPlaceholderText("1")
 
-        self.ui.tripleRangeTextbox.setPlaceholderText("20")
+        self.ui.tripleRangeTextbox.setPlaceholderText("16")
         self.ui.tripleGinfTextbox.setPlaceholderText("0")
         self.ui.tripleWTextbox.setPlaceholderText("10")
         self.ui.tripleG0Textbox.setPlaceholderText("1")
