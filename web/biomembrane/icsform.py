@@ -195,9 +195,17 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a range value for auto correlation"
               self._errors["rangeAuto"] = self.error_class([msg])
               del cleaned_data["rangeAuto"]
+           elif cleaned_data.get("rangeAuto") < 0:
+              msg = u"w value should not be less than zero for auto correlation"
+              self._errors["rangeAuto"] = self.error_class([msg])
+              del cleaned_data["rangeAuto"]
 
            if cleaned_data.get("gzeroAuto") == None:
               msg = u"Must specifiy a g(0) value for auto correlation"
+              self._errors["gzeroAuto"] = self.error_class([msg])
+              del cleaned_data["gzeroAuto"]
+           elif cleaned_data.get("gzeroAuto") < 0:
+              msg = u"g(0) value should not be less than zero for auto correlation"
               self._errors["gzeroAuto"] = self.error_class([msg])
               del cleaned_data["gzeroAuto"]
 
@@ -205,14 +213,17 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a w value for auto correlation"
               self._errors["wAuto"] = self.error_class([msg])
               del cleaned_data["wAuto"]
-           elif cleaned_data.get("wAuto") == 0:
-              msg = u"w value cannot be zero for auto correlation"
+           elif cleaned_data.get("wAuto") <= 0:
+              msg = u"w value should not be zero or less than zero for auto correlation"
               self._errors["wAuto"] = self.error_class([msg])
               del cleaned_data["wAuto"]
 
-
            if cleaned_data.get("ginfAuto") == None:
               msg = u"Must specifiy a ginf value for auto correlation"
+              self._errors["ginfAuto"] = self.error_class([msg])
+              del cleaned_data["ginfAuto"]
+           elif cleaned_data.get("ginfAuto") < 0:
+              msg = u"ginf value should not be less than zero for auto correlation"
               self._errors["ginfAuto"] = self.error_class([msg])
               del cleaned_data["ginfAuto"]
 
@@ -222,9 +233,18 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a range value for cross correlation"
               self._errors["rangeCross"] = self.error_class([msg])
               del cleaned_data["rangeCross"]
+           elif cleaned_data.get("rangeCross") < 0:
+              msg = u"range value should not be less than zero for cross correlation"
+              self._errors["rangeCross"] = self.error_class([msg])
+              del cleaned_data["rangeCross"]
+
 
            if cleaned_data.get("gzeroCross") == None:
               msg = u"Must specifiy a g(0) value for cross correlation"
+              self._errors["gzeroCross"] = self.error_class([msg])
+              del cleaned_data["gzeroCross"]
+           elif cleaned_data.get("gzeroCross") < 0:
+              msg = u"g(0) value should not be less than zero for cross correlation"
               self._errors["gzeroCross"] = self.error_class([msg])
               del cleaned_data["gzeroCross"]
 
@@ -232,13 +252,17 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a w value for cross correlation"
               self._errors["wCross"] = self.error_class([msg])
               del cleaned_data["wCross"]
-           elif cleaned_data.get("wCross") == 0:
-              msg = u"w value cannot be zero for cross correlation"
+           elif cleaned_data.get("wCross") <= 0:
+              msg = u"w value should not be zero or less than zero for cross correlation"
               self._errors["wCross"] = self.error_class([msg])
               del cleaned_data["wCross"]
 
            if cleaned_data.get("ginfCross") == None:
               msg = u"Must specifiy a ginf value for cross correlation"
+              self._errors["ginfCross"] = self.error_class([msg])
+              del cleaned_data["ginfCross"]
+           elif cleaned_data.get("ginfCross") < 0:
+              msg = u"ginf value should not be zero or less than zero for cross correlation"
               self._errors["ginfCross"] = self.error_class([msg])
               del cleaned_data["ginfCross"]
 
@@ -249,7 +273,7 @@ class RgbSettingsForm(forms.Form):
               self._errors["rangeTriple"] = self.error_class([msg])
               del cleaned_data["rangeTriple"]
            elif cleaned_data.get("rangeTriple") > self.selectedResolution():
-              msg = u"Range value must not be larger than the sample resolution for triple correlation"
+              msg = u"Range value should not be larger than the sample resolution for triple correlation"
               self._errors["rangeTriple"] = self.error_class([msg])
               del cleaned_data["rangeTriple"]
 
@@ -257,20 +281,30 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a g(0) value for triple correlation"
               self._errors["gzeroTriple"] = self.error_class([msg])
               del cleaned_data["gzeroTriple"]
+           elif cleaned_data.get("gzeroTriple") < 0:
+              msg = u"g(0) value should not be less than zero for triple correlation"
+              self._errors["gzeroTriple"] = self.error_class([msg])
+              del cleaned_data["gzeroTriple"]  
+
 
            if cleaned_data.get("wTriple") == None:
               msg = u"Must specifiy a w value for triple correlation"
               self._errors["wTriple"] = self.error_class([msg])
               del cleaned_data["wTriple"]
-           elif cleaned_data.get("wTriple") == 0:
-              msg = u"w value cannot be zero for triple correlation"
+           elif cleaned_data.get("wTriple") <= 0:
+              msg = u"w value should not be zero or less than zero for triple correlation"
               self._errors["wTriple"] = self.error_class([msg])
-              del cleaned_data["wTriple"]  
+              del cleaned_data["wTriple"]
 
            if cleaned_data.get("ginfTriple") == None:
               msg = u"Must specifiy a ginf value for triple correlation"
               self._errors["ginfTriple"] = self.error_class([msg])
               del cleaned_data["ginfTriple"]
+           elif cleaned_data.get("wTriple") < 0:
+              msg = u"ginf value should not be less than zero for triple correlation"
+              self._errors["wTriple"] = self.error_class([msg])
+              del cleaned_data["wTriple"]
+
 
         elif self.isAll():
 
@@ -278,9 +312,17 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a range value for the auto and cross correlation"
               self._errors["rangeAutoCrossAll"] = self.error_class([msg])
               del cleaned_data["rangeAutoCrossAll"]
+           elif cleaned_data.get("rangeAutoCrossAll") < 0:
+              msg = u"range value should not be less than zero for the auto and cross correlation"
+              self._errors["rangeAutoCrossAll"] = self.error_class([msg])
+              del cleaned_data["rangeAutoCrossAll"]
 
            if cleaned_data.get("gzeroAutoCrossAll") == None:
               msg = u"Must specifiy a g(0) value for the auto and corss correlation"
+              self._errors["gzeroAutoCrossAll"] = self.error_class([msg])
+              del cleaned_data["gzeroAutoCrossAll"]
+           elif cleaned_data.get("gzeroAutoCrossAll") < 0:
+              msg = u"g(0) value should not be less than zero for auto and cross correlation"
               self._errors["gzeroAutoCrossAll"] = self.error_class([msg])
               del cleaned_data["gzeroAutoCrossAll"]
 
@@ -288,8 +330,8 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a w value for auto and cross correlation"
               self._errors["wAutoCrossAll"] = self.error_class([msg])
               del cleaned_data["wAutoCrossAll"]
-           elif cleaned_data.get("wAutoCrossAll") == 0:
-              msg = u"w value cannot be zero for auto and cross correlation"
+           elif cleaned_data.get("wAutoCrossAll") <= 0:
+              msg = u"w value should not be zero or less than zero for auto and cross correlation"
               self._errors["wAutoCrossAll"] = self.error_class([msg])
               del cleaned_data["wAutoCrossAll"]               
 
@@ -297,6 +339,10 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a ginf value for auto and cross correlation"
               self._errors["ginfAutoCrossAll"] = self.error_class([msg])
               del cleaned_data["ginfAutoCrossAll"]
+           elif cleaned_data.get("ginfAutoCrossAll") < 0:
+              msg = u"ginf value should not be less zero for auto and cross correlation"
+              self._errors["ginfAutoCrossAll"] = self.error_class([msg])
+              del cleaned_data["ginfAutoCrossAll"]           
 
         return cleaned_data
           

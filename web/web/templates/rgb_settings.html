@@ -51,7 +51,7 @@
      <legend>Parameters:</legend>
      <div class="control-group {% if form.rangeCross.errors %}error{% endif %}"><label for="{{form.rangeCross.auto_id}}" class="control-label">Range:</label>{{ form.rangeCross }}</div>
      <div class="control-group {% if form.gzeroCross.errors %}error{% endif %}">{{ form.gzeroCross.errors }}<label for="{{form.gzeroCross.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroCross}}</div>
-     <div class="control-group"><label for="{{form.wCross.auto_id}}" class="control-label">    w:</label>{{ form.wCross }}</div>
+     <div class="control-group {% if form.wCross.errors %}error{% endif %}"><label for="{{form.wCross.auto_id}}" class="control-label">    w:</label>{{ form.wCross }}</div>
      <div class="control-group {% if form.ginfCross.errors %}error{% endif %}"><label for="{{form.ginfCross.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfCross }}</div>
      <div class="control-group"><label for="{{form.deltaCross.auto_id}}" class="checkbox">{{ form.deltaCross }}Consider Deltas</label></div>
      </fieldset>
