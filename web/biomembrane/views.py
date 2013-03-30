@@ -332,8 +332,8 @@ def results(request):
         - sec_ title: The title of the section
         - copyrightdate: The year of copyright.
     """
-    if 'batch_id' not in request.session:
-        return HttpResponseRedirect('/rgb_upload/')
+    #if 'batch_id' not in request.session:
+        #return HttpResponseRedirect('/rgb_upload/')
     
     temp = {"sec_title": "Results", "copyrightdate": 2013,}
     return render(request, 'results.html', temp)
@@ -407,3 +407,16 @@ def batch(request):
 
     temp = {"sec_title": "Image Correlation Spectroscopy Program | Batch Mode", "form": form}
     return render(request, 'batch.html', temp)
+
+def help(request):
+    """ Renders a documentation help page view.
+         Template: /web/web/templates/help.html
+
+         Request parameters (ie, parameters in the request object):
+         - None
+
+         Context parameters (ie, keys in the dictionary passed to the template):
+        - sec_ title: The title of the section
+    """
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Documentation",}
+    return render(request, 'help.html', temp)
