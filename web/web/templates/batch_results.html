@@ -3,12 +3,36 @@
 {% block script %}{{ block.super}}{% endblock script %}
 {% block content-main %}
 <h3>All Batch Correlations</h3>
-<div class="img-displayblock">
-    <ul class="sortableImgList" id="sortable-graphs"> 
-    {% for key, val in graphImgs.items %}
-    <li><span class="sortableGraph"><img src="{{val.url}}" alt="{{key}}"/></span>{{key}}</li>
-    {% endfor %}
-    </ul>
+<div id="batch_display">
+{% for batch in batch_list %}
+<button type="button" class="btn" data-toggle="button" onclick="">Batch {{ batch.id }} Details</button>
+<div id="show{{ batch.id }}" class="row-fluid">
+ <div class="span4">
+  <p>Auto/Cross Parameters</p>
+  <label>Range:</label>
+  <span class="input-medium uneditable-input">{{ batch.autoCrossAll.range }}</span>
+  <label>ginf:</label>
+  <span class="input-medium uneditable-input">{{ batch.autoCrossAll.ginf }}</span>
+  <label>w:</label>
+  <span class="input-medium uneditable-input">{{ batch.autoCrossAll.w }}</span>
+  <label>g(0):</label>
+  <span class="input-medium uneditable-input">{{ batch.autoCrossAll.gzero }}</span>
+ </div> <!-- span4 -->
+ <div class="span4">
+  <p>Triple Parameters</p>
+  <span class="input-medium uneditable-input">{{ batch.triple.range }}</span>
+  <label>Range:</label>
+  <span class="input-medium uneditable-input">{{ batch.triple.ginf }}</span>
+  <label>ginf:</label>
+  <span class="input-medium uneditable-input">{{ batch.triple.w }}</span>
+  <label>w:</label>
+  <span class="input-medium uneditable-input">{{ batch.triple.gzero }}</span>
+  <label>g(0):</label>
+  <span class="input-medium uneditable-input">{{ batch.resolution }}</span>
+ </div> <!-- span4 -->
+</div> <!-- row-fluid -->
+  <div><a class="btn btn-primary" href="{{ batch.export_link }}">Download Batch #{{ batch.id }}</a></div>
+  <button type="button" class="btn" data-toggle="button" onclick="">Delete</button>
+{% endfor %}
 </div>
-<div><a class="btn btn-primary" href="{{ export.link }}">Download Results</a></div>
 {% endblock content-main %}
