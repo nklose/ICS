@@ -1415,13 +1415,13 @@ class StartQT4(QtGui.QMainWindow):
 
         if self.get_red_green_checkbox():
             self.ui.imageCrossRG.setPixmap(QtGui.QPixmap(rgPath))
-            self.autoRGGraphPath = rgPath
+            self.crossRGGraphPath = rgPath
         if self.get_red_blue_checkbox():
             self.ui.imageCrossRB.setPixmap(QtGui.QPixmap(rbPath))
-            self.autoRBGraphPath = rbPath
+            self.crossRBGraphPath = rbPath
         if self.get_green_blue_checkbox():
             self.ui.imageCrossGB.setPixmap(QtGui.QPixmap(gbPath))
-            self.autoGBGraphPath = gbPath
+            self.crossGBGraphPath = gbPath
 
         # Change to auto section of output tab
         self.select_tab("output", "cross")
