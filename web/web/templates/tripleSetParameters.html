@@ -7,15 +7,24 @@
 <div class="rgbimg-background"><img src={{ graph_path }}/></div>
   <form method="post">{% csrf_token %}
  <div class="rgbimg-background">
+{% if form.errors %}
+<div class="alert alert-error">
+{{ form.rangeTriple.errors }}
+{{ form.ginfTriple.errors }}
+{{ form.wTriple.errors }}
+{{ form.gzeroTriple.errors }}
+</div>
+{% endif %} 
+
   <div class="row-fluid">
      <p>Input Parameters for Auto and Cross Correlations Below:</p>
      <div class="span4">
       <fieldset>
       <legend>Paramters:</legend>
-      <div class="control-group {% if form.rangeTriple.errors %}error{% endif %}">{{ form.rangeTriple.errors }}<label for="{{form.rangeTriple.auto_id}}" class="control-label">Range:</label>{{ form.rangeTriple }}</div>
-      <div class="control-group {% if form.gzeroTriple.errors %}error{% endif %}">{{ form.gzeroTriple.errors }}<label for="{{form.gzeroTriple.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroTriple}}</div>
-      <div class="control-group {% if form.wTriple.errors %}error{% endif %}">{{ form.wTriple.errors }}<label for="{{form.wTriple.auto_id}}" class="control-label">    w:</label>{{ form.wTriple }}</div>
-      <div class="control-group {% if form.ginfTriple.errors %}error{% endif %}">{{ form.ginfTriple.errors }}<label for="{{form.ginfTriple.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfTriple }}</div>
+      <div class="control-group{% if form.rangeTriple.errors %}error{% endif %}"><label for="{{form.rangeTriple.auto_id}}" class="control-label">Range:</label>{{ form.rangeTriple }}</div>
+      <div class="control-group{% if form.gzeroTriple.errors %}error{% endif %}"><label for="{{form.gzeroTriple.auto_id}}" class="control-label"> g(0):</label>{{ form.gzeroTriple}}</div>
+      <div class="control-group{% if form.wTriple.errors %}error{% endif %}"><label for="{{form.wTriple.auto_id}}" class="control-label">    w:</label>{{ form.wTriple }}</div>
+      <div class="control-group{% if form.ginfTriple.errors %}error{% endif %}"><label for="{{form.ginfTriple.auto_id}}" class="control-label"> ginf:</label>{{ form.ginfTriple }}</div>
       </fieldset>
      </div> <!-- span4 -->
      </div> <!-- row -->
