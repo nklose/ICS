@@ -145,7 +145,7 @@ def __gen_style(style, color):
         The string representing the style
     """
     if len(color) == 1: return style + color[0]
-    if 'r' and 'g' and 'b' in color:
+    if 'r' in color and 'g' in color and 'b' in color:
         return style + "k"
     if 'r' and 'g' in color: return style + "y"
     if 'r' and 'b' in color: return style + "m"
