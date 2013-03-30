@@ -267,7 +267,7 @@ def home(request):
          Context parameters (ie, keys in the dictionary passed to the template):
         - sec_ title: The title of the section
     """
-    temp = {"sec_title": "Welcome to the Homepage",}
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Welcome to the Homepage",}
     return render(request, 'homepage.html', temp)
 
 @login_required(login_url='/accounts/login/')
@@ -319,24 +319,6 @@ def rgb_upload(request):
     temp = {"sec_title": "Image Correlation Spectroscopy Program | Image Upload",
             "form": form}
     return render(request, 'rgb_upload.html', temp)
-
-@login_required(login_url='/accounts/login/')
-def results(request):
-    """ Renders a home  view.
-         Template: /web/web/templates/results.html
-
-         Request parameters (ie, parameters in the request object):
-         - None
-
-         Context parameters (ie, keys in the dictionary passed to the template):
-        - sec_ title: The title of the section
-        - copyrightdate: The year of copyright.
-    """
-    #if 'batch_id' not in request.session:
-        #return HttpResponseRedirect('/rgb_upload/')
-    
-    temp = {"sec_title": "Results", "copyrightdate": 2013,}
-    return render(request, 'results.html', temp)
 
 @login_required(login_url='/accounts/login/')
 def batch(request):
@@ -407,6 +389,41 @@ def batch(request):
 
     temp = {"sec_title": "Image Correlation Spectroscopy Program | Batch Mode", "form": form}
     return render(request, 'batch.html', temp)
+
+@login_required(login_url='/accounts/login/')
+def results(request):
+    """ Renders a home  view.
+         Template: /web/web/templates/results.html
+
+         Request parameters (ie, parameters in the request object):
+         - None
+
+         Context parameters (ie, keys in the dictionary passed to the template):
+        - sec_ title: The title of the section
+        - copyrightdate: The year of copyright.
+    """
+    #if 'batch_id' not in request.session:
+        #return HttpResponseRedirect('/rgb_upload/')
+    
+    temp = {"sec_title": "Image Correlation Spectroscopy Program | Results", "copyrightdate": 2013,}
+    return render(request, 'results.html', temp)
+
+
+@login_required(login_url='/accounts/login/')
+def batchResults(request):
+    """ Renders a home  view.
+         Template: /web/web/templates/batchResults.html
+
+         Request parameters (ie, parameters in the request object):
+         - None
+
+         Context parameters (ie, keys in the dictionary passed to the template):
+        - sec_ title: The title of the section
+        - copyrightdate: The year of copyright.
+    """
+    
+    temp = {"sec_title": "", "copyrightdate": 2013,}
+    return render(request, 'batch_results.html', temp)
 
 def help(request):
     """ Renders a documentation help page view.
