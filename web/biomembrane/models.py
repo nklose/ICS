@@ -24,14 +24,15 @@ from django.contrib.auth.models import User
 
 
 def _generate_image_path(instance, filename):
-    id = instance.batch.id
-    number = instance.number
-    path = '/'.join([str(id), str(number), filename])
+    batch = instance.batch
+    path = '/'.join([batch.get_inputs_path(), filename])
     return path
 
 
 def _generate_temp_path(instance, filename):
-    return _generate_image_path(instance.job, filename)
+    batch = instance.job.batch
+    path = '/'.join([str(batch.id), 'temp', filename])
+    return path 
 
 
 def _generate_result_path(instance, filename):
@@ -41,9 +42,31 @@ def _generate_result_path(instance, filename):
 
 
 class Batch(models.Model):
+    UPLOADING, RUNNING, COMPLETE = u'u', u'r', u'c'
+    JOB_STATES = (
+        (UPLOADING, u'Uploading'),
+        (RUNNING, u'Running'),
+        (COMPLETE, u'Complete')
+    )
+
+    MIXED, SPLIT = u'mixed', u'split'
+    IMAGE_TYPES = (
+        (MIXED, MIXED),
+        (SPLIT, SPLIT)
+    )
+
     id = models.AutoField(primary_key=True)
     date = models.DateTimeField(auto_now_add=True)
+    state = models.CharField(max_length=1, choices=JOB_STATES, blank=True)
+    image_type = models.CharField(max_length=5, choices=IMAGE_TYPES, blank=True)
+    image_size = models.IntegerField(null=True, blank=True)
+    start = models.IntegerField(null=True, blank=True)
+    stop = models.IntegerField(null=True, blank=True)
+    name_format = models.CharField(max_length=20, blank=True)
     user = models.ForeignKey(User)
+
+    def get_inputs_path(self):
+        return '/'.join([str(self.id), 'inputs'])
 
     def get_results_path(self):
         return '/'.join([str(self.id), 'results'])
@@ -53,15 +76,7 @@ class Batch(models.Model):
 
 
 class Job(models.Model):
-    UPLOADING, RUNNING, COMPLETE = u'u', u'r', u'c'
-    JOB_STATES = (
-        (UPLOADING, u'Uploading'),
-        (RUNNING, u'Running'),
-        (COMPLETE, u'Complete')
-    )
-
     number = models.IntegerField()
-    state = models.CharField(max_length=1, choices=JOB_STATES)
     red_image = models.ImageField(upload_to=_generate_image_path)
     green_image = models.ImageField(upload_to=_generate_image_path)
     blue_image = models.ImageField(upload_to=_generate_image_path)

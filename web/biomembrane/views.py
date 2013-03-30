@@ -283,7 +283,7 @@ def rgb_upload(request):
                 r, g, b = image_utils.get_channels(rgb) # generate the three channels
                 redImage, greenImage, blueImage = image_utils.create_images(r, g, b) #create the images
                 
-                job = models.Job(number=1, batch=batch, state=models.Job.UPLOADING)
+                job = models.Job(number=1, batch=batch)
                 job.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
                 job.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
                 job.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))
@@ -301,7 +301,7 @@ def rgb_upload(request):
                 b = scipy.misc.fromimage(blueImage)
                 rgbImage = image_utils.create_image(r, g, b)
 
-                job = models.Job(number=1, batch=batch, state=models.Job.UPLOADING) 
+                job = models.Job(number=1, batch=batch) 
                 job.red_image.save('r.png', ContentFile(image_utils.image_to_string_io(redImage).read()))
                 job.green_image.save('g.png', ContentFile(image_utils.image_to_string_io(greenImage).read()))
                 job.blue_image.save('b.png', ContentFile(image_utils.image_to_string_io(blueImage).read()))

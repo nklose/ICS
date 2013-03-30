@@ -19,11 +19,31 @@ the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
 from celery import task
-from models import Correlation, DualParameters, TripleParameters, Result
+from models import Batch, Correlation, DualParameters, TripleParameters, Result
 from django.core.files.base import ContentFile
 from StringIO import StringIO
-from midend import adaptor
+from midend import adaptor, batchRunner
 import PIL.Image
+import numpy
+
+
+class Config:
+    side = None
+    input_directory = None
+    output_directory = None
+    name_min = None
+    name_max = None
+    name_format = None
+    dual_range = None
+    triple_range = None
+    auto_consider_deltas = None
+    cross_consider_deltas = None
+    dual_initial = None 
+    triple_initial = None 
+    triple_lim = None
+    input_type = None
+    output_type = 'full'
+    output_numbering = '{:03d}'
 
 
 def _save_result(correlation, job, ics_result):
@@ -60,7 +80,6 @@ def run_triple1(job):
 
 def run_triple2(job, part1_result):
     params = TripleParameters.objects.get(batch=job.batch)
-    print params.limit
     result = adaptor.run_triple_part2(part1_result, params.limit)
     return result
 
@@ -71,3 +90,33 @@ def run_triple3(job, part2_result):
     correlation = Correlation.objects.get(batch=job.batch, color=Correlation.RGB)
     result = adaptor.run_triple_part3(part2_result, params.range_val, params.g0, params.w, params.ginf)
     _save_result(correlation, job, result)
+
+
+@task()
+def run_batch(batch):
+    dual_params = DualParameters.objects.get(batch=batch)
+    triple_params = TripleParameters.objects.get(batch=batch)
+    config = Config()
+    config.side = batch.image_size
+    config.input_directory = batch.get_inputs_path()
+    config.output_directory = batch.get_results_path()
+    config.name_min = batch.start
+    config.name_max = batch.stop
+    config.name_format = batch.name_format
+    config.dual_range = dual_params.range_val
+    config.triple_range = triple_params.range_val
+    config.auto_consider_deltas = dual_params.use_deltas
+    config.cross_consider_deltas = dual_params.use_deltas
+    config.dual_initial = numpy.array([dual_params.g0, dual_params.w, dual_params.ginf, 0, 0], dtype=numpy.float)
+    config.triple_initial = numpy.array([triple_params.g0, triple_params.w, triple_params.ginf], dtype=numpy.float)
+    config.triple_lim = triple_params.limit
+    config.input_type = batch.image_type
+
+    batch.state = Batch.RUNNING
+    batch.save()
+
+    batch_runner = batchRunner.BatchRunner(config)
+    batch_runner.runAll()
+
+    batch.state =  Batch.COMPLETE
+    batch.save()
