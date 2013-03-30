@@ -53,6 +53,7 @@ def program(request):
         return HttpResponseRedirect('/rgb_upload/')
         
     batch = Batch.objects.get(id=request.session['batch_id'])
+    job = Job.objects.get(batch=batch)
 
     if request.method == 'POST':  #form has been submitted
         form = RgbSettingsForm(request.POST)
@@ -79,6 +80,8 @@ def program(request):
                 if blueChecked:
                     Correlation(batch=batch, color=Correlation.B).save()
 
+                tasks.run_dual.delay(job)
+
                 #Do Auto with parameters above
                 return HttpResponseRedirect('/results/') #redirect results view
 
@@ -102,6 +105,8 @@ def program(request):
                     Correlation(batch=batch, color=Correlation.RB).save()
                 if greenblueChecked:
                     Correlation(batch=batch, color=Correlation.GB).save()
+
+                tasks.run_dual.delay(job)
 
                 #Do Cross Correlation with above parameters
                 return HttpResponseRedirect('/results/') #redirect results view
@@ -130,6 +135,8 @@ def program(request):
                 Correlation(batch=batch, color=Correlation.RB).save()
                 Correlation(batch=batch, color=Correlation.GB).save()
                 Correlation(batch=batch, color=Correlation.RGB).save()
+
+                tasks.run_dual.delay(job)
 
                 #Redirect to tripleSetRes (Ask User for Triple's Sample Resolution)
                 return HttpResponseRedirect('/triple/setRes/') # see tripleSetRes view function
