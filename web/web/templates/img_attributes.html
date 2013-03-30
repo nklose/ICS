@@ -1,7 +1,11 @@
 {% block img-attributes %}
 <h5>Image Attributes</h5>
- <label>Image Size {{ imgSize }}</label>
- <label>Red-{{ redPixel }}</label>
- <label>Green-{{ greenPixel }}</label>
- <label>Blue-{{ bluePixel }}</label>
+<label>Dimensions:</label>
+<span class="input-medium uneditable-input">{{ imgAttrs.size }}</span>
+ <label>Red Intensity:</label>
+<span class="input-medium uneditable-input">{{ imgAttrs.red }}</span>
+ <label>Green Intensity:</label>
+<span class="input-medium uneditable-input">{{ imgAttrs.green }}</span>
+ <label>Blue Intensity:</label>
+<span class="input-medium uneditable-input">{{ imgAttrs.blue }}</span>
 {% endblock img-attributes %}

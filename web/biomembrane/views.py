@@ -150,8 +150,15 @@ def program(request):
     batch = Batch.objects.get(id=request.session['batch_id'])
     job = Job.objects.get(batch=batch)
     images = [job.rgb_image.url, job.red_image.url, job.green_image.url, job.blue_image.url]
+    imageAttrs = {}
+    image = PIL.Image.open(job.rgb_image.path)
+    intensities = image_utils.get_intensities(image)
+    imageAttrs['size'] = str(image.size[0]) + 'x' + str(image.size[1])
+    imageAttrs['red'] = intensities[0]
+    imageAttrs['green'] = intensities[1]
+    imageAttrs['blue'] = intensities[2]
 
-    temp = {"sec_title": "Image Correlation Spectroscopy Program","form": form, "rgbimgs": images}
+    temp = {"sec_title": "Image Correlation Spectroscopy Program","form": form, "rgbimgs": images, "imgAttrs": imageAttrs}
     return render(request, 'icslayout.html', temp)
 
 @login_required(login_url='/accounts/login/')
