@@ -1,12 +1,8 @@
 {% extends "generic.html" %}
-{% block stylesheet %}
-{{ block.super }}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">
-{% endblock stylesheet %}
+{% block stylesheet %}{{ block.super }}{% endblock stylesheet %}
 {% block script %}{{ block.super}}{% endblock script %}
 {% block content-main %}
-<h3>Single Image Correlation Results</h3>
-<div class="rgbimg-background">
+<h3>All Batch Correlations</h3>
 <div class="img-displayblock">
     <ul class="sortableImgList" id="sortable-graphs"> 
     {% for key, val in graphImgs.items %}
@@ -14,6 +10,5 @@
     {% endfor %}
     </ul>
 </div>
-</div>
-<div><a class="btn btn-primary" href="{{ export_link }}">Download Results</a></div>
+<div><a class="btn btn-primary" href="{{ export.link }}">Download Results</a></div>
 {% endblock content-main %}
