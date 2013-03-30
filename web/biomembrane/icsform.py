@@ -104,6 +104,8 @@ class RgbSettingsForm(forms.Form):
         (SIXTYFOUR, u'64x64'),
     )
 
+    setResolutionSize = 64;
+
     resolutions = forms.ChoiceField(required=False, initial=SIXTYFOUR, choices=RESOLUTIONS)
 
     def selectedResolution(self):
@@ -114,7 +116,7 @@ class RgbSettingsForm(forms.Form):
        elif self.cleaned_data['resolutions'] == self.SIXTYFOUR:
           return 64
        else:
-          return None;
+          return self.setResolutionSize;
 
     def _init_(self, *args, **kwargs):
         super(RgbSettingsForm, self).__init__(*args, **kwargs) # Call to ModelForm constructor
@@ -246,10 +248,10 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a range value for triple correlation"
               self._errors["rangeTriple"] = self.error_class([msg])
               del cleaned_data["rangeTriple"]
-           #elif cleaned_data.get("rangeTriple") > self.selectedResolution():
-           #   msg = u"Range value must not be larger than the sample resolution for triple correlation"
-           #   self._errors["rangeTriple"] = self.error_class([msg])
-           #   del cleaned_data["rangeTriple"]
+           elif cleaned_data.get("rangeTriple") > self.selectedResolution():
+              msg = u"Range value must not be larger than the sample resolution for triple correlation"
+              self._errors["rangeTriple"] = self.error_class([msg])
+              del cleaned_data["rangeTriple"]
 
            if cleaned_data.get("gzeroTriple") == None:
               msg = u"Must specifiy a g(0) value for triple correlation"
