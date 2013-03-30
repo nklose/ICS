@@ -147,9 +147,9 @@ def __gen_style(style, color):
     if len(color) == 1: return style + color[0]
     if 'r' in color and 'g' in color and 'b' in color:
         return style + "k"
-    if 'r' and 'g' in color: return style + "y"
-    if 'r' and 'b' in color: return style + "m"
-    if 'g' and 'b' in color: return style + "c"
+    if 'r' in color and 'g' in color: return style + "y"
+    if 'r' in color and 'b' in color: return style + "m"
+    if 'g' in color and 'b' in color: return style + "c"
 
 
 def surfacePlot(xData, yData, zData, color):
