@@ -3,14 +3,18 @@
 {{ block.super }}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style-ics.css">
 {% endblock stylesheet %}
-{% block script %}{{ block.super}}{% endblock script %}
+{% block script %}{{ block.super}}
+<script type="text/javascript" src="{{ STATIC_URL }}js/ics_scripts/zoom_master/jquery.zoom.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/ics_scripts/ics.js"></script>
+{% endblock script %}
 {% block content-main %}
 <h3>Correlation Results</h3>
 <div class="rgbimg-background">
 <div class="img-displayblock">
     <ul class="sortableImgList" id="sortable-graphs"> 
     {% for result in results %}
-    <li><span class="sortableGraph"><img src="{{result.graph_image.url}}"/></span></li>
+    <li class="zoom"><span class="sortableGraph"><img src="{{result.graph_image.url}}"/>
+    </span></li>
     {% endfor %}
     </ul>
 </div>

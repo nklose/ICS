@@ -1,18 +1,23 @@
+   /* Jquery functions to control aspects of the web page */
+
+   // Makes images sortable
    $(function() {
     $( "#sortable-img" ).sortable();
     $( "#sortable-img" ).disableSelection();
    });
 
+  // Enables tab functionality
   var selected = null;
   $('a[data-toggle="tab"]').on('shown', function (e) {
    selected = e.target // activated tab
    e.relatedTarget // previous tab
-
   localStorage.setItem('lastTab', $(e.target).attr('id'));
 
+  // Get which correlation selected by user
   if ($("#id_userSelected") != null)
         $("#id_userSelected").val(selected.id);
 
+  // Get upload type selected by user
   if ($("#id_uploadType") != null)
         $("#id_uploadType").val(selected.id);
    $("#userNotice").val(selected.id).html(showSelected(selected.id) +" is Selected");
@@ -23,11 +28,13 @@
       $('#'+lastTab).tab('show');
   }
 
+ // Start Button 'Loading' Functionality
  $('#start').on('click', function () {
   $(this).button('loading')
   $('#settings-form').submit();
   })
 
+  // Return which correlation is selected
   function showSelected(value)
   {
     if (value == "id_auto")

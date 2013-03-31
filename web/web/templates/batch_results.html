@@ -1,6 +1,9 @@
 {% extends "generic.html" %}
 {% block stylesheet %}{{ block.super }}{% endblock stylesheet %}
-{% block script %}{{ block.super}}{% endblock script %}
+{% block script %}{{ block.super}}
+<script type="text/javascript" src="{{ STATIC_URL }}js/ics_scripts/ics.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/ics_scripts/zoom_master/jquery.zoom.js"></script>
+{% endblock script %}
 {% block content-main %}
 <h3>All Batch Correlations</h3>
 <div id="batch_display">

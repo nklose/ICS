@@ -36,6 +36,30 @@
     width: 600px;
 }
 
+.sortableGraph img:hover { 
+   cursor: url(../js/ics_scripts/zoom_master/grab.cur), 4 4, crosshair;
+   cursor:-webkit-grabbing;
+   cursor: -moz-moz-grabbing;
+}
+
+.sortableGraph img:active { 
+   cursor: url(../js/ics_scripts/zoom_master/grabbed.cur), 4 4, crosshair;
+   cursor:-webkit-grab;
+   cursor: -moz-moz-grab; 
+}
+
+/* magnifying glass icon */
+.zoom:after {
+   content:'';
+   display:block; 
+   width:33px; 
+   height:33px; 
+   position:absolute; 
+   top:0;
+   right:0;
+   background:url(../js/ics_scripts/zoom_master/icon.png);
+}
+
 .sortableImgList ul {
     list-style-type: none;
     width: 100%;
