@@ -882,8 +882,8 @@ class StartQT4(QtGui.QMainWindow):
                 # non-numeric range
                 try:
                     r = float(self.get_auto_range())
-                    if r < 0:
-                        self.message("Range cannot be negative.")
+                    if r <= 0:
+                        self.message("Range must be greater than 0.")
                         validInput = False
                 except ValueError:
                     validInput = False
@@ -957,8 +957,8 @@ class StartQT4(QtGui.QMainWindow):
                 # non-numeric range
                 try:
                     r = float(self.get_cross_range())
-                    if r < 0:
-                        self.message("Range cannot be negative.")
+                    if r <= 0:
+                        self.message("Range must be greater than 0.")
                         validInput = False
                 except ValueError:
                     validInput = False
@@ -1014,8 +1014,8 @@ class StartQT4(QtGui.QMainWindow):
             else:
                 try:
                     r = int(self.ui.tripleRangeTextbox.text())
-                    if r < 0:
-                        self.message("Range cannot be negative.")
+                    if r <= 0:
+                        self.message("Range must be greater than 0.")
                         validInput = False
                         self.ui.tripleRangeTextbox.clear()
                         self.ui.tripleRangeTextbox.setFocus()

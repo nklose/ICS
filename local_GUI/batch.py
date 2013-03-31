@@ -349,9 +349,12 @@ class Batch(QtGui.QMainWindow):
                 tw = float(triple_w)
                 dginf = float(dual_ginf)
                 tginf = float(triple_ginf)
-                if dr < 0 or tr < 0 or dg0 < 0 or tg0 < 0 or dginf < 0 or tginf < 0:
+                if dg0 < 0 or tg0 < 0 or dginf < 0 or tginf < 0:
                     validInput = False
                     self.message("Some parameters are negative; aborting.")
+                elif dr <= 0 or tr <= 0:
+                    validInput = False
+                    self.message("Range must be greater than 0; aborting.")
                 elif dw <= 0 or tw <= 0:
                     validInput = False
                     self.message("W parmeter must be greater than 0; aborting.")
