@@ -195,8 +195,8 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a range value for auto correlation"
               self._errors["rangeAuto"] = self.error_class([msg])
               del cleaned_data["rangeAuto"]
-           elif cleaned_data.get("rangeAuto") < 0:
-              msg = u"w value should not be less than zero for auto correlation"
+           elif cleaned_data.get("rangeAuto") <= 0:
+              msg = u"w value should not be zero or less than zero for auto correlation"
               self._errors["rangeAuto"] = self.error_class([msg])
               del cleaned_data["rangeAuto"]
 
@@ -233,8 +233,8 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a range value for cross correlation"
               self._errors["rangeCross"] = self.error_class([msg])
               del cleaned_data["rangeCross"]
-           elif cleaned_data.get("rangeCross") < 0:
-              msg = u"range value should not be less than zero for cross correlation"
+           elif cleaned_data.get("rangeCross") <= 0:
+              msg = u"range value should not be zero or less than zero for cross correlation"
               self._errors["rangeCross"] = self.error_class([msg])
               del cleaned_data["rangeCross"]
 
@@ -276,6 +276,10 @@ class RgbSettingsForm(forms.Form):
               msg = u"Range value should not be larger than the sample resolution for triple correlation"
               self._errors["rangeTriple"] = self.error_class([msg])
               del cleaned_data["rangeTriple"]
+           elif cleaned_data.get("rangeTriple") <= 0:
+              msg = u"Range value should not be zero or less than zero for triple correlation"
+              self._errors["rangeTriple"] = self.error_class([msg])
+              del cleaned_data["rangeTriple"]
 
            if cleaned_data.get("gzeroTriple") == None:
               msg = u"Must specifiy a g(0) value for triple correlation"
@@ -312,8 +316,8 @@ class RgbSettingsForm(forms.Form):
               msg = u"Must specifiy a range value for the auto and cross correlation"
               self._errors["rangeAutoCrossAll"] = self.error_class([msg])
               del cleaned_data["rangeAutoCrossAll"]
-           elif cleaned_data.get("rangeAutoCrossAll") < 0:
-              msg = u"range value should not be less than zero for the auto and cross correlation"
+           elif cleaned_data.get("rangeAutoCrossAll") <= 0:
+              msg = u"range value should not be zero or less than zero for the auto and cross correlation"
               self._errors["rangeAutoCrossAll"] = self.error_class([msg])
               del cleaned_data["rangeAutoCrossAll"]
 
