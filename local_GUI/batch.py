@@ -65,6 +65,8 @@ class Batch(QtGui.QMainWindow):
         self.splitMax = None  # maximum image number for split images
         self.mixedMin = None  # minimum image number for mixed images
         self.mixedMax = None  # maximum image number for mixed images
+        self.mixedExtension = None   # file extension of mixed images
+        self.splitExtension = None   # file extension of split images
 
         # Track parent window
         self.parent = parent
@@ -114,6 +116,8 @@ class Batch(QtGui.QMainWindow):
 
             outputDirectory = str(self.path) + "_output"
             self.message(str(len(self.rgbImages) + len(self.monoImages) / 3) + " correlations performed. Results outputted to " + outputDirectory + ".")
+
+        self.numProcessed = 0
 
         self.set_processing(False)
 
@@ -165,6 +169,7 @@ class Batch(QtGui.QMainWindow):
                                 self.mixedMin = self.get_number(image)
                             if self.get_number(image) > self.mixedMax:
                                 self.mixedMax = self.get_number(image)
+                        self.mixedExtension = str(os.path.splitext(image)[1])
                     else:
                         if self.splitMin == None:
                             self.splitMin = self.get_number(image)
@@ -183,6 +188,7 @@ class Batch(QtGui.QMainWindow):
                             self.monoImages.append(image)
                         else:
                             self.message("Warning: improperly formatted filename(s) found.")
+                        self.splitExtension = str(os.path.splitext(image)[1])
                     if str(os.path.splitext(image)[1]) not in self.extensions:
                         self.extensions.append(str(os.path.splitext(image)[1]))
                 
@@ -414,13 +420,13 @@ class Batch(QtGui.QMainWindow):
         config.triple_lim = self.get_limit()
         if mixed:
             config.input_type = "mixed"
-            config.name_format = "rgb_{:03d}.bmp"
+            config.name_format = "rgb_{:03d}" + self.mixedExtension
             config.output_type = "full"
             config.name_min = self.mixedMin
             config.name_max = self.mixedMax
         else:
             config.input_type = "split"
-            config.name_format = "{:s}_{:03d}.bmp"
+            config.name_format = "{:s}_{:03d}" + self.splitExtension
             config.output_type = "full"
             config.name_min = self.splitMin
             config.name_max = self.splitMax
