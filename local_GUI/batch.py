@@ -151,42 +151,43 @@ class Batch(QtGui.QMainWindow):
     
             # iterate through all files
             for image in files:
-                if self.size == 0:
-                    i = PIL.Image.open(os.path.join(self.path,str(image)))
-                    self.size = i.size[0]
-                image = str(image)
-                channels = self.get_channels(image)
-                if channels == "rgb":
-                    self.rgbImages.append(image)
-                    if self.mixedMin == None:
-                        self.mixedMin = self.get_number(image)
-                    elif self.mixedMax == None:
-                        self.mixedMax = self.get_number(image)
-                    else:
-                        if self.get_number(image) < self.mixedMin:
+                if self.get_number(image) != "IGNORE":
+                    if self.size == 0:
+                        i = PIL.Image.open(os.path.join(self.path,str(image)))
+                        self.size = i.size[0]
+                    image = str(image)
+                    channels = self.get_channels(image)
+                    if channels == "rgb":
+                        self.rgbImages.append(image)
+                        if self.mixedMin == None:
                             self.mixedMin = self.get_number(image)
-                        if self.get_number(image) > self.mixedMax:
+                        elif self.mixedMax == None:
                             self.mixedMax = self.get_number(image)
-                else:
-                    if self.splitMin == None:
-                        self.splitMin = self.get_number(image)
-                    elif self.splitMax == None:
-                        self.splitMax = self.get_number(image)
+                        else:
+                            if self.get_number(image) < self.mixedMin:
+                                self.mixedMin = self.get_number(image)
+                            if self.get_number(image) > self.mixedMax:
+                                self.mixedMax = self.get_number(image)
                     else:
-                        if self.get_number(image) < self.splitMin:
+                        if self.splitMin == None:
                             self.splitMin = self.get_number(image)
-                        if self.get_number(image) > self.splitMax:
+                        elif self.splitMax == None:
                             self.splitMax = self.get_number(image)
-                    if channels == "r":
-                        self.monoImages.append(image)
-                    elif channels == "g":
-                        self.monoImages.append(image)
-                    elif channels == "b":
-                        self.monoImages.append(image)
-                    else:
-                        self.message("Warning: improperly formatted filename(s) found.")
-                if str(os.path.splitext(image)[1]) not in self.extensions:
-                    self.extensions.append(str(os.path.splitext(image)[1]))
+                        else:
+                            if self.get_number(image) < self.splitMin:
+                                self.splitMin = self.get_number(image)
+                            if self.get_number(image) > self.splitMax:
+                                self.splitMax = self.get_number(image)
+                        if channels == "r":
+                            self.monoImages.append(image)
+                        elif channels == "g":
+                            self.monoImages.append(image)
+                        elif channels == "b":
+                            self.monoImages.append(image)
+                        else:
+                            self.message("Warning: improperly formatted filename(s) found.")
+                    if str(os.path.splitext(image)[1]) not in self.extensions:
+                        self.extensions.append(str(os.path.splitext(image)[1]))
                 
             # Sort the resulting lists
             self.rgbImages.sort()
@@ -316,7 +317,10 @@ class Batch(QtGui.QMainWindow):
             elif c == ".":
                 number = False
 
-        return int(file_number[:-1])
+        try:
+            return int(file_number[:-1])
+        except:
+            return "IGNORE" # ignore this file as it doesn't follow syntax
  
     # Returns the selected correlation mode by reading which tab the user has open
     def get_correlation_tab(self):
