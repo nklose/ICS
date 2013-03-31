@@ -20,7 +20,7 @@ the domain of use for the application, for a period of 6 (six) months after the
 signing of this agreement.
 """
 from django.shortcuts import render
-from django.http import HttpResponseRedirect 
+from django.http import HttpResponseRedirect, HttpResponse 
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from django.conf import settings
@@ -385,7 +385,7 @@ def batch(request):
             #batch.task_id = result.id
             batch.save()
              
-            return HttpResponseRedirect('/results/') # redirect after post
+            return HttpResponseRedirect('/batchResults/') # redirect after post
     else:
         form = BatchSettingsForm()
 
@@ -427,6 +427,19 @@ def batchResults(request):
         - sec_ title: The title of the section
         - copyrightdate: The year of copyright.
     """
+    if request.method == 'POST':
+       if 'batchToDelete' in request.POST:
+           batchidToDelete = request.POST['batchToDelete']
+           batch = Batch.objects.get(id=batchidToDelete)
+           if batch != None:
+               batch.delete()
+               response = HttpResponse()
+               response.write(1)
+               return response
+           else:
+               response = HttpResponse()
+               response.write(-1)
+
     batches = Batch.objects.filter(user=request.user).exclude(state='')
     batches = reversed(batches)
     temp = {"sec_title": "", "copyrightdate": 2013, "batches": batches}
