@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainv6.ui'
+# Form implementation generated from reading ui file 'main.ui'
 #
-# Created: Tue Mar 26 13:04:08 2013
+# Created: Sat Mar 30 21:01:20 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -896,6 +896,9 @@ class Ui_Dialog(object):
         self.progressBar.setTextVisible(True)
         self.progressBar.setInvertedAppearance(False)
         self.progressBar.setObjectName(_fromUtf8("progressBar"))
+        self.helpButton = QtGui.QPushButton(Dialog)
+        self.helpButton.setGeometry(QtCore.QRect(807, 0, 211, 27))
+        self.helpButton.setObjectName(_fromUtf8("helpButton"))
 
         self.retranslateUi(Dialog)
         self.mainTabWidget.setCurrentIndex(0)
@@ -1003,4 +1006,5 @@ class Ui_Dialog(object):
         self.outputCorrelationTabWidget.setTabText(self.outputCorrelationTabWidget.indexOf(self.tripleOutputTab), _translate("Dialog", "Triple-Correlation", None))
         self.saveAllButton.setText(_translate("Dialog", "Save All Results", None))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.outputTab), _translate("Dialog", "Output", None))
+        self.helpButton.setText(_translate("Dialog", "Help/About", None))
 

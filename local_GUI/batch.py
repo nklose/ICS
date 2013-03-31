@@ -22,6 +22,7 @@ import thread
 import shutil
 from PyQt4 import QtCore, QtGui
 from gui_batch import Ui_Dialog
+from help import Help
 
 # Enable importing of other project modules
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -82,6 +83,7 @@ class Batch(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.stopButton, clicked, self.stop)
         QtCore.QObject.connect(self.ui.loadButton, clicked, self.load)
         QtCore.QObject.connect(self.ui.singleModeButton, clicked, self.single_mode)
+        QtCore.QObject.connect(self.ui.helpButton, clicked, self.show_help)
 
     #######################################################
     # Connection Functions                                #
@@ -204,6 +206,11 @@ class Batch(QtGui.QMainWindow):
     def single_mode(self):
         self.parent.show()
         self.close()
+
+    # Shows the help dialog
+    def show_help(self):
+        help = Help(self)
+        help.show()
 
     #######################################################
     # Miscellaneous Functions                             #

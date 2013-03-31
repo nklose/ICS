@@ -23,9 +23,10 @@ import thread
 import shutil # used to recursively remove directories
 from PyQt4 import QtCore, QtGui
 from PIL import Image
-from main_ICS import Ui_Dialog
+from gui_main import Ui_Dialog
 from graphzoom import GraphZoom
 from batch import Batch
+from help import Help
 
 # Enable importing of other project modules
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -211,6 +212,11 @@ class StartQT4(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.tripleGraph3Zoom,
                                QtCore.SIGNAL("clicked()"),
                                self.zoomTriple3)
+
+        # Help/About Button
+        QtCore.QObject.connect(self.ui.helpButton,
+                               QtCore.SIGNAL("clicked()"),
+                               self.show_help)
 
 
     #######################################################
@@ -610,6 +616,11 @@ class StartQT4(QtGui.QMainWindow):
         batch = Batch(self)
         batch.show()
         self.hide()
+
+    # Show help dialog
+    def show_help(self):
+        help = Help(self)
+        help.show()
 
     ######################################################
     # Interface Input Functions                          #

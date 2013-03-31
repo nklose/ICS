@@ -2799,6 +2799,19 @@
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QPushButton" name="helpButton">
+   <property name="geometry">
+    <rect>
+     <x>807</x>
+     <y>0</y>
+     <width>211</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Help/About</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

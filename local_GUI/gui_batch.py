@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'batchv2.ui'
+# Form implementation generated from reading ui file 'batch.ui'
 #
-# Created: Thu Mar 28 17:19:24 2013
+# Created: Sat Mar 30 21:23:54 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -47,7 +47,7 @@ class Ui_Dialog(object):
         self.stopButton.setFont(font)
         self.stopButton.setObjectName(_fromUtf8("stopButton"))
         self.imageGroup = QtGui.QGroupBox(Dialog)
-        self.imageGroup.setGeometry(QtCore.QRect(10, 10, 1001, 251))
+        self.imageGroup.setGeometry(QtCore.QRect(10, 20, 1001, 241))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.imageGroup.setFont(font)
@@ -233,6 +233,7 @@ class Ui_Dialog(object):
         self.resolution16.setObjectName(_fromUtf8("resolution16"))
         self.resolution32 = QtGui.QRadioButton(self.allTripleParametersGroup)
         self.resolution32.setGeometry(QtCore.QRect(20, 150, 116, 22))
+        self.resolution32.setChecked(True)
         self.resolution32.setObjectName(_fromUtf8("resolution32"))
         self.resolution64 = QtGui.QRadioButton(self.allTripleParametersGroup)
         self.resolution64.setGeometry(QtCore.QRect(20, 170, 116, 22))
@@ -308,6 +309,9 @@ class Ui_Dialog(object):
         self.progressBar.setTextVisible(True)
         self.progressBar.setInvertedAppearance(False)
         self.progressBar.setObjectName(_fromUtf8("progressBar"))
+        self.helpButton = QtGui.QPushButton(Dialog)
+        self.helpButton.setGeometry(QtCore.QRect(820, 0, 191, 27))
+        self.helpButton.setObjectName(_fromUtf8("helpButton"))
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -347,4 +351,5 @@ class Ui_Dialog(object):
         self.considerAutoDeltas.setText(_translate("Dialog", "Consider Autocorrelation Deltas", None))
         self.considerCrossDeltas.setText(_translate("Dialog", "Consider Cross-correlation Deltas", None))
         self.messageBox.setText(_translate("Dialog", "Ready.", None))
+        self.helpButton.setText(_translate("Dialog", "Help/About", None))
 
