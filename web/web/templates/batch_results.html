@@ -21,7 +21,7 @@
             {% if batch.state == batch.COMPLETE %}
             <a class="btn btn-primary" href="{{MEDIA_URL}}{{batch.get_zip_path}}">Download</a>
             {% else %}
-            <a class="btn btn-primary disabled" href="">Download</a>
+            <a class="btn btn-primary disabled">Download</a>
             {% endif %}
             <a class="btn btn-danger" data-toggle="button" onclick="">Delete</a>
         </div>
