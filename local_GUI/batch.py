@@ -34,10 +34,7 @@ import midend.batchRunner
 
 # Global constants
 TEMP_DIR = "./ics_tmp"
-RGB_PLACEHOLDER = "./Images/rgb.png"
-RED_PLACEHOLDER = "./Images/r.png"
-GREEN_PLACEHOLDER = "./Images/g.png"
-BLUE_PLACEHOLDER = "./Images/b.png"
+PLACEHOLDER = "./Images/rgb.png"
 
 class Batch(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -115,8 +112,8 @@ class Batch(QtGui.QMainWindow):
                 splitBR.runAll(self.update_batch_progress)
                 splitBR.outputAllFiles()
 
-        outputDirectory = str(self.path) + "_output"
-        self.message(str(len(self.rgbImages) + len(self.monoImages) / 3) + " correlations performed. Results outputted to " + outputDirectory + ".")
+            outputDirectory = str(self.path) + "_output"
+            self.message(str(len(self.rgbImages) + len(self.monoImages) / 3) + " correlations performed. Results outputted to " + outputDirectory + ".")
 
         self.set_processing(False)
 
@@ -228,13 +225,21 @@ class Batch(QtGui.QMainWindow):
     # a new image is being correlated.
     def update_batch_progress(self, numFinished, numTotal):
         outputString = "Running " + str(numFinished) + " of " + str(numTotal)
+        currentPath = None
         if self.imageType == "mixed":
             outputString += " mixed images."
             currentImage = self.rgbImages[self.numProcessed + self.mixedMin]
             currentPath = os.path.join(self.path, currentImage)
-            self.ui.imageRgb.setPixmap(QtGui.QPixmap(currentPath))
+
         elif self.imageType == "split":
             outputString += " split images."
+            currentImage = self.monoImages[self.numProcessed + self.splitMin - len(self.rgbImages)]
+            currentPath = os.path.join(self.path, currentImage)
+        
+        # Show the current image in the interface
+        self.ui.image.setPixmap(QtGui.QPixmap(currentPath))
+        self.ui.imagePath.setText(currentPath)
+
         self.message(outputString)
         self.numSteps = self.numImages
         self.numProcessed += 1
@@ -265,12 +270,9 @@ class Batch(QtGui.QMainWindow):
         self.ui.tripleW.setPlaceholderText("10")
         self.ui.tripleG0.setPlaceholderText("1")
 
-    # Shows default placeholder images
+    # Shows default placeholder image
     def load_default_images(self):
-        self.ui.imageRgb.setPixmap(QtGui.QPixmap(RGB_PLACEHOLDER))
-        self.ui.imageRed.setPixmap(QtGui.QPixmap(RED_PLACEHOLDER))
-        self.ui.imageGreen.setPixmap(QtGui.QPixmap(GREEN_PLACEHOLDER))
-        self.ui.imageBlue.setPixmap(QtGui.QPixmap(BLUE_PLACEHOLDER))
+        self.ui.image.setPixmap(QtGui.QPixmap(PLACEHOLDER))
 
     # Enables or disables processing mode
     def set_processing(self, value):

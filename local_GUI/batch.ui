@@ -74,9 +74,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>20</y>
-     <width>1001</width>
-     <height>241</height>
+     <y>30</y>
+     <width>511</width>
+     <height>500</height>
     </rect>
    </property>
    <property name="font">
@@ -93,85 +93,13 @@
    <property name="checkable">
     <bool>false</bool>
    </property>
-   <widget class="QLabel" name="labelRGB">
+   <widget class="QLabel" name="image">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>220</y>
-      <width>101</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>All Channels</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelRed">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>220</y>
-      <width>51</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Red</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelGreen">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>220</y>
-      <width>51</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Green</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelBlue">
-    <property name="geometry">
-     <rect>
-      <x>860</x>
-      <y>220</y>
-      <width>51</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Blue</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="imageRgb">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
+      <x>50</x>
       <y>30</y>
-      <width>191</width>
-      <height>191</height>
+      <width>400</width>
+      <height>400</height>
      </rect>
     </property>
     <property name="font">
@@ -188,23 +116,21 @@
     <property name="text">
      <string/>
     </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
    </widget>
-   <widget class="QLabel" name="imageRed">
+   <widget class="QLabel" name="imagePath">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>30</y>
-      <width>191</width>
-      <height>191</height>
+      <x>10</x>
+      <y>450</y>
+      <width>491</width>
+      <height>41</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
     <property name="frameShape">
-     <enum>QFrame::Panel</enum>
+     <enum>QFrame::Box</enum>
     </property>
     <property name="frameShadow">
      <enum>QFrame::Sunken</enum>
@@ -212,63 +138,18 @@
     <property name="text">
      <string/>
     </property>
-   </widget>
-   <widget class="QLabel" name="imageGreen">
-    <property name="geometry">
-     <rect>
-      <x>530</x>
-      <y>30</y>
-      <width>191</width>
-      <height>191</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Panel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Sunken</enum>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="imageBlue">
-    <property name="geometry">
-     <rect>
-      <x>780</x>
-      <y>30</y>
-      <width>191</width>
-      <height>191</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Panel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Sunken</enum>
-    </property>
-    <property name="text">
-     <string/>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
   <widget class="QGroupBox" name="imageParametersGroup">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>270</y>
-     <width>311</width>
-     <height>341</height>
+     <x>530</x>
+     <y>30</y>
+     <width>481</width>
+     <height>241</height>
     </rect>
    </property>
    <property name="font">
@@ -282,10 +163,10 @@
    <widget class="QPushButton" name="loadButton">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>50</y>
+      <x>100</x>
+      <y>30</y>
       <width>261</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -295,8 +176,8 @@
    <widget class="QLabel" name="fileCountLabel">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>140</y>
+      <x>50</x>
+      <y>120</y>
       <width>141</width>
       <height>21</height>
      </rect>
@@ -311,8 +192,8 @@
    <widget class="QLabel" name="imageFormatLabel">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>250</y>
+      <x>50</x>
+      <y>210</y>
       <width>141</width>
       <height>21</height>
      </rect>
@@ -327,9 +208,9 @@
    <widget class="QLabel" name="fileCount">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>140</y>
-      <width>131</width>
+      <x>200</x>
+      <y>120</y>
+      <width>221</width>
       <height>21</height>
      </rect>
     </property>
@@ -346,10 +227,10 @@
    <widget class="QLabel" name="formatsList">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>230</y>
-      <width>131</width>
-      <height>61</height>
+      <x>200</x>
+      <y>210</y>
+      <width>221</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -371,9 +252,9 @@
    <widget class="QLabel" name="rgbCount">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>170</y>
-      <width>131</width>
+      <x>200</x>
+      <y>150</y>
+      <width>221</width>
       <height>21</height>
      </rect>
     </property>
@@ -390,8 +271,8 @@
    <widget class="QLabel" name="numRgbLabel">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>170</y>
+      <x>50</x>
+      <y>150</y>
       <width>141</width>
       <height>21</height>
      </rect>
@@ -406,8 +287,8 @@
    <widget class="QLabel" name="numMonochromeLabel">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>200</y>
+      <x>50</x>
+      <y>180</y>
       <width>141</width>
       <height>21</height>
      </rect>
@@ -422,9 +303,9 @@
    <widget class="QLabel" name="monoCount">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>200</y>
-      <width>131</width>
+      <x>200</x>
+      <y>180</y>
+      <width>221</width>
       <height>21</height>
      </rect>
     </property>
@@ -441,9 +322,9 @@
    <widget class="QLabel" name="folderLabel">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>100</y>
-      <width>221</width>
+      <x>20</x>
+      <y>70</y>
+      <width>421</width>
       <height>31</height>
      </rect>
     </property>
@@ -469,10 +350,10 @@
   <widget class="QGroupBox" name="correlationSettingsGroup">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>270</y>
-     <width>671</width>
-     <height>251</height>
+     <x>530</x>
+     <y>280</y>
+     <width>481</width>
+     <height>331</height>
     </rect>
    </property>
    <property name="font">
@@ -486,10 +367,10 @@
    <widget class="QGroupBox" name="allTripleParametersGroup">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>30</y>
-      <width>311</width>
-      <height>201</height>
+      <x>10</x>
+      <y>200</y>
+      <width>461</width>
+      <height>121</height>
      </rect>
     </property>
     <property name="title">
@@ -638,72 +519,14 @@
       <enum>Qt::VisualMoveStyle</enum>
      </property>
     </widget>
-    <widget class="QLabel" name="tripleG0Label_2">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>100</y>
-       <width>151</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Sample Resolution:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="resolution16">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>130</y>
-       <width>116</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>16 x 16</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="resolution32">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>150</y>
-       <width>116</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>32 x 32</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="resolution64">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>170</y>
-       <width>116</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>64 x 64</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QGroupBox" name="allAutoCrossGroup">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
-      <width>311</width>
-      <height>201</height>
+      <y>20</y>
+      <width>461</width>
+      <height>171</height>
      </rect>
     </property>
     <property name="title">
@@ -718,7 +541,7 @@
     <widget class="QLabel" name="dualRangeLabel">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>70</x>
        <y>30</y>
        <width>51</width>
        <height>31</height>
@@ -734,7 +557,7 @@
     <widget class="QLabel" name="dualG0Label">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>70</x>
        <y>70</y>
        <width>51</width>
        <height>31</height>
@@ -750,7 +573,7 @@
     <widget class="QLabel" name="dualWLabel">
      <property name="geometry">
       <rect>
-       <x>180</x>
+       <x>240</x>
        <y>30</y>
        <width>21</width>
        <height>31</height>
@@ -766,7 +589,7 @@
     <widget class="QLabel" name="dualGinfLabel">
      <property name="geometry">
       <rect>
-       <x>150</x>
+       <x>210</x>
        <y>70</y>
        <width>51</width>
        <height>31</height>
@@ -782,7 +605,7 @@
     <widget class="QCheckBox" name="considerAutoDeltas">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>130</x>
        <y>110</y>
        <width>301</width>
        <height>20</height>
@@ -795,7 +618,7 @@
     <widget class="QCheckBox" name="considerCrossDeltas">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>130</x>
        <y>140</y>
        <width>301</width>
        <height>20</height>
@@ -808,7 +631,7 @@
     <widget class="QLineEdit" name="dualRange">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>130</x>
        <y>30</y>
        <width>91</width>
        <height>31</height>
@@ -827,7 +650,7 @@
     <widget class="QLineEdit" name="dualG0">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>130</x>
        <y>70</y>
        <width>91</width>
        <height>31</height>
@@ -846,7 +669,7 @@
     <widget class="QLineEdit" name="dualW">
      <property name="geometry">
       <rect>
-       <x>210</x>
+       <x>270</x>
        <y>30</y>
        <width>91</width>
        <height>31</height>
@@ -865,7 +688,7 @@
     <widget class="QLineEdit" name="dualGinf">
      <property name="geometry">
       <rect>
-       <x>210</x>
+       <x>270</x>
        <y>70</y>
        <width>91</width>
        <height>31</height>
@@ -882,14 +705,72 @@
      </property>
     </widget>
    </widget>
+   <widget class="QRadioButton" name="resolution64">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>280</y>
+      <width>116</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>64 x 64</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="tripleG0Label_2">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>210</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sample Resolution:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="resolution32">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>260</y>
+      <width>116</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>32 x 32</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="resolution16">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>240</y>
+      <width>116</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>16 x 16</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QLabel" name="messageBox">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>530</y>
-     <width>671</width>
-     <height>81</height>
+     <x>10</x>
+     <y>540</y>
+     <width>511</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="font">
