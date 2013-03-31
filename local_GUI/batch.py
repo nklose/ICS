@@ -115,6 +115,9 @@ class Batch(QtGui.QMainWindow):
                 splitBR.runAll(self.update_batch_progress)
                 splitBR.outputAllFiles()
 
+        outputDirectory = str(self.path) + "_output"
+        self.message(str(len(self.rgbImages) + len(self.monoImages) / 3) + " correlations performed. Results outputted to " + outputDirectory + ".")
+
         self.set_processing(False)
 
     # Stops the current operation
@@ -184,6 +187,10 @@ class Batch(QtGui.QMainWindow):
                         self.message("Warning: improperly formatted filename(s) found.")
                 if str(os.path.splitext(image)[1]) not in self.extensions:
                     self.extensions.append(str(os.path.splitext(image)[1]))
+                
+            # Sort the resulting lists
+            self.rgbImages.sort()
+            self.monoImages.sort()
 
             # update file counts
             self.ui.rgbCount.setText(str(len(self.rgbImages)))
@@ -216,11 +223,15 @@ class Batch(QtGui.QMainWindow):
     # Miscellaneous Functions                             #
     #######################################################
 
-    # Updates the progress bar to reflect the current batch state
+    # Updates the interface to reflect the current batch state. Called whenever
+    # a new image is being correlated.
     def update_batch_progress(self, numFinished, numTotal):
         outputString = "Running " + str(numFinished) + " of " + str(numTotal)
         if self.imageType == "mixed":
             outputString += " mixed images."
+            currentImage = self.rgbImages[self.numProcessed + self.mixedMin]
+            currentPath = os.path.join(self.path, currentImage)
+            self.ui.imageRgb.setPixmap(QtGui.QPixmap(currentPath))
         elif self.imageType == "split":
             outputString += " split images."
         self.message(outputString)
@@ -382,7 +393,7 @@ class Batch(QtGui.QMainWindow):
         config = Config()
         config.side = self.size
         config.input_directory = self.path
-        config.output_directory = os.path.join("..", 
+        config.output_directory = os.path.join(os.path.dirname(self.path), 
                                                os.path.basename(self.path) + "_output")
         config.dual_range = int(self.ui.dualRange.text())
         config.triple_range = int(self.ui.tripleRange.text())
