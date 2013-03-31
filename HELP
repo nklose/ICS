@@ -2,5 +2,39 @@ Image Correlation Spectroscopy (ICS)
 Version 2.1 Beta
 Copyright (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar Qadri, and James Wang.
 Released under the GPL-compatible 401 IP License.
+--------------------------------------------------------------------------
+INTRODUCTION:
 
-(Help text can be added on this line and below.)
+The purpose of this application is to do analysis on images of biomembranes taken from microscopes. It is capable of completing correlations between different image channels of an image or a series of images. Amongst its functionality is the ability to specify input parameters to generate graphs and output values which can be exported to files.
+
+By default, the interface loads single-image mode, which does analysis on a single RGB image or three related one-channel images (R, G, and B). Most common image formats are supported such as BMP, JPG, PNG, TIF, and RAW.
+
+Once an image is loaded, its channels will be split (in the case of an RGB image) or combined (for three one-channel images) and displayed in the interface, along with the image dimensions and the average intensity per pixel of each channel. The user can then choose to do an auto-correlation (comparing an individual channel with itself), a cross-correlation (comparing two channels) or a triple correlation (comparing all three channels). A fourth option exists which completes all of the above correlations together. 
+
+AUTO AND CROSS (DUAL) CORRELATIONS:
+
+For auto-correlations and cross-correlations, the user selects which channels to correlate, then inputs the range value as well as the three correlation parameters g(0), w, and g(infinity). The user can also select whether or not to consider delta parameters in the correlation. Once everything is set up, the user can click START and the correlation graphs and output data will be shown on the Output tab.
+
+TRIPLE CORRELATIONS:
+
+For triple-correlations, the user clicks START as soon as the image is loaded. Note that unlike dual correlations, triple-correlations do not take input parameters before the correlation process has begun. When the user clicks start, the triple-correlation tab will be shown along with a Fourier transform surface plot of the red channel of the input image. The user can select a sample resolution (limit) based on this result, then press the first Continue button to be shown the triple-correlation surface plot. The user can then select and input a range value as well as the three correlation parameters, g(0), w, and g(infinity). When the user clicks the second Continue button, the fitting curve and output values will be shown and the process is complete.
+
+BATCH MODE:
+
+Batch mode allows for correlations to be done on a set of images rather than on a single one. The user loads a folder containing images, then inputs the parameters for dual (auto and cross) correlations and triple-correlations. The user can choose whether or not to consider deltas for either of the dual correlations, and what sample resolution (limit) to use for the triple-correlations. Note that unlike in single-image mode, the only correlation option is to perform all auto-, cross-, and triple-correlations on all channels.
+
+The naming convention for files in the input directory is important for the files to be read. The convention is as follows:
+
+    XXX_YYY.ZZZ
+
+Where:
+
+    XXX is the identifier for which channel(s) are in the image; that is, "rgb", "r", "g", or "b"
+    YYY is the three-digit file number. These numbers must be sequential (e.g. 105, 106, 107...).
+    ZZZ is the file extension (BMP, PNG, etc.)
+
+EXPORTING RESULTS:
+
+In single-image mode, the user can click the Zoom button of a specific graph, which appears as a small magnifying glass in the bottom-right corner of the graph area. Once a specific graph has been zoomed in, the user can save it to a file. Alternatively, the user can click the Save All Results button, which exports all graphs and other data in the form of text files to a specified folder.
+
+In batch mode, all data is automatically output to a folder in the same directory as the input folder. The output folder will have the same name as the input folder, with "_output" appended to the end. So, if the input folder is named "images", the output folder will be named "images_output".
