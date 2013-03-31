@@ -24,32 +24,35 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+from celery.task.control import revoke
 import shutil
+import os
 import os.path
+import zipfile
 
 
 def _generate_image_path(instance, filename):
     batch = instance.batch
-    path = '/'.join([batch.get_inputs_path(), filename])
+    path = os.path.join(batch.get_inputs_path(), filename)
     return path
 
 
 def _generate_temp_path(instance, filename):
     batch = instance.job.batch
-    path = '/'.join([str(batch.id), 'temp', filename])
+    path = os.path.join(batch.get_temp_path(), filename)
     return path 
 
 
 def _generate_result_path(instance, filename):
     batch = instance.job.batch
-    path = '/'.join([batch.get_results_path(), filename])
+    path = os.path.join(batch.get_results_path(), filename)
     return path
 
 
 class Batch(models.Model):
     UPLOADING, RUNNING, COMPLETE = u'u', u'r', u'c'
     JOB_STATES = (
-        (UPLOADING, u'Uploading'),
+        (UPLOADING, u'Uploaded'),
         (RUNNING, u'Running'),
         (COMPLETE, u'Complete')
     )
@@ -61,6 +64,7 @@ class Batch(models.Model):
     )
 
     id = models.AutoField(primary_key=True)
+    #task_id = models.CharField(max_length=50, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     state = models.CharField(max_length=1, choices=JOB_STATES, blank=True)
     image_type = models.CharField(max_length=5, choices=IMAGE_TYPES, blank=True)
@@ -70,11 +74,30 @@ class Batch(models.Model):
     name_format = models.CharField(max_length=20, blank=True)
     user = models.ForeignKey(User)
 
+    def generate_zip(self):
+        results_path = os.path.join(settings.MEDIA_ROOT, self.get_results_path())
+        path_len = len(results_path) + 1
+        zip_path = os.path.join(settings.MEDIA_ROOT, self.get_zip_path())
+        with zipfile.ZipFile(zip_path, 'w') as zip:
+            for base, dirs, files in os.walk(results_path):
+                for file in files:
+                    filename = os.path.join(base, file)
+                    zip.write(filename, filename[path_len:])
+
     def get_inputs_path(self):
-        return '/'.join([str(self.id), 'inputs'])
+        return os.path.join(self.get_path(), 'inputs')
 
     def get_results_path(self):
-        return '/'.join([str(self.id), 'results'])
+        return os.path.join(self.get_path(), 'results')
+
+    def get_temp_path(self):
+        return os.path.join(self.get_path(), 'temp')
+
+    def get_zip_path(self):
+        return os.path.join(self.get_path(), 'results.zip')
+
+    def get_path(self):
+        return str(self.id)
 
     def __unicode__(self):
         return unicode(self.date.__str__())
@@ -82,6 +105,8 @@ class Batch(models.Model):
 
 @receiver(pre_delete, sender=Batch)
 def on_batch_delete(sender, instance, **kwargs):
+    #if instance.state == Batch.RUNNING:
+        #revoke(instance.task_id, terminate=True)
     path = os.path.join(settings.MEDIA_ROOT, str(instance.id))
     shutil.rmtree(path)
 

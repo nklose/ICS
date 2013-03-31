@@ -381,7 +381,9 @@ def batch(request):
                     batch.image_type = Batch.SINGLE
                 batch.save()
 
-            tasks.run_batch.delay(batch)
+            result = tasks.run_batch.delay(batch)
+            #batch.task_id = result.id
+            batch.save()
              
             return HttpResponseRedirect('/results/') # redirect after post
     else:
@@ -406,16 +408,8 @@ def results(request):
         return HttpResponseRedirect('/rgb_upload/')
 
     batch = Batch.objects.get(id=request.session['batch_id'])
-    resultsPath = os.path.join(settings.MEDIA_ROOT, batch.get_results_path())
-    pathLen = len(resultsPath) + 1
-    zipPath = os.path.join(settings.MEDIA_ROOT, str(batch.id), 'results.zip')
-    with zipfile.ZipFile(zipPath, 'w') as zipf:
-        for base, dirs, files in os.walk(resultsPath):
-            for file in files:
-                filename = os.path.join(base, file)
-                zipf.write(filename, filename[pathLen:])
-
-    export_link = os.path.join(settings.MEDIA_URL, str(batch.id), 'results.zip')
+    batch.generate_zip()
+    export_link = batch.get_zip_path()
     results = batch.job_set.all()[0].result_set.all()
     temp = {"sec_title": "Image Correlation Spectroscopy Program | Results", "copyrightdate": 2013, "results": results, "export_link": export_link}
     return render(request, 'results.html', temp)
@@ -433,8 +427,9 @@ def batchResults(request):
         - sec_ title: The title of the section
         - copyrightdate: The year of copyright.
     """
-    
-    temp = {"sec_title": "", "copyrightdate": 2013,}
+    batches = Batch.objects.filter(user=request.user).exclude(state='')
+    batches = reversed(batches)
+    temp = {"sec_title": "", "copyrightdate": 2013, "batches": batches}
     return render(request, 'batch_results.html', temp)
 
 def help(request):

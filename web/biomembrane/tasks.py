@@ -125,5 +125,6 @@ def run_batch(batch):
     batch_runner.runAll()
     batch_runner.outputAllFiles()
 
-    batch.state =  Batch.COMPLETE
+    batch.state = Batch.COMPLETE
     batch.save()
+    batch.generate_zip()

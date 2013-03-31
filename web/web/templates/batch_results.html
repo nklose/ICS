@@ -5,37 +5,33 @@
 <script type="text/javascript" src="{{ STATIC_URL }}js/ics_scripts/zoom_master/jquery.zoom.js"></script>
 {% endblock script %}
 {% block content-main %}
-<h3>All Batch Correlations</h3>
-<div id="batch_display">
-{% for batch in batch_list %}
-<button type="button" class="btn" data-toggle="button" onclick="">Batch {{ batch.id }} Details</button>
-<div id="show{{ batch.id }}" class="row-fluid">
- <div class="span4">
-  <p>Auto/Cross Parameters</p>
-  <label>Range:</label>
-  <span class="input-medium uneditable-input">{{ batch.autoCrossAll.range }}</span>
-  <label>ginf:</label>
-  <span class="input-medium uneditable-input">{{ batch.autoCrossAll.ginf }}</span>
-  <label>w:</label>
-  <span class="input-medium uneditable-input">{{ batch.autoCrossAll.w }}</span>
-  <label>g(0):</label>
-  <span class="input-medium uneditable-input">{{ batch.autoCrossAll.gzero }}</span>
- </div> <!-- span4 -->
- <div class="span4">
-  <p>Triple Parameters</p>
-  <span class="input-medium uneditable-input">{{ batch.triple.range }}</span>
-  <label>Range:</label>
-  <span class="input-medium uneditable-input">{{ batch.triple.ginf }}</span>
-  <label>ginf:</label>
-  <span class="input-medium uneditable-input">{{ batch.triple.w }}</span>
-  <label>w:</label>
-  <span class="input-medium uneditable-input">{{ batch.triple.gzero }}</span>
-  <label>g(0):</label>
-  <span class="input-medium uneditable-input">{{ batch.resolution }}</span>
- </div> <!-- span4 -->
-</div> <!-- row-fluid -->
-  <div><a class="btn btn-primary" href="{{ batch.export_link }}">Download Batch #{{ batch.id }}</a></div>
-  <button type="button" class="btn" data-toggle="button" onclick="">Delete</button>
-{% endfor %}
+<h3>Batch Results</h3>
+
+<div class="accordion" id="results">
+    {% for batch in batches %}
+    <div class="accordion-group">
+        {% if batch.state == batch.COMPLETE %}
+        <div class="accordion-heading" style="background:lightgreen">
+        {% else %}
+        <div class="accordion-heading"> 
+        {% endif %}
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#results" href="#{{batch.id}}">
+                <strong>{{batch.get_state_display}}</strong> ({{batch}})
+            </a>
+            {% if batch.state == batch.COMPLETE %}
+            <a class="btn btn-primary" href="{{MEDIA_URL}}{{batch.get_zip_path}}">Download</a>
+            {% else %}
+            <a class="btn btn-primary disabled" href="">Download</a>
+            {% endif %}
+            <a class="btn btn-danger" data-toggle="button" onclick="">Delete</a>
+        </div>
+        <div id="{{batch.id}}" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <label>Data</label>
+                <span class="input-medium uneditable-inner">Something...</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock content-main %}
