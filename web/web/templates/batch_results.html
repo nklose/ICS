@@ -27,8 +27,47 @@
         </div>
         <div id="{{batch.id}}" class="accordion-body collapse">
             <div class="accordion-inner">
-                <label>Data</label>
-                <span class="input-medium uneditable-inner">Something...</span>
+                <div class="row-fluid">
+                    <div class="span4">
+                        <fieldset>
+                            <legend>Batch Settings</legend>
+                            <label>Batch Image Size:</label>
+                            <span class="input-medium uneditable-inner">{{batch.image_size}}</span>
+                            <label>Start At Image #:</label>
+                            <span class="input-medium uneditable-inner">{{batch.start}}</span>
+                            <label>Stop At Image #:</label>
+                            <span class="input-medium uneditable-inner">{{batch.stop}}</span>
+                            <label>File Name Format:</label>
+                            <span class="input-medium uneditable-inner">{{batch.name_format}}</span>
+                        </fieldset>
+                    </div>
+                    <div class="span4">
+                        <fieldset>
+                            <legend>Auto/Cross Parameters</legend>
+                            <label>Range:</label>
+                            <span class="input-medium uneditable-inner">{{batch.dualparameters_set.all.0.range_val}}</span>
+                            <label>gInf</label>
+                            <span class="input-medium uneditable-inner">{{batch.dualparameters_set.all.0.ginf}}</span>
+                            <label>w</label>
+                            <span class="input-medium uneditable-inner">{{batch.dualparameters_set.all.0.w}}</span>
+                            <label>g(0)</label>
+                            <span class="input-medium uneditable-inner">{{batch.dualparameters_set.all.0.g0}}</span>
+                        </fieldset>
+                    </div>
+                    <div class="span4">
+                        <fieldset>
+                            <legend>Triple Parameters</legend>
+                            <label>Range:</label>
+                            <span class="input-medium uneditable-inner">{{batch.tripleparameters_set.all.0.range_val}}</span>
+                            <label>gInf</label>
+                            <span class="input-medium uneditable-inner">{{batch.tripleparameters_set.all.0.ginf}}</span>
+                            <label>w</label>
+                            <span class="input-medium uneditable-inner">{{batch.tripleparameters_set.all.0.w}}</span>
+                            <label>g(0)</label>
+                            <span class="input-medium uneditable-inner">{{batch.tripleparameters_set.all.0.g0}}</span>
+                        </fieldset>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
