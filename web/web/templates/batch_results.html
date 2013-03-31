@@ -13,7 +13,7 @@
         {% if batch.state == batch.COMPLETE %}
         <div class="accordion-heading" style="background:lightgreen">
         {% else %}
-        <div class="accordion-heading"> 
+        <div class="accordion-heading">
         {% endif %}
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#results" href="#{{batch.id}}">
                 <strong>{{batch.get_state_display}}</strong> ({{batch}})
