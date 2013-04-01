@@ -21,7 +21,7 @@ Installation
         sudo rabbitmqctl add_vhost <vhost>
         sudo rabbitmqctl set_permissions -p <vhost> <user> ".*" ".*" ".*"
         
-Dev Settings
+   Dev Settings
 
         sudo rabbitmqctl add_user ics_user ics_password
         sudo rabbitmqctl add_vhost ics_vhost
@@ -42,3 +42,22 @@ Running
 2. Run the development server on localhost:8000
 
         python manage.py runserver
+        
+        
+Enable Registeration / Password Reset
+=====================================
+
+1. Configure Mail Client Settings 
+   In settings.py
+
+         ACCOUNT_ACTIVATION_DAYS= <days>
+         EMAIL_HOST = <host address>
+         EMAIL_PORT = <portnumber>
+         EMAIL_HOST_USER = <host>
+         EMAIL_HOST_PASSWORD = <password>
+         EMAIL_USE_TLS = <True,False>
+         DEFAULT_FROM_EMAIL = <email address>
+         
+2. Start SMTP Server
+
+         python -m smtpd -n -c DebuggingServer <server address>:<port>
