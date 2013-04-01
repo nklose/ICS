@@ -382,7 +382,7 @@ def batch(request):
                 batch.save()
 
             result = tasks.run_batch.delay(batch)
-            #batch.task_id = result.id
+            batch.task_id = result.id
             batch.save()
              
             return HttpResponseRedirect('/batchResults/') # redirect after post

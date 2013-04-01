@@ -64,7 +64,7 @@ class Batch(models.Model):
     )
 
     id = models.AutoField(primary_key=True)
-    #task_id = models.CharField(max_length=50, blank=True)
+    task_id = models.CharField(max_length=50, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     state = models.CharField(max_length=1, choices=JOB_STATES, blank=True)
     image_type = models.CharField(max_length=5, choices=IMAGE_TYPES, blank=True)
@@ -105,8 +105,8 @@ class Batch(models.Model):
 
 @receiver(pre_delete, sender=Batch)
 def on_batch_delete(sender, instance, **kwargs):
-    #if instance.state == Batch.RUNNING:
-        #revoke(instance.task_id, terminate=True)
+    if instance.state == Batch.RUNNING:
+        revoke(instance.task_id, terminate=True)
     path = os.path.join(settings.MEDIA_ROOT, str(instance.id))
     shutil.rmtree(path)
 
