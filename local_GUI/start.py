@@ -161,9 +161,18 @@ class StartQT4(QtGui.QMainWindow):
         if validImage:
             try:
                 images = bimloader.load_image_mixed(str(self.rgbPath))
+                image = PIL.Image.open(self.rgbPath)
             except bimloader.ImageFormatException:
                 validImage = False
                 self.msgBadFormat()
+                self.rgbPath = ""
+            except IOError as e:
+                validImage = False
+                self.message(e)
+                self.rgbPath = ""
+            except:
+                validImage = False
+                self.message("An error occurred while loading the image.")
                 self.rgbPath = ""
 
         if validImage:
