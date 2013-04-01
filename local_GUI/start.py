@@ -87,9 +87,6 @@ class StartQT4(QtGui.QMainWindow):
         # Number of steps in a given function, for updating progress bar
         self.numSteps = 1
 
-        # Temporary file directory (used during runtime only, purged each run)
-        self.temp_dir = "./ics_tmp"
-
         # Refresh the temporary directory
         self.refresh_temp()
 
@@ -260,9 +257,9 @@ class StartQT4(QtGui.QMainWindow):
             self.update_size(self.redChannel.shape[1])
 
             # Update the red, green, and blue paths
-            self.redPath = self.temp_dir + "/red.png"
-            self.greenPath = self.temp_dir + "/green.png"
-            self.bluePath = self.temp_dir + "/blue.png"
+            self.redPath = TEMP_DIR + "/red.png"
+            self.greenPath = TEMP_DIR + "/green.png"
+            self.bluePath = TEMP_DIR + "/blue.png"
 
             # Refresh the temporary directory (delete and recreate)
             self.refresh_temp()
@@ -280,7 +277,7 @@ class StartQT4(QtGui.QMainWindow):
             red = redImage.split()[0]
             empty = red.point(lambda i: i * 0)
             redImage = PIL.Image.merge("RGB", (red, empty, empty))
-            redColorized = os.path.join(self.temp_dir, "rc_split.png")
+            redColorized = os.path.join(TEMP_DIR, "rc_split.png")
             redImage.save(redColorized, "PNG")
 
             # Get rid of red and blue channels in green image
@@ -288,7 +285,7 @@ class StartQT4(QtGui.QMainWindow):
             greenImage = greenImage.convert("RGB")
             green = greenImage.split()[1]
             greenImage = PIL.Image.merge("RGB", (empty, green, empty))
-            greenColorized = os.path.join(self.temp_dir, "gc_split.png")
+            greenColorized = os.path.join(TEMP_DIR, "gc_split.png")
             greenImage.save(greenColorized, "PNG")
 
             # Get rid of red and green channels in blue image
@@ -296,7 +293,7 @@ class StartQT4(QtGui.QMainWindow):
             blueImage = blueImage.convert("RGB")
             blue = blueImage.split()[2]
             blueImage = PIL.Image.merge("RGB", (empty, empty, blue))
-            blueColorized = os.path.join(self.temp_dir, "bc_split.png")
+            blueColorized = os.path.join(TEMP_DIR, "bc_split.png")
             blueImage.save(blueColorized, "PNG")
             
             # Load the colorized images into the interface
@@ -360,7 +357,7 @@ class StartQT4(QtGui.QMainWindow):
             red = image.split()[0]
             empty = red.point(lambda i: i * 0)
             redImage = PIL.Image.merge("RGB", (red, empty, empty))
-            colorizedPath = os.path.join(self.temp_dir, "rc.png")
+            colorizedPath = os.path.join(TEMP_DIR, "rc.png")
             redImage.save(colorizedPath, "PNG")
             
             # Load the colorized image into the interface
@@ -442,7 +439,7 @@ class StartQT4(QtGui.QMainWindow):
             green = image.split()[1]
             empty = green.point(lambda i: i * 0)
             greenImage = PIL.Image.merge("RGB", (empty, green, empty))
-            colorizedPath = os.path.join(self.temp_dir, "gc.png")
+            colorizedPath = os.path.join(TEMP_DIR, "gc.png")
             greenImage.save(colorizedPath, "PNG")
             
             # Load the colorized image into the interface
@@ -523,7 +520,7 @@ class StartQT4(QtGui.QMainWindow):
             blue = image.split()[2]
             empty = blue.point(lambda i: i * 0)
             blueImage = PIL.Image.merge("RGB", (empty, empty, blue))
-            colorizedPath = os.path.join(self.temp_dir, "bc.png")
+            colorizedPath = os.path.join(TEMP_DIR, "bc.png")
             blueImage.save(colorizedPath, "PNG")
             
             # Load the colorized image into the interface
@@ -1275,9 +1272,9 @@ class StartQT4(QtGui.QMainWindow):
         self.progress(7)
 
         # create and display the graphs
-        rPath = os.path.join(self.temp_dir, "r_graph.png")
-        gPath = os.path.join(self.temp_dir, "g_graph.png")
-        bPath = os.path.join(self.temp_dir, "b_graph.png")
+        rPath = os.path.join(TEMP_DIR, "r_graph.png")
+        gPath = os.path.join(TEMP_DIR, "g_graph.png")
+        bPath = os.path.join(TEMP_DIR, "b_graph.png")
                 
         for i, x in enumerate(result):
             fileLike = x.plotToStringIO()
@@ -1400,9 +1397,9 @@ class StartQT4(QtGui.QMainWindow):
         self.set_cross_deltas(round(redGreenResult.usedDeltas,PRECISION))
 
         # create and display the graphs
-        rgPath = os.path.join(self.temp_dir, "rg_graph.png")
-        rbPath = os.path.join(self.temp_dir, "rb_graph.png")
-        gbPath = os.path.join(self.temp_dir, "gb_graph.png")
+        rgPath = os.path.join(TEMP_DIR, "rg_graph.png")
+        rbPath = os.path.join(TEMP_DIR, "rb_graph.png")
+        gbPath = os.path.join(TEMP_DIR, "gb_graph.png")
         
         self.progress(7)
 
@@ -1489,7 +1486,7 @@ class StartQT4(QtGui.QMainWindow):
         result = None
 
         # define a path to save the image
-        path = os.path.join(self.temp_dir, "triple_1.png")
+        path = os.path.join(TEMP_DIR, "triple_1.png")
 
         # Save graph path
         self.tripleGraph1Path = path
@@ -1552,7 +1549,7 @@ class StartQT4(QtGui.QMainWindow):
         result = None
 
         # define a path to save the image
-        path = os.path.join(self.temp_dir, "triple_2.png")
+        path = os.path.join(TEMP_DIR, "triple_2.png")
 
         # Save graph path
         self.tripleGraph2Path = path
@@ -1615,7 +1612,7 @@ class StartQT4(QtGui.QMainWindow):
             self.progress(12)
 
             # create the fitting curve
-            path = os.path.join(self.temp_dir, "triple_3.png")
+            path = os.path.join(TEMP_DIR, "triple_3.png")
             self.tripleGraph3Path = path
             fileLike = result.plotToStringIO()
             outFile = open(path, "wb")
@@ -1710,12 +1707,12 @@ class StartQT4(QtGui.QMainWindow):
         self.progress(6)
 
         # Create and display the graphs
-        rPath = os.path.join(self.temp_dir, "r_graph.png")
-        gPath = os.path.join(self.temp_dir, "g_graph.png")
-        bPath = os.path.join(self.temp_dir, "b_graph.png")
-        rgPath = os.path.join(self.temp_dir, "rg_graph.png")
-        rbPath = os.path.join(self.temp_dir, "rb_graph.png")
-        gbPath = os.path.join(self.temp_dir, "gb_graph.png")
+        rPath = os.path.join(TEMP_DIR, "r_graph.png")
+        gPath = os.path.join(TEMP_DIR, "g_graph.png")
+        bPath = os.path.join(TEMP_DIR, "b_graph.png")
+        rgPath = os.path.join(TEMP_DIR, "rg_graph.png")
+        rbPath = os.path.join(TEMP_DIR, "rb_graph.png")
+        gbPath = os.path.join(TEMP_DIR, "gb_graph.png")
 
         self.autoRedGraphPath = rPath
         self.autoGreenGraphPath = gPath
@@ -1970,7 +1967,7 @@ class StartQT4(QtGui.QMainWindow):
             self.progress(1)
             rgb_image = PIL.Image.fromarray(numpy.uint8(rgb))
             self.progress(2)
-            path = os.path.join(self.temp_dir, "rgb_image.png")
+            path = os.path.join(self.TEMP_DIR, "rgb_image.png")
             self.progress(3)
             scipy.misc.imsave(path, rgb_image)
             self.progress(4)
@@ -1979,24 +1976,24 @@ class StartQT4(QtGui.QMainWindow):
 
     # Removes any images generated by splitting an RGB image.
     def remove_split_images(self):
-        if str(os.path.dirname(self.redPath)) == self.temp_dir:
+        if str(os.path.dirname(self.redPath)) == TEMP_DIR:
             if str(os.path.basename(self.redPath)) == "blue.png":
                 self.redPath = ""
                 self.ui.imageRed.clear()
-        if str(os.path.dirname(self.greenPath)) == self.temp_dir:
+        if str(os.path.dirname(self.greenPath)) == TEMP_DIR:
             if str(os.path.basename(self.greenPath)) == "green.png":
                 self.greenPath = ""
                 self.ui.imageGreen.clear()
-        if str(os.path.dirname(self.bluePath)) == self.temp_dir:
+        if str(os.path.dirname(self.bluePath)) == TEMP_DIR:
             if str(os.path.basename(self.bluePath)) == "blue.png":
                 self.bluePath = ""
                 self.ui.imageBlue.clear()
 
     # Refreshes the temporary directory by deleting and recreating it
     def refresh_temp(self):
-        if os.path.exists(self.temp_dir):
-            shutil.rmtree(self.temp_dir)
-        os.makedirs(self.temp_dir)
+        if os.path.exists(TEMP_DIR):
+            shutil.rmtree(TEMP_DIR)
+        os.makedirs(TEMP_DIR)
 
     # Updates the size of the image internally and on the GUI label.
     def update_size(self, size):
