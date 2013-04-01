@@ -93,42 +93,65 @@ class Batch(QtGui.QMainWindow):
         self.set_processing(True)
         validInput = self.validate_input()
         if validInput:
-            # begin process
             self.message("Beginning batch correlation process.")
-            
-            # create config object
-            mixedBR = None
-            splitBR = None
-
-            if len(self.rgbImages) != 0:
-                self.imageType = "mixed"
-                mixedConfig = self.get_config(True)
-                mixedBR = midend.batchRunner.BatchRunner(mixedConfig)
-                mixedBR.runAll(self.update_batch_progress)
-                mixedBR.outputAllFiles()
-
-            if len(self.monoImages) != 0:
-                self.imageType = "split"
-                splitConfig = self.get_config(False)                
-                splitBR = midend.batchRunner.BatchRunner(splitConfig)
-                splitBR.runAll(self.update_batch_progress)
-                splitBR.outputAllFiles()
-
-            outputDirectory = str(self.path) + "_output"
-            self.message(str(len(self.rgbImages) + len(self.monoImages) / 3) + " correlations performed. Results outputted to " + outputDirectory + ".")
-
+            self.runBatch()
         self.numProcessed = 0
-
         self.set_processing(False)
 
     # Stops the current operation
     def stop(self):
+        self.message("Correlation stopped.")
+        self.progress(0)
         self.set_processing(False)
+        thread.interrupt_main()
 
     # Loads a folder into the interface
     def load(self):
         self.set_processing(True)
-        
+        self.loadDirectory()
+        self.set_processing(False)
+
+    # Switches to single mode
+    def single_mode(self):
+        self.parent.show()
+        self.close()
+
+    # Shows the help dialog
+    def show_help(self):
+        help = Help(self)
+        help.show()
+
+    #######################################################
+    # Miscellaneous Functions                             #
+    #######################################################
+
+    # Runs the batch correlations.
+    def runBatch(self):
+        # create config object
+        mixedBR = None
+        splitBR = None
+
+        if len(self.rgbImages) != 0:
+            self.imageType = "mixed"
+            mixedConfig = self.get_config(True)
+            mixedBR = midend.batchRunner.BatchRunner(mixedConfig)
+            mixedBR.runAll(self.update_batch_progress)
+            mixedBR.outputAllFiles()
+            
+        if len(self.monoImages) != 0:
+            self.imageType = "split"
+            splitConfig = self.get_config(False)                
+            splitBR = midend.batchRunner.BatchRunner(splitConfig)
+            splitBR.runAll(self.update_batch_progress)
+            splitBR.outputAllFiles()
+
+        outputDirectory = str(self.path) + "_output"
+        message = str(len(self.rgbImages) + len(self.monoImages) / 3) 
+        message += " correlations performed. Results outputted to " + outputDirectory + "."
+        self.message(message)
+
+    # Loads a user-specified directory into the interface.
+    def loadDirectory(self):
         self.size = 0
         self.numProcessed = 0
         self.numImages = 0
@@ -209,23 +232,6 @@ class Batch(QtGui.QMainWindow):
                 extList += str(ext)[1:] + ", "
             extList = extList[:-2]
             self.ui.formatsList.setText(extList.upper())
-                
-
-        self.set_processing(False)
-
-    # Switches to single mode
-    def single_mode(self):
-        self.parent.show()
-        self.close()
-
-    # Shows the help dialog
-    def show_help(self):
-        help = Help(self)
-        help.show()
-
-    #######################################################
-    # Miscellaneous Functions                             #
-    #######################################################
 
     # Updates the interface to reflect the current batch state. Called whenever
     # a new image is being correlated.
