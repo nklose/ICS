@@ -28,18 +28,14 @@
    width: 180px;
 }
 
-.sortableGraph {
-    display: block;
-}
-
 .sortableGraph img {
     width: 600px;
 }
 
 .sortableGraph img:hover { 
-   cursor: url(../js/ics_scripts/zoom_master/grab.cur), 4 4, crosshair;
-   cursor:-webkit-grabbing;
-   cursor: -moz-moz-grabbing;
+    cursor: url(../js/ics_scripts/zoom_master/grab.cur), 4 4, crosshair;
+    cursor:-webkit-grabbing;
+    cursor: -moz-moz-grabbing;
 }
 
 .sortableGraph img:active { 
@@ -48,17 +44,31 @@
    cursor: -moz-moz-grab; 
 }
 
+.zoom {
+   display:inline-block;
+   position: relative;
+}
+
 /* magnifying glass icon */
 .zoom:after {
    content:'';
    display:block; 
-   width:33px; 
-   height:33px; 
+   width:2.063em; 
+   height:2.063em; 
    position:absolute; 
    top:0;
    right:0;
    background:url(../js/ics_scripts/zoom_master/icon.png);
 }
+
+.zoom img::selection {
+   background-color: transparent;
+}
+
+.zoom img {
+  display: block;
+}
+
 
 .sortableImgList ul {
     list-style-type: none;
