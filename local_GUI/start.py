@@ -1891,7 +1891,7 @@ class StartQT4(QtGui.QMainWindow):
             self.progress(1)
             rgb_image = PIL.Image.fromarray(numpy.uint8(rgb))
             self.progress(2)
-            path = os.path.join(self.TEMP_DIR, "rgb_image.png")
+            path = os.path.join(TEMP_DIR, "rgb_image.png")
             self.progress(3)
             scipy.misc.imsave(path, rgb_image)
             self.progress(4)
