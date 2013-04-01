@@ -18,8 +18,9 @@ import os.path
 import scipy
 import numpy
 import PIL
-import thread
+import thread, threading
 import shutil
+import time
 from PyQt4 import QtCore, QtGui
 from gui_batch import Ui_Dialog
 from help import Help
@@ -67,9 +68,8 @@ class Batch(QtGui.QMainWindow):
         self.mixedMax = None  # maximum image number for mixed images
         self.mixedExtension = None   # file extension of mixed images
         self.splitExtension = None   # file extension of split images
-
-        # Track parent window
-        self.parent = parent
+        self.parent = parent  # parent window
+        self.processing = False      # whether or not the program is doing processing
         
         #######################################################
         # Interface Object Connections                        #
@@ -94,16 +94,14 @@ class Batch(QtGui.QMainWindow):
         validInput = self.validate_input()
         if validInput:
             self.message("Beginning batch correlation process.")
-            self.runBatch()
+            QtCore.QTimer.singleShot(0, self.runBatch)
         self.numProcessed = 0
-        self.set_processing(False)
 
     # Stops the current operation
     def stop(self):
         self.message("Correlation stopped.")
         self.progress(0)
         self.set_processing(False)
-        thread.interrupt_main()
 
     # Loads a folder into the interface
     def load(self):
@@ -149,6 +147,8 @@ class Batch(QtGui.QMainWindow):
         message = str(len(self.rgbImages) + len(self.monoImages) / 3) 
         message += " correlations performed. Results outputted to " + outputDirectory + "."
         self.message(message)
+
+        self.set_processing(False)
 
     # Loads a user-specified directory into the interface.
     def loadDirectory(self):
@@ -236,6 +236,10 @@ class Batch(QtGui.QMainWindow):
     # Updates the interface to reflect the current batch state. Called whenever
     # a new image is being correlated.
     def update_batch_progress(self, numFinished, numTotal):
+        time.sleep(0.001)
+        QtGui.qApp.processEvents()
+        if not self.processing:
+            thread.interrupt_main()
         outputString = "Running " + str(numFinished) + " of " + str(numTotal)
         currentPath = None
         if self.imageType == "mixed":
@@ -288,6 +292,7 @@ class Batch(QtGui.QMainWindow):
 
     # Enables or disables processing mode
     def set_processing(self, value):
+        self.processing = value
         self.ui.startButton.setEnabled(not value)
         self.ui.stopButton.setEnabled(value)
         self.ui.singleModeButton.setEnabled(not value)
