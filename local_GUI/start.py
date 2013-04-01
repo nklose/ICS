@@ -112,109 +112,33 @@ class StartQT4(QtGui.QMainWindow):
         #######################################################
         # Interface Object Connections                        #
         #######################################################
+        clicked = QtCore.SIGNAL("clicked()")
+        changed = QtCore.SIGNAL("currentChanged()")
 
-        # Image Settings Buttons
-        QtCore.QObject.connect(self.ui.loadImageRed,
-                               QtCore.SIGNAL("clicked()"),
-                               self.load_red_image)
-
-        QtCore.QObject.connect(self.ui.loadImageGreen,
-                               QtCore.SIGNAL("clicked()"),
-                               self.load_green_image)
-
-        QtCore.QObject.connect(self.ui.loadImageBlue,
-                               QtCore.SIGNAL("clicked()"),
-                               self.load_blue_image)
-
-        QtCore.QObject.connect(self.ui.loadImageRGB,
-                               QtCore.SIGNAL("clicked()"),
-                               self.load_RGB_image)
+        # Buttons
+        QtCore.QObject.connect(self.ui.loadImageRed, clicked, self.load_red_image)
+        QtCore.QObject.connect(self.ui.loadImageGreen, clicked, self.load_green_image)
+        QtCore.QObject.connect(self.ui.loadImageBlue, clicked, self.load_blue_image)
+        QtCore.QObject.connect(self.ui.loadImageRGB, clicked, self.load_RGB_image)
+        QtCore.QObject.connect(self.ui.startButton, clicked,  self.start)
+        QtCore.QObject.connect(self.ui.stopButton, clicked, self.stop)
+        QtCore.QObject.connect(self.ui.batchModeButton, clicked, self.batch_mode)
+        QtCore.QObject.connect(self.ui.saveAllButton, clicked, self.saveAll)
+        QtCore.QObject.connect(self.ui.continueButton1, clicked, self.triple_process)
+        QtCore.QObject.connect(self.ui.continueButton2, clicked, self.triple_complete)
+        QtCore.QObject.connect(self.ui.redGraphZoom, clicked, self.zoomRed)
+        QtCore.QObject.connect(self.ui.greenGraphZoom, clicked, self.zoomGreen)
+        QtCore.QObject.connect(self.ui.blueGraphZoom, clicked, self.zoomBlue)
+        QtCore.QObject.connect(self.ui.redGreenGraphZoom, clicked, self.zoomRedGreen)
+        QtCore.QObject.connect(self.ui.redBlueGraphZoom, clicked, self.zoomRedBlue)
+        QtCore.QObject.connect(self.ui.greenBlueGraphZoom, clicked, self.zoomGreenBlue)
+        QtCore.QObject.connect(self.ui.tripleGraph1Zoom, clicked, self.zoomTriple1)
+        QtCore.QObject.connect(self.ui.tripleGraph2Zoom, clicked, self.zoomTriple2)
+        QtCore.QObject.connect(self.ui.tripleGraph3Zoom, clicked, self.zoomTriple3)
+        QtCore.QObject.connect(self.ui.helpButton, clicked, self.show_help)
 
         # Correlation tabs
-        QtCore.QObject.connect(self.ui.correlationTabWidget,
-                               QtCore.SIGNAL("currentChanged()"),
-                               self.update)
-
-        # Start Button
-        QtCore.QObject.connect(self.ui.startButton,
-                               QtCore.SIGNAL("clicked()"),
-                               self.start)
-
-        # Stop Button
-        QtCore.QObject.connect(self.ui.stopButton,
-                               QtCore.SIGNAL("clicked()"),
-                               self.stop)
-
-        # Batch Mode Button
-        QtCore.QObject.connect(self.ui.batchModeButton,
-                               QtCore.SIGNAL("clicked()"),
-                               self.batch_mode)
-
-        # Save All Graphs Button
-        QtCore.QObject.connect(self.ui.saveAllButton,
-                               QtCore.SIGNAL("clicked()"),
-                               self.saveAll)
-
-        # Continue Button 1
-        QtCore.QObject.connect(self.ui.continueButton1,
-                               QtCore.SIGNAL("clicked()"),
-                               self.triple_process)
-
-        # Continue Button 2
-        QtCore.QObject.connect(self.ui.continueButton2,
-                               QtCore.SIGNAL("clicked()"),
-                               self.triple_complete)
-
-        # Auto Red Zoom Button
-        QtCore.QObject.connect(self.ui.redGraphZoom,
-                               QtCore.SIGNAL("clicked()"),
-                               self.zoomRed)
-
-        # Auto Green Zoom Button
-        QtCore.QObject.connect(self.ui.greenGraphZoom,
-                               QtCore.SIGNAL("clicked()"),
-                               self.zoomGreen)
-        
-        # Auto Blue Zoom Button
-        QtCore.QObject.connect(self.ui.blueGraphZoom,
-                               QtCore.SIGNAL("clicked()"),
-                               self.zoomBlue)
-
-        # Cross Red-Green Zoom Button
-        QtCore.QObject.connect(self.ui.redGreenGraphZoom,
-                               QtCore.SIGNAL("clicked()"),
-                               self.zoomRedGreen)
-        
-        # Cross Red-Blue Zoom Button
-        QtCore.QObject.connect(self.ui.redBlueGraphZoom,
-                               QtCore.SIGNAL("clicked()"),
-                               self.zoomRedBlue)
-
-        # Cross Green-Blue Zoom Button
-        QtCore.QObject.connect(self.ui.greenBlueGraphZoom,
-                               QtCore.SIGNAL("clicked()"),
-                               self.zoomGreenBlue)
-
-        # Triple Graph 1 Zoom Button
-        QtCore.QObject.connect(self.ui.tripleGraph1Zoom,
-                               QtCore.SIGNAL("clicked()"),
-                               self.zoomTriple1)
-        
-        # Triple Graph 2 Zoom Button
-        QtCore.QObject.connect(self.ui.tripleGraph2Zoom,
-                               QtCore.SIGNAL("clicked()"),
-                               self.zoomTriple2)
-        
-        # Triple Graph 3 Zoom Button
-        QtCore.QObject.connect(self.ui.tripleGraph3Zoom,
-                               QtCore.SIGNAL("clicked()"),
-                               self.zoomTriple3)
-
-        # Help/About Button
-        QtCore.QObject.connect(self.ui.helpButton,
-                               QtCore.SIGNAL("clicked()"),
-                               self.show_help)
-
+        QtCore.QObject.connect(self.ui.correlationTabWidget, changed, self.update)
 
     #######################################################
     # Interface Object Functions                          #
