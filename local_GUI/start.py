@@ -193,9 +193,10 @@ class StartQT4(QtGui.QMainWindow):
             # Update user interface with image
             if oldPath is None:
                 self.message("Loaded image " + self.rgbPath)
+                self.ui.rgbFile.setText(os.path.basename(self.rgbPath))
             else:
                 self.message("Loaded image " + oldPath)
-            self.ui.rgbFile.setText(os.path.basename(self.rgbPath))
+                self.ui.rgbFile.setText(os.path.basename(oldPath))
             self.ui.imageRgb.setPixmap(QtGui.QPixmap(self.rgbPath))
 
             # Save the three channel arrays
@@ -274,6 +275,7 @@ class StartQT4(QtGui.QMainWindow):
             validImage = False
             self.message("Image loading canceled.")
 
+        oldPath = None
         # Call the backend to check that the file extension is valid
         if validImage:
             try:
@@ -289,11 +291,17 @@ class StartQT4(QtGui.QMainWindow):
 
             try:
                 image = PIL.Image.open(self.redPath)
-            except IOError as e:
-                validImage = False
-                message = "The image could not be loaded. Please use a different format.\n"
-                message += "Exception:\n<" + str(e) + ">"
-                self.message(message)
+            except IOError:
+                try:
+                    image = bimloader.validate_image(str(self.redPath), False, asSciPy=False)
+                    oldPath = self.redPath
+                    self.redPath = os.path.join(TEMP_DIR, "r.png")
+                    image.save(self.redPath)
+                except Exception as e:
+                    validImage = False
+                    message = "The image could not be loaded. Please use a different format.\n"
+                    message += "Exception:\n<" + str(e) + ">"
+                    self.message(message)
             except e:
                 validImage = False
                 message = "An error occurred while loading the image.\n"
@@ -317,8 +325,12 @@ class StartQT4(QtGui.QMainWindow):
             self.ui.imageRed.setPixmap(QtGui.QPixmap(colorizedPath))
 
             # Update user interface with image
-            self.message("Loaded image " + self.redPath)
-            self.ui.redChannelFile.setText(os.path.basename(self.redPath))
+            if oldPath:
+                self.message("Loaded image " + oldPath)
+                self.ui.redChannelFile.setText(os.path.basename(oldPath))
+            else:
+                self.message("Loaded image " + self.redPath)
+                self.ui.redChannelFile.setText(os.path.basename(self.redPath))
 
             # Remember old size in case something bad happens
             oldSize = self.size
@@ -359,6 +371,7 @@ class StartQT4(QtGui.QMainWindow):
             validImage = False
             self.message("Image loading canceled.")
 
+        oldPath = None
         # Call the backend to load the image as an array
         if validImage:
             try:
@@ -374,9 +387,17 @@ class StartQT4(QtGui.QMainWindow):
 
             try:
                 image = PIL.Image.open(self.greenPath)
-            except IOError as e:
-                validImage = False
-                self.message(e)
+            except IOError:
+                try:
+                    image = bimloader.validate_image(str(self.greenPath), False, asSciPy=False)
+                    oldPath = self.greenPath
+                    self.greenPath = os.path.join(TEMP_DIR, "g.png")
+                    image.save(self.greenPath)
+                except Exception as e:
+                    validImage = False
+                    message = "The image could not be loaded. Please use a different format.\n"
+                    message += "Exception:\n<" + str(e) + ">"
+                    self.message(message)
             except:
                 validImage = False
                 self.message("An error occurred while loading the image.")
@@ -399,8 +420,12 @@ class StartQT4(QtGui.QMainWindow):
             self.ui.imageGreen.setPixmap(QtGui.QPixmap(colorizedPath))
 
             # Update user interface with image
-            self.message("Loaded image " + self.greenPath)
-            self.ui.greenChannelFile.setText(os.path.basename(self.greenPath))
+            if oldPath:
+                self.message("Loaded image " + oldPath)
+                self.ui.greenChannelFile.setText(os.path.basename(oldPath))
+            else:
+                self.message("Loaded image " + self.greenPath)
+                self.ui.greenChannelFile.setText(os.path.basename(self.greenPath))
 
             # Remember old size in case something bad happens
             oldSize = self.size
@@ -440,6 +465,7 @@ class StartQT4(QtGui.QMainWindow):
             validImage = False
             self.message("Image loading canceled.")
 
+        oldPath = None
         # Call the backend to load the image as an array
         if validImage:
             try:
@@ -454,10 +480,18 @@ class StartQT4(QtGui.QMainWindow):
                 self.bluePath = ""
 
             try:
-                image = PIL.Image.open(self.redPath)
-            except IOError as e:
-                validImage = False
-                self.message(e)
+                image = PIL.Image.open(self.bluePath)
+            except IOError:
+                try:
+                    image = bimloader.validate_image(str(self.bluePath), False, asSciPy=False)
+                    oldPath = self.bluePath
+                    self.bluePath = os.path.join(TEMP_DIR, "b.png")
+                    image.save(self.bluePath)
+                except Exception as e:
+                    validImage = False
+                    message = "The image could not be loaded. Please use a different format.\n"
+                    message += "Exception:\n<" + str(e) + ">"
+                    self.message(message)
             except:
                 validImage = False
                 self.message("An error occurred while loading the image.")
@@ -480,8 +514,12 @@ class StartQT4(QtGui.QMainWindow):
             self.ui.imageBlue.setPixmap(QtGui.QPixmap(colorizedPath))
 
             # Update user interface with image
-            self.message("Loaded image " + self.bluePath)
-            self.ui.blueChannelFile.setText(os.path.basename(self.bluePath))
+            if oldPath:
+                self.message("Loaded image " + oldPath)
+                self.ui.blueChannelFile.setText(os.path.basename(oldPath))
+            else:
+                self.message("Loaded image " + self.bluePath)
+                self.ui.blueChannelFile.setText(os.path.basename(self.bluePath))
 
             # Remember old size in case something bad happens
             oldSize = self.size

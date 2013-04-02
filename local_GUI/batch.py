@@ -32,6 +32,7 @@ sys.path.append(ROOT_DIR)
 
 # Import midend modules
 import midend.batchRunner
+import backend.bimloader as bimloader
 
 # Global constants
 TEMP_DIR = "./ics_tmp"
@@ -185,7 +186,11 @@ class Batch(QtGui.QMainWindow):
             for image in files:
                 if self.get_number(image) != "IGNORE":
                     if self.size == 0:
-                        i = PIL.Image.open(os.path.join(self.path,str(image)))
+                        loadPath = os.path.join(self.path,str(image))
+                        try:
+                            i = PIL.Image.open(loadPath)
+                        except IOError:
+                            i = bimloader.validate_image(loadPath, True, asSciPy=False)
                         self.size = i.size[0]
                     image = str(image)
                     channels = self.get_channels(image)
