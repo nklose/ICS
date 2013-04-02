@@ -824,13 +824,13 @@ class StartQT4(QtGui.QMainWindow):
             else:
                 # non-numeric range
                 try:
-                    r = float(self.get_auto_range())
+                    r = int(self.get_auto_range())
                     if r <= 0:
                         self.message("Range must be greater than 0.")
                         validInput = False
                 except ValueError:
                     validInput = False
-                    self.message("Range must be a number.")
+                    self.message("Range must be a positive integer.")
 
                 # non-numeric g(0)
                 try:
@@ -899,13 +899,13 @@ class StartQT4(QtGui.QMainWindow):
             else:
                 # non-numeric range
                 try:
-                    r = float(self.get_cross_range())
+                    r = int(self.get_cross_range())
                     if r <= 0:
                         self.message("Range must be greater than 0.")
                         validInput = False
                 except ValueError:
                     validInput = False
-                    self.message("Range must be a number.")
+                    self.message("Range must be a positive integer.")
 
                 # non-numeric g(0)
                 try:
@@ -1032,13 +1032,13 @@ class StartQT4(QtGui.QMainWindow):
             else:
                 # non-numeric range
                 try:
-                    r = float (self.get_all_range())
+                    r = int(self.get_all_range())
                     if r < 0:
                         self.message("Range cannot be negative")
                         validInput = False
                 except ValueError:
                     validInput = False
-                    self.message("Range must be a number.")
+                    self.message("Range must be a positive integer.")
 
                 # non-numeric g(0)
                 try:

@@ -55,7 +55,7 @@ class Batch(QtGui.QMainWindow):
         self.rgbImages = []   # list containing RGB image paths
         self.monoImages = []  # list containing monochrome image paths
         self.extensions = []  # list of file extensions in directory
-        self.numSteps = 0     # number of steps in current process
+        self.numSteps = 1     # number of steps in current process
         self.rgbCount = 0     # number of RGB images in current directory
         self.monoCount = 0    # number of monochrome images in current directory
         self.size = 0         # length in pixels of one size of an image
@@ -304,7 +304,10 @@ class Batch(QtGui.QMainWindow):
     #  total number of steps. The current step is passed to the function, and
     #  the total number is stored in self.numSteps and updated each process.
     def progress(self, value):
-        self.ui.progressBar.setValue(value * 100 / self.numSteps)
+        if self.numSteps <= 0:
+            self.ui.progressBar.setValue(0)
+        else:
+            self.ui.progressBar.setValue(value * 100 / self.numSteps)
 
     # Updates the message bar with some text.
     def message(self, text):
@@ -397,7 +400,7 @@ class Batch(QtGui.QMainWindow):
                     validInput = False
             except ValueError:
                 validInput = False
-                self.message("Some parameters are non-numeric; aborting.")
+                self.message("The inputted parameters are invalid. Range must be a positive integer, w must be a positive number, and the rest must be non-negative numbers.")
         return validInput
     
     # Returns the selected limit for triple correlations.
