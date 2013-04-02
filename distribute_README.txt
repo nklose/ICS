@@ -3,26 +3,7 @@
 =======================================================
 Copryight (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar Qadri, and James Wang
 
-Beta V2.1
-
-NOTE: This application is currently in BETA.
-
-Changes since Beta V1
-=====================
-- All correlations now works!
-- Res Norm is now Displayed
-- Graphs are now generated
-- Triple Correlations are computed
-- Separate images are being combined and displayed
-- The Progress bar has been temporarily disabled.
-- Fixed: The speed is temporarily slightly slower. This is due to an optimization step that needs to be worked around.
-- Separate channels appear Red / Green / Blue, rather then grayscale.
-- Fixed: Error log messages appear after trying to load an image that has been previously loaded.
-- Fixed: Canceling an image selection may cause the program to cease responding.
-- Fixed: Some of our systems experience crashes when the user attempts to load a monochrome image.
-- Fixed: Permission error 13 on startup.
-- Fixed: Log messages after running the program
-
+V1.0
 
 Installation
 ============
@@ -41,10 +22,5 @@ Working Features
 6. The start button and progress bar are functional. The interface disables the start button when correlation is in place, and jumps to the appropriate output tab.
 7. The triple-correlation process.
 8. All correlations works.
-
-Known Bugs/Issues
-=================
-1. Export button has not been added.
-2. Batch mode has not yet been implemented.
-3. The stop button is not fully functional.
-4. The Progress bar has been temporarily disabled.
+9. Batch mode works.
+10. Results can be saved to the computer.
