@@ -95,6 +95,8 @@ class Batch(QtGui.QMainWindow):
         if validInput:
             self.message("Beginning batch correlation process.")
             QtCore.QTimer.singleShot(0, self.runBatch)
+        else:
+            self.set_processing(False)
         self.numProcessed = 0
 
     # Stops the current operation
