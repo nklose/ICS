@@ -29,7 +29,10 @@ class GraphZoom(QtGui.QMainWindow):
         # Force consistent theme and font size
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("Plastique"))
         self.setStyleSheet("font-size: 11pt")
-    
+
+        # Prevent resizing
+        self.setFixedSize(self.size())
+
         # Close Window Button
         QtCore.QObject.connect(self.ui.closeButton,
                                QtCore.SIGNAL("clicked()"),
@@ -39,6 +42,9 @@ class GraphZoom(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.saveButton,
                                QtCore.SIGNAL("clicked()"),
                                self.save)
+
+        # Close event
+        QtCore.QObject.connect(self, QtCore.SIGNAL("triggered()"), self.closeEvent)
 
     # Loads an image from the given path into the interface
     def load_image(self, path):
@@ -55,6 +61,11 @@ class GraphZoom(QtGui.QMainWindow):
                                                          "PNG Image (*.png)")
             # copy the image to the chosen destination
             shutil.copyfile(self.imagePath, savePath)
+
+    # Notify parent window that this interface is closing
+    def closeEvent(self, e):
+        self.parent.graphZoomOpen = False
+        self.destroy()
 
 def start():
     app = QtGui.QApplication(sys.argv)

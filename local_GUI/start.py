@@ -61,6 +61,9 @@ class StartQT4(QtGui.QMainWindow):
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("Plastique"))
         self.setStyleSheet("font-size: 11pt")
 
+        # Disable resizing
+        self.setFixedSize(self.size())
+        
         # Paths to channel input files
         self.redPath = ""
         self.greenPath = ""
@@ -108,6 +111,10 @@ class StartQT4(QtGui.QMainWindow):
 
         # Disable processing mode
         self.set_processing(False)
+
+        # Whether or not the Graph Zoom and Help dialogs are open
+        self.graphZoomOpen = False
+        self.helpOpen = False
 
         #######################################################
         # Interface Object Connections                        #
@@ -562,8 +569,10 @@ class StartQT4(QtGui.QMainWindow):
 
     # Show help dialog
     def show_help(self):
-        help = Help(self)
-        help.show()
+        if not self.helpOpen:
+            help = Help(self)
+            self.helpOpen = True
+            help.show()
 
     ######################################################
     # Interface Input Functions                          #
@@ -1886,9 +1895,11 @@ class StartQT4(QtGui.QMainWindow):
 
     # Shows a zoomed-in version of an image at a given path
     def zoomGraph(self, path):
-        zoomGraph = GraphZoom(self)
-        zoomGraph.show()
-        zoomGraph.load_image(path)
+        if not self.graphZoomOpen:
+            zoomGraph = GraphZoom(self)
+            self.graphZoomOpen = True
+            zoomGraph.show()
+            zoomGraph.load_image(path)
         
 
     #####################################################
