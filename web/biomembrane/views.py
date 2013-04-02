@@ -378,7 +378,7 @@ def batch(request):
                 if len(image.getbands()) == 3:
                     batch.image_type = Batch.MIXED
                 else:
-                    batch.image_type = Batch.SINGLE
+                    batch.image_type = Batch.SPLIT
                 batch.save()
 
             result = tasks.run_batch.delay(batch)
