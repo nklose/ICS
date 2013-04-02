@@ -11,7 +11,7 @@ def ics_similar(fname_old, fname_new):
 
 
 def validate_output(expectedOutput, output):
-    fnames = ['ACb', 'ACg', 'ACr', 'XCrg', 'XCrb', 'XCrg', "TripleCrgb"]
+    fnames = ['ACb', 'ACg', 'ACr', 'XCrg', 'XCrb', 'XCgb', "TripleCrgb"]
     fname_old = fname_new = None
     for fname in fnames:
         fname_old = os.path.join(expectedOutput, '%s.txt' % (fname))
