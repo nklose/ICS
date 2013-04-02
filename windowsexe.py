@@ -31,6 +31,10 @@ LOCAL_IMAGES = [os.path.join(IMAGE_PATH, "r.png"),
                 os.path.join(IMAGE_PATH, "b.png"),
                 os.path.join(IMAGE_PATH, "rgb.png"),
                 os.path.join(IMAGE_PATH, "zoom.png")]
+                
+HELP_FILES = [os.path.join(ROOT_PATH, "HELP"),
+              os.path.join(ROOT_PATH, "LICENSE"),
+              os.path.join(ROOT_PATH, "README.md")]
 
 AUTHOR = "CMPUT 401 - Biomembranes Team"
 VERSION = "1.0"
@@ -47,7 +51,8 @@ DLL_EXCLUDES = ["libiomp5md.dll", "MSVCP90.dll", "numpy.linalg.lapack_lite.pyd",
                 ]
 
 QT_ICON_DLL = r'C:\Python27\Lib\site-packages\PyQt4\plugins\imageformats\qico4.dll'
-DATA_FILES = [(IMAGE_FOLDER, LOCAL_IMAGES), ("", [ICON_FILE]),
+ROOT_DATA_FILES = HELP_FILES + [ICON_FILE]
+DATA_FILES = [(IMAGE_FOLDER, LOCAL_IMAGES), ("", ROOT_DATA_FILES),
               ('imageformats', [QT_ICON_DLL])]
 DATA_FILES.extend(matplotlib.get_py2exe_datafiles())
 

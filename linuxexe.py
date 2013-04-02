@@ -18,6 +18,10 @@ LOCAL_IMAGES = [os.path.join(IMAGE_PATH, "r.png"),
                 os.path.join(IMAGE_PATH, "zoom.png")]
 BIN_FOLDER = os.path.join(ROOT_PATH, "bin")
 
+HELP_FILES = [os.path.join(ROOT_PATH, "HELP"),
+              os.path.join(ROOT_PATH, "LICENSE"),
+              os.path.join(ROOT_PATH, "README.md")]
+
 
 LIB_BACKEND = os.path.join(BACKEND, "libbackend.so")
 LIB_BACKEND_PATH = os.path.join(ROOT_PATH, LIB_BACKEND)
@@ -27,8 +31,10 @@ INCLUDES = ["sip", "scipy.linalg.cblas", "scipy.linalg.fblas",
             "matplotlib", "matplotlib.backends.backend_tkagg"]
 
 # Dependencies are automatically detected, but it might need fine tuning.
-include_files = [(a, os.path.join(IMAGE_FOLDER, os.path.basename(a)))
-                 for a in LOCAL_IMAGES]
+include_files_1 = [(a, os.path.join(IMAGE_FOLDER, os.path.basename(a)))
+                    for a in LOCAL_IMAGES]
+include_files_2 = [(a, os.path.basename(a) for a in HELP_FILES)]
+include_files = include_files_1 + include_files_2
 include_in_shared_zip = [(LIB_BACKEND_PATH, LIB_BACKEND)]
 build_exe_options = {"packages": ["backend", "midend", "local_GUI"],
                      "excludes": [], "include_files": include_files,

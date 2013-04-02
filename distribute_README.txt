@@ -24,3 +24,4 @@ Working Features
 8. All correlations works.
 9. Batch mode works.
 10. Results can be saved to the computer.
+11. Help tab added. The HELP file in the installation directory may be edited to add information to the help tab. It is a plain text file.
