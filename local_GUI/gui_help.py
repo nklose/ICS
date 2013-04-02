@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'help.ui'
 #
-# Created: Sat Mar 30 21:20:20 2013
+# Created: Tue Apr  2 05:37:22 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -94,7 +94,7 @@ class Ui_HelpWindow(object):
         QtCore.QMetaObject.connectSlotsByName(HelpWindow)
 
     def retranslateUi(self, HelpWindow):
-        HelpWindow.setWindowTitle(_translate("HelpWindow", "MainWindow", None))
+        HelpWindow.setWindowTitle(_translate("HelpWindow", "Help/About Dialog", None))
         self.title.setText(_translate("HelpWindow", "Image Correlation Spectroscopy (ICS)", None))
         self.version.setText(_translate("HelpWindow", "Version 2.1 Beta", None))
         self.copyright.setText(_translate("HelpWindow", "Copyright (c) 2013 Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar Qadri, and James Wang.", None))

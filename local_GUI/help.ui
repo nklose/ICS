@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Help/About Dialog</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="title">
