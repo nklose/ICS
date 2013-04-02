@@ -2,14 +2,17 @@
 {% block stylesheet %}{{ block.super }}{% endblock stylesheet %}
 {% block script %}{{ block.super}}{% endblock script %}
 {% block content-main %}
-<h1>Welcome to the homepage</h1>
+<h2>Welcome to the ICS Web Application Homepage</h2>
 {% if not user.is_active %}
-<p>To use the services please <a href="{% url auth_login %}">Login</a>.</p>
+<p>To use this service please <a href="{% url auth_login %}">Login.</a></p>
+<p>Don't have an account yet? Register for one <a href="{% url registration_register %}">Here.</a></p>
 {% endif %}
-<p>Download the  desktop application below</p>
-<h3>Latest Beta</h3>
-<a href="{{ STATIC_URL }}ics-win32-x86-setup-beta2.1.zip">Download Beta 2.1 -ics-win32-x86-setup-beta2.1.zip 37.0 MB</a>
-<h3>Previous Versions</h3>
+<p>There is also desktop version which you can find below:</p>
+<h3>Download Desktop Version (For Windows)</h3>
+<h4>Release Version</h4>
+<a href="{{ STATIC_URL }}ics-win32-x86-setup-v1.0.zip">Download Version 1 -ics-win32-x86-setup-v1.0.zip</a>
+<h4>Previous Beta Versions</h4>
+<a href="{{ STATIC_URL }}ics-win32-x86-setup-beta2.1.zip">Download Beta 2.1 -ics-win32-x86-setup-beta2.1.zip 37.0 MB</a></br>
 <a href="{{ STATIC_URL }}ics-win32-x86-setup-beta2.zip">Download Beta 2.0 -ics-win32-x86-setup-beta2.zip 37.2 MB</a><br>
 <a href="{{ STATIC_URL }}ics-win32-x86-setup-beta1.exe">Download Beta 1 - ics-win32-x86-setup-beta1.exe - 32.0 MB</a>
 {% endblock content-main %}
