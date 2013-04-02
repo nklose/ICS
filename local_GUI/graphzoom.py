@@ -43,6 +43,9 @@ class GraphZoom(QtGui.QMainWindow):
                                QtCore.SIGNAL("clicked()"),
                                self.save)
 
+        # Close event
+        QtCore.QObject.connect(self, QtCore.SIGNAL("triggered()"), self.closeEvent)
+
     # Loads an image from the given path into the interface
     def load_image(self, path):
         self.ui.image.setPixmap(QtGui.QPixmap(path))
@@ -58,6 +61,11 @@ class GraphZoom(QtGui.QMainWindow):
                                                          "PNG Image (*.png)")
             # copy the image to the chosen destination
             shutil.copyfile(self.imagePath, savePath)
+
+    # Notify parent window that this interface is closing
+    def closeEvent(self, e):
+        self.parent.graphZoomOpen = False
+        self.destroy()
 
 def start():
     app = QtGui.QApplication(sys.argv)

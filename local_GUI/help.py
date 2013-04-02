@@ -24,6 +24,7 @@ LOGO = "icon.ico"
 class Help(QtGui.QMainWindow):
     def __init__(self, parent = None):
         QtGui.QWidget.__init__(self, parent)
+        self.parent = parent
         self.setWindowIcon(QtGui.QIcon("icon.ico"))
         self.ui = Ui_HelpWindow()
         self.ui.setupUi(self)
@@ -52,6 +53,7 @@ class Help(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.licenseButton, clicked, self.license)
         QtCore.QObject.connect(self.ui.readmeButton, clicked, self.readme)
         QtCore.QObject.connect(self.ui.helpButton, clicked, self.help)
+        QtCore.QObject.connect(self, QtCore.SIGNAL("triggered()"), self.closeEvent)
 
     # Loads the LICENSE file into the text window.
     def license(self):
@@ -97,6 +99,12 @@ class Help(QtGui.QMainWindow):
             displayText += str(line)
 
         self.ui.text.setText(displayText)
+
+    # Notify parent window that this interface is closing
+    def closeEvent(self, e):
+        self.parent.helpOpen = False
+        self.destroy()
+        
 
 def start():
     app = QtGui.QApplication(sys.argv)

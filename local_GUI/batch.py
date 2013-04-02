@@ -54,25 +54,26 @@ class Batch(QtGui.QMainWindow):
         # Run startup functions
         self.initialize()
 
-        self.path = None      # directory containing all images
-        self.rgbImages = []   # list containing RGB image paths
-        self.monoImages = []  # list containing monochrome image paths
-        self.extensions = []  # list of file extensions in directory
-        self.numSteps = 1     # number of steps in current process
-        self.rgbCount = 0     # number of RGB images in current directory
-        self.monoCount = 0    # number of monochrome images in current directory
-        self.size = 0         # length in pixels of one size of an image
-        self.numImages = 0    # total number of images to run
-        self.numProcessed = 0 # number of images processed so far
-        self.imageType = None # current type of image being processed
-        self.splitMin = None  # minimum image number for split images
-        self.splitMax = None  # maximum image number for split images
-        self.mixedMin = None  # minimum image number for mixed images
-        self.mixedMax = None  # maximum image number for mixed images
+        self.path = None             # directory containing all images
+        self.rgbImages = []          # list containing RGB image paths
+        self.monoImages = []         # list containing monochrome image paths
+        self.extensions = []         # list of file extensions in directory
+        self.numSteps = 1            # number of steps in current process
+        self.rgbCount = 0            # number of RGB images in current directory
+        self.monoCount = 0           # number of monochrome images in current directory
+        self.size = 0                # length in pixels of one size of an image
+        self.numImages = 0           # total number of images to run
+        self.numProcessed = 0        # number of images processed so far
+        self.imageType = None        # current type of image being processed
+        self.splitMin = None         # minimum image number for split images
+        self.splitMax = None         # maximum image number for split images
+        self.mixedMin = None         # minimum image number for mixed images
+        self.mixedMax = None         # maximum image number for mixed images
         self.mixedExtension = None   # file extension of mixed images
         self.splitExtension = None   # file extension of split images
-        self.parent = parent  # parent window
+        self.parent = parent         # parent window
         self.processing = False      # whether or not the program is doing processing
+        self.helpOpen = False        # whether or not a help window is open
         
         #######################################################
         # Interface Object Connections                        #
@@ -121,8 +122,10 @@ class Batch(QtGui.QMainWindow):
 
     # Shows the help dialog
     def show_help(self):
-        help = Help(self)
-        help.show()
+        if not self.helpOpen:
+            help = Help(self)
+            help.show()
+            self.helpOpen = True
 
     #######################################################
     # Miscellaneous Functions                             #
