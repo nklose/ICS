@@ -157,19 +157,26 @@ class StartQT4(QtGui.QMainWindow):
             validImage = False
             self.message("Image loading canceled.")
 
+        oldPath = None
         # Call the backend to separate the image by channel
         if validImage:
             try:
                 images = bimloader.load_image_mixed(str(self.rgbPath))
-                image = PIL.Image.open(str(self.rgbPath))
+                image = Image.open(str(self.rgbPath))
             except bimloader.ImageFormatException:
                 validImage = False
                 self.msgBadFormat()
                 self.rgbPath = ""
-            except IOError as e:
-                validImage = False
-                self.message(e)
-                self.rgbPath = ""
+            except IOError:
+                try:
+                    image = bimloader.validate_image(str(self.rgbPath), True, asSciPy=False)
+                    oldPath = self.rgbPath
+                    self.rgbPath = os.path.join(TEMP_DIR, "rgb.png")
+                    image.save(self.rgbPath)
+                except Exception as e:
+                    validImage = False
+                    self.message(e)
+                    self.rgbPath = ""
             except:
                 validImage = False
                 self.message("An error occurred while loading the image.")
@@ -177,7 +184,10 @@ class StartQT4(QtGui.QMainWindow):
 
         if validImage:
             # Update user interface with image
-            self.message("Loaded image " + self.rgbPath)
+            if oldPath is None:
+                self.message("Loaded image " + self.rgbPath)
+            else:
+                self.message("Loaded image " + oldPath)
             self.ui.rgbFile.setText(os.path.basename(self.rgbPath))
             self.ui.imageRgb.setPixmap(QtGui.QPixmap(self.rgbPath))
 

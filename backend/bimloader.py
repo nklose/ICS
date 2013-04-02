@@ -26,7 +26,7 @@ class ImageFormatException(Exception):
         super(ImageFormatException, self).__init__(msg)
 
 
-def validate_image(filepath, mixed):
+def validate_image(filepath, mixed, asSciPy=True):
     """ Checks if the image file is valid (Lossless / uncompressed).
 
     Arguments:
@@ -35,9 +35,12 @@ def validate_image(filepath, mixed):
 
         mixed: Whether the image is a "mixed" image or not.
         mixed type: boolean
+        
+        asSciPy: Whether to return a scipyImage or not. Default True.
+        asSciPy type: boolean
 
     Return Value:
-        The image opened in PIL.
+        The image opened in PIL or scipy.
 
     Raises:
         image_converter.ImageFormatException: If file type is invalid
@@ -48,7 +51,10 @@ def validate_image(filepath, mixed):
     jpeg_format = 'Joint Photographic Experts Group JFIF format'
     if comp_type != '' or img_format == jpeg_format:
         raise ImageFormatException(filepath)
-    return convertWandtoScipy(wand.image.Image(filename=filepath), mixed)
+    if asSciPy:
+        return convertWandtoScipy(wand.image.Image(filename=filepath), mixed)
+    else:
+        return convertWandtoPil(wand.image.Image(filename=filepath), mixed)
 
 
 def convertWandtoScipy(wandImage, mixed):
@@ -62,7 +68,7 @@ def convertWandtoScipy(wandImage, mixed):
         mixed type: boolean
 
     Return Value:
-        The image opened in PIL.
+        The image opened in scipy.
     """
     img = wand.image.Image(wandImage)
     conv_wand = "RGB"
@@ -73,6 +79,28 @@ def convertWandtoScipy(wandImage, mixed):
         pilimage = pilimage.convert("L")
     array = scipy.misc.fromimage(pilimage)
     return array
+    
+def convertWandtoPil(wandImage, mixed):
+    """ Convert a Wand image to a pil image
+
+    Arguments:
+        wandImage: The file in wand.
+        wandImage type: wand.image.Image
+
+        mixed: Whether the image is a "mixed" image or not.
+        mixed type: boolean
+
+    Return Value:
+        The image opened in pil.
+    """
+    img = wand.image.Image(wandImage)
+    conv_wand = "RGB"
+    conv_pil = "RGB"
+    data = img.make_blob(conv_wand)
+    pilimage = Image.fromstring(conv_pil, img.size, data)
+    if not mixed:
+        pilimage = pilimage.convert("L")
+    return pilimage
 
 
 def load_image_mixed(fpath):
