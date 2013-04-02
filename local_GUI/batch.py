@@ -48,6 +48,9 @@ class Batch(QtGui.QMainWindow):
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("Plastique"))
         self.setStyleSheet("font-size: 11pt")
 
+        # Disable resizing
+        self.setFixedSize(self.size())
+
         # Run startup functions
         self.initialize()
 

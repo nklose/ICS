@@ -32,6 +32,9 @@ class Help(QtGui.QMainWindow):
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("Plastique"))
         self.setStyleSheet("font-size: 11pt")
         
+        # Disable resizing
+        self.setFixedSize(self.size())
+
         # Load program logo
         self.ui.logo.setPixmap(QtGui.QPixmap(LOGO))
 

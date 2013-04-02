@@ -61,6 +61,9 @@ class StartQT4(QtGui.QMainWindow):
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("Plastique"))
         self.setStyleSheet("font-size: 11pt")
 
+        # Disable resizing
+        self.setFixedSize(self.size())
+        
         # Paths to channel input files
         self.redPath = ""
         self.greenPath = ""

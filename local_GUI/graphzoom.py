@@ -29,7 +29,10 @@ class GraphZoom(QtGui.QMainWindow):
         # Force consistent theme and font size
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("Plastique"))
         self.setStyleSheet("font-size: 11pt")
-    
+
+        # Prevent resizing
+        self.setFixedSize(self.size())
+
         # Close Window Button
         QtCore.QObject.connect(self.ui.closeButton,
                                QtCore.SIGNAL("clicked()"),
