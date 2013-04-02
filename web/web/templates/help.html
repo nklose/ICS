@@ -3,4 +3,191 @@
 {% block script %}{{ block.super}}{% endblock script %}
 {% block content-main %}
 <h3>Help Page</h3>
+<strong>Overview</strong><br>
+
+<p>Image Correlation Spectroscopy (ICS) is an application for performing analysis on images of bio-membranes taken from microscopes. It is capable of completing correlations between different image channels, which are then used to output graphs and values. The application consists of two parts: a standalone executable for Windows and Linux, and a web interface which can be set up on a web server and accessed remotely.</p>
+
+<p>The local user interface is downloaded and installed as an executable packaged with all dependencies. It consists of Single-Image Mode, which can run specific correlations on a single RGB image (or a set of 3 monochrome images), and Batch Mode, which is capable of running all possible correlations on an arbitrarily large set of images. Results for either mode can be exported in the form of graph images and text files.<p>
+
+<p>The web interface essentially delivers the same functionality as the downloadable executable, with a few extra features including an administrative approval-based account registration system. Due to the overhead of uploading large sets of images, the web interface performs correlations only on a single RGB image or a set of 3 monochrome images. 
+Both interfaces feature Single-Image Mode and Batch Mode.</p>
+
+<strong>Web Application</strong>
+
+<p>A registered account is required to access the ICS functionality using the web interface. 
+On the signup page, users need to create a username and password for authentication into the site as well as provide a valid email address. Upon clicking the submit button the user will be sent an email confirmation as well as an account activation key (a url) to the email they provided. Once the account is successfully activated the user should see a confirmation similar to what’s shown below.</p>
+
+<div class="row-fluid">
+<a href="{{ STATIC_URL }}/helpfiles/register.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/register.png" width="300" height="200" alt="Account Creation"/></a>
+<a href="{{ STATIC_URL }}/helpfiles/register_complete.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/register_complete.png" width="300" height="200" alt="Account Submitted"/>
+</a>
+<a href="{{ STATIC_URL }}/helpfiles/register_confirm.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/register_confirm.png" width="300" height="200" alt="Confirmed Account Activated"/>
+</a>
+</div><br>
+
+<strong>Single Correlation</strong>
+
+<p>To run a single correlation using web interface first by clicking on Single Mode on the navigation bar on the top of the page. In Single Mode the two tabs Single Image and Separate Images presented allow the user can choose whether to upload a single RGB image or upload  3 separate monochrome images for each color channel. By clicking on the labels the user will have the option to upload either a single image or three separate images.</p>
+
+<strong>Single RGB Image</strong>
+
+<p>When the blue Upload Single Image button is clicked a modal dialog will pop up asking the user to specify the image file to upload.</p>
+
+<strong>Separate Image Channels</strong>
+<p>When the blue Upload Separate Images button is clicked a modal dialog will pop up asking the user to specify the red, the green and the blue image file to upload.</p>
+
+<strong>Note: Support image upload file types are .TIFF, .PNG, .BMP, GIF</strong>
+
+<div class="row-fluid">
+<a href="{{ STATIC_URL }}/helpfiles/singleImageUpload.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/singleImageUpload.png" width="300" height="200" alt="Single Image Upload"/></a>
+<a href="{{ STATIC_URL }}/helpfiles/seperateImageUpload.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/seperateImageUpload.png" width="300" height="200" alt="Seperate Image Upload"/>
+</a>
+<a href="{{ STATIC_URL }}/helpfiles/singlemode.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/singlemode.png" width="300" height="200" alt="Seperate Image Upload"/>
+</a>
+</div><br>
+
+<p>If the user specified and uploaded a Single RGB the program automatically splits the images and generates the corresponding Red, Green, and Blue image channels. Otherwise, if the user specified and uploaded three separate monochrome images the program will auto generate a mixed RGB image. In addition to displaying the images, data such as image dimensions, color intensity for each channel is display to the user</p>
+
+<p>After all images have successfully uploaded to the server, the user is brought to a new page and will be presented with both the mixed image and  three separate images for each color channel.</p>
+
+<p>Auto-correlations correlate an image channel with itself.<p>
+<p>Cross-correlations correlate two image channels together.</p>
+
+<ul>
+<li>range: the range over which to fit the gaussian</li>
+<li>g0: amplitude</li>
+<li>w: width</li>
+<li>ginf: value at infinity</li>
+</ul>
+
+<strong>Consider Deltas</strong>
+<p>An option for the user if they would like the program to take into account horizontal and vertical displacement in its calculations.
+The values of delta X and delta Y are determined in the application logic therefore, no additional parameters need to be set by the user.</p>
+
+<div class="row-fluid">
+<a href="{{ STATIC_URL }}/helpfiles/autoparams.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/autoparams.png" width="300" height="200" alt="Parameters for Auto Correlation"/></a>
+<a href="{{ STATIC_URL }}/helpfiles/crossparams.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/crossparams.png" width="300" height="200" alt="Parameters for Cross Correlation"/>
+</a>
+<a href="{{ STATIC_URL }}/helpfiles/allparams.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/allparams.png" width="300" height="200" alt="Parameters for all Correlations"/>
+</a>
+</div><br>
+
+<strong>Triple Correlation</strong><br>
+<p>The triple correlation parameters are set sequentially. Because of the procedural nature of triple correlations, there are no initial settings. The user may just click start to begin a triple correlation. The user will notice the start button changes to ‘loading’ while the program is calculating the first Fourier Transform.</p>
+
+<p>The user will notice the page will shortly change, displaying a surface plot of the Fourier transform of the red channel (i.e Auto Correlation Red - Y Graph). After examining the graph the user then selects the resolution (limit) to which to sample the image from. Preset limits to sample from the preset 16x16, 32x32, and 64x64 and can be accessed through the drop down menu just below the surface plot. When the user has selected the limit they can press Next to continue. Once again the button will change to show loading as the Triple-correlation surface plot will then be calculated. The page will change to show the Triple-correlation surface plot and and the user can input a range and set of fitting parameters based on this.</p>
+
+
+<ul>
+<li>range: the range over which to fit the gaussian</li>
+<li>g0: amplitude</li>
+<li>w: width</li>
+<li>ginf: value at infinity</li>
+</ul>
+
+<p>Note: If the user wishes to revise the selected sample resolution or inputted values, he/she can do so by pressing cancel which will take the user back to the Single Mode page.</p>
+
+<p>Once the user has decide on the parameter he or she can press the Next button, the fitting curve and output values are displayed and the process is complete.  A download button will allow the user to download the data for the fit graphs, saved graph images.</p>
+
+<div class="row-fluid">
+<a href="{{ STATIC_URL }}/helpfiles/triple01.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/triple01.png" width="300" height="200" alt="Setting Sample Resolution"/></a>
+<a href="{{ STATIC_URL }}/helpfiles/triple02.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/triple02.png" width="300" height="200" alt="Parameters for Triple Correlation"/>
+</a>
+<a href="{{ STATIC_URL }}/helpfiles/triple03.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/triple03.png" width="300" height="200" alt="Results for the Triple Correlation"/>
+</a>
+</div><br>
+
+
+<strong>Batch Mode</strong>
+
+<p>Batch Mode, which is capable of running all possible correlations on an arbitrarily large set of images. Batch allows the user to upload a ZIP containing sets of images.</p>
+	 	 	
+<p>Unlike Single-Image Mode, the user cannot select specific channels or correlations to perform. However, the user can input separate parameter sets for dual- (auto- and cross-) and triple-correlations, as well as whether to use deltas for each dual correlation and the sample resolution (limit) to use for the triple-correlation.</p>
+
+<p>Parameters for Batch are the following</p>
+
+<ul>
+<li>Image Size:  The  length of one side of the square input image (in pixels)</li>
+<li>Start At Image #: The first image to process in the batch</li>
+<li>Stop At Image #: The last image to process in the batch.</li>
+</ul>
+
+<strong>Default Batch File Naming Convention</strong>
+<p>Images loaded using Single Image mode can have any name. However, for Batch Mode to correctly carry out a batch of correlations, the input files must be named very specifically.
+The naming convention for files in the input directory is important for the files to be read. The convention is as follows:
+XXX_YYY.ZZZ</p>
+<p>Where:</p>
+<ul>
+<li>XXX is the identifier for which channel(s) are in the image; that is, "rgb","r", "g", or "b"</li>	
+<li>YYY is the three-digit file number. These numbers must be sequential (e.g. 105, 	106, 107...).</li>
+<li>ZZZ is the file extension (BMP, PNG, etc.)</li>
+<li>The file number must be sequential, though it can start and end with any three-digit number.</li>
+<li>The format of all RGB images must be consistent, and likewise with all monochrome images.</li>
+<li>Each monochrome image must come in a set of 3 to make up each red, green, and bhe lue channel. All images belonging to a set must have the same file number.</li>
+</ul>
+For example, the following batch sets are valid:
+
+rgb_001.png, rgb_002.png, rgb_003.png
+r_007.bmp, g_007.bmp, b_007.bmp, r_008.bmp, g_008.bmp, b_008.bmp
+rgb_500.tif, rgb_501.tif, rgb_502.tif, r_000.bmp, g_000.bmp, b_000.bmp
+
+<p>The following batch sets are not valid:</p>
+<ul>
+<li>rgb_001.bmp, 	rgb_002.bmp, rgb_004.bmp, rgb_005.bmp</li>
+<li>rgb_500.bmp, 	rgb_501.png, rgb_502.raw, rgb_503.tif</li>
+<li>r_001.bmp, 	r_002.bmp, g_003.bmp, b_003.bmp, g_004.bmp</li>
+<li>r_500.bmp, 	g_500.bmp, b_500.png</li>
+</ul>
+
+<strong>Customizing Filename Format</strong>
+
+<p>If a user wants to define their own filename format he or she can do so by changing the value in File Name Format field.</p>
+
+<p>Suppose your files are mixed (i.e. the RGB channels are combined in one image) and the file names are of the form img_9.png, img_10.png, img_11.png, etc. then img_{:d}.png can be used as the format string.</p>
+
+<p>Suppose your files are split (i.e. the RGB channels are separates) and the file names are of the form img_r_9.png, img_g_9.png, img_b_9.png, img_r_10.png, img_g_10.png, img_b_10.png, etc. then img_{:s}_{:d}.png can be used as the format string.</p>
+
+
+<strong>Correlation Parameters</strong>
+<p>The user is asked to input the parameters for both the dual (auto and cross) correlations and the triple correlation. The user can run the batch by pressing the start button.</p>
+
+<ul>
+<li>range: the range over which to fit the gaussian</li>
+<li>g0: amplitude</li>
+<li>w: width</li>
+<li>ginf: value at infinity</li>
+<li>Resolution (for triple correlation only): the range of the FFTs over which to perform computations
+range: the range over which to fit the gaussian</li>
+</ul>
+
+<strong>Batch Output</strong>
+<p>Completed Batch processing are viewable in the Batch Output Page accessed through the navigation bar</p>
+<p>Clicking on the batch file allows the user to see the parameters they inputted.</p>
+<p>Click the Download Button to download the results of the batch.</p> 
+<p>Delete removes the batch from the server. A modal dialog will appear asking you to confirm the deletion.</p>
+<p>Note although it will autmatically refresh and update the page, sometimes the user may need to refresh the page manually to update the Batch Result Page.</p>
+
+<div class="row-fluid">
+<a href="{{ STATIC_URL }}/helpfiles/batchconfig.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/batchconfig.png" width="300" height="200" alt="Setting Up Batch Mode"/></a>
+<a href="{{ STATIC_URL }}/helpfiles/batchdelete_confirm.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/batchdelete_confirm.png" width="300" height="200" alt="Parameters for Triple Correlation"/>
+</a>
+<a href="{{ STATIC_URL }}/helpfiles/batch_deleted.png" class="span4">
+<img class="thumbnail" src="{{ STATIC_URL }}/helpfiles/batch_deleted.png" width="300" height="200" alt="Results for the Triple Correlation"/>
+</a>
+</div><br>
+
 {% endblock content-main %}

@@ -3,11 +3,14 @@
 {% block script %}{{ block.super}}{% endblock script %}
 {% block content-main %}
 <h2>Welcome to the ICS Web Application Homepage</h2>
+
+<p>Image Correlation Spectroscopy (ICS) is an application for performing analysis on images of bio-membranes taken from microscopes. 
+It is capable of completing correlations between different image channels, which are then used to output graphs and values. The application consists of two parts: a standalone executable for Windows and Linux, and a web interface which can be set up on a web server and accessed remotely.</p>
+
 {% if not user.is_active %}
 <p>To use this service please <a href="{% url auth_login %}">Login.</a></p>
 <p>Don't have an account yet? Register for one <a href="{% url registration_register %}">Here.</a></p>
 {% endif %}
-<p>There is also desktop version which you can find below:</p>
 <h3>Download Desktop Version (For Windows)</h3>
 <h4>Release Version</h4>
 <a href="{{ STATIC_URL }}ics-win32-x86-setup-v1.0.zip">Download Version 1 -ics-win32-x86-setup-v1.0.zip</a>
