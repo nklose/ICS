@@ -1,0 +1,5 @@
+Online Manual is avaliable and part of the Web GUI.
+To view the online manual install the Web GUI as per the Acceptance Test Document. 
+Run the Web GUI on localhost and click on the Documentation link on the navigation bar to view the page.
+
+Some Information about Web GUI is also avaliable in the Offline User Manual.
