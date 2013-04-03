@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block stylesheet %}{{ block.super }}
 {# Add additional stylesheets here #}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/navbar.css">
@@ -11,11 +10,11 @@
 {% block nav-main %}{% include "navbar.html" %}{% endblock nav-main %}
 {% block content %}<div id="content-body">{% block content-body %}<div class="content-main">{% block content-main %}{% endblock content-main %}</div>{% endblock content-body%}</div>{% endblock content %}
 {% block footer %}
-{# Generic footer includes uses University Of Aliberta Website Copyright parm=copyrightdate #}
+{# Generic footer includes uses University Of Alberta Website Copyright parm=copyrightdate #}
 <div id="copyright">{% block copyright %}
 <small>CMPUT 401 Project 5 "Simulation and analysis of images for studies of biological membranes" for Dr Nils O. Petersen.
 Copryight &copy;  {{ copyrightdate }} Nick Klose, Richard Leung, Cameron Mann, Glen Nelson, Omar Qadri, and James Wang under the <a href="{{ STATIC_URL }}/LICENSE"> 401 IP License.</a></small>
 
-<small>&copy;{% now "Y" %}<a href="http://www.ualberta.ca/">University of Alberta</a> 116 St. and 85 Ave., Edmonton, AB, Canada T6G 2R3</small></div>
+<small>&copy;{% now "Y" %}<a href="http://www.ualberta.ca/"> University of Alberta</a> 116 St. and 85 Ave., Edmonton, AB, Canada T6G 2R3</small></div>
 {% endblock %}
 {% endblock %}
