@@ -32,8 +32,8 @@ INCLUDES = ["sip", "scipy.linalg.cblas", "scipy.linalg.fblas",
 
 # Dependencies are automatically detected, but it might need fine tuning.
 include_files_1 = [(a, os.path.join(IMAGE_FOLDER, os.path.basename(a)))
-                    for a in LOCAL_IMAGES]
-include_files_2 = [(a, os.path.basename(a) for a in HELP_FILES)]
+                   for a in LOCAL_IMAGES]
+include_files_2 = [(a, os.path.basename(a)) for a in HELP_FILES]
 include_files = include_files_1 + include_files_2
 include_in_shared_zip = [(LIB_BACKEND_PATH, LIB_BACKEND)]
 build_exe_options = {"packages": ["backend", "midend", "local_GUI"],
