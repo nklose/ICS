@@ -113,7 +113,6 @@ class StartQT4(QtGui.QMainWindow):
         self.set_processing(False)
 
         # Whether or not the Graph Zoom and Help dialogs are open
-        self.graphZoomOpen = False
         self.helpOpen = False
 
         #######################################################
@@ -1933,11 +1932,9 @@ class StartQT4(QtGui.QMainWindow):
 
     # Shows a zoomed-in version of an image at a given path
     def zoomGraph(self, path):
-        if not self.graphZoomOpen:
-            zoomGraph = GraphZoom(self)
-            self.graphZoomOpen = True
-            zoomGraph.show()
-            zoomGraph.load_image(path)
+        zoomGraph = GraphZoom(self)
+        zoomGraph.show()
+        zoomGraph.load_image(path)
         
 
     #####################################################
