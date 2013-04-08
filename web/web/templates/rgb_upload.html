@@ -2,7 +2,7 @@
 {% block script %}{{ block.super}}<script type="text/javascript" src="{{ STATIC_URL }}js/ics_scripts/ics.js"></script>{% endblock script %}
 {% block content-main %}
 {% block rgbimg-settings  %}
-<h3>Image Upload</h3>
+<h3 id="imgUpload">Image Upload</h3>
 <div class="rgbimg-background">
 <div class="alert alert-info" id="userNotice"><strong>Note: </strong>Choose either to upload a single RGB image file or three files for each image channel</div>
 {% if form.errors %}

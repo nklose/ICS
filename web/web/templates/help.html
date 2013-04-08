@@ -2,21 +2,21 @@
 {% block stylesheet %}{{ block.super }}{% endblock stylesheet %}
 {% block script %}{{ block.super}}{% endblock script %}
 {% block content-main %}
-<h3>Help Page</h3>
+<h3 id="helpPage">Help Page</h3>
 <strong>Overview</strong><br>
 
 <p>Image Correlation Spectroscopy (ICS) is an application for performing analysis on images of bio-membranes taken from microscopes. It is capable of completing correlations between different image channels, which are then used to output graphs and values. The application consists of two parts: a standalone executable for Windows and Linux, and a web interface which can be set up on a web server and accessed remotely.</p>
 
 <p>The local user interface is downloaded and installed as an executable packaged with all dependencies. It consists of Single-Image Mode, which can run specific correlations on a single RGB image (or a set of 3 monochrome images), and Batch Mode, which is capable of running all possible correlations on an arbitrarily large set of images. Results for either mode can be exported in the form of graph images and text files.<p>
 
-<p>The web interface essentially delivers the same functionality as the downloadable executable, with a few extra features including an administrative approval-based account registration system. Due to the overhead of uploading large sets of images, the web interface performs correlations only on a single RGB image or a set of 3 monochrome images. 
+<p>The web interface essentially delivers the same functionality as the downloadable executable, with a few extra features including an administrative approval-based account registration system. Due to the overhead of uploading large sets of images, the web interface performs correlations only on a single RGB image or a set of 3 monochrome images.
 Both interfaces feature Single-Image Mode and Batch Mode.</p>
 
-<p>Download a copy of the full documentation:<a href="{{ STATIC_URL }}ICSUserManual.docx"> ICS User Manual</a></p> 
+<p>Download a copy of the full documentation:<a href="{{ STATIC_URL }}ICSUserManual.docx"> ICS User Manual</a></p>
 
 <strong>Web Application</strong>
 
-<p>A registered account is required to access the ICS functionality using the web interface. 
+<p>A registered account is required to access the ICS functionality using the web interface.
 On the signup page, users need to create a username and password for authentication into the site as well as provide a valid email address. Upon clicking the submit button the user will be sent an email confirmation as well as an account activation key (a url) to the email they provided. Once the account is successfully activated the user should see a confirmation similar to what’s shown below.</p>
 
 <div class="row-fluid">
@@ -115,7 +115,7 @@ The values of delta X and delta Y are determined in the application logic theref
 <strong>Batch Mode</strong>
 
 <p>Batch Mode, which is capable of running all possible correlations on an arbitrarily large set of images. Batch allows the user to upload a ZIP containing sets of images.</p>
-	 	 	
+
 <p>Unlike Single-Image Mode, the user cannot select specific channels or correlations to perform. However, the user can input separate parameter sets for dual- (auto- and cross-) and triple-correlations, as well as whether to use deltas for each dual correlation and the sample resolution (limit) to use for the triple-correlation.</p>
 
 <p>Parameters for Batch are the following</p>
@@ -132,7 +132,7 @@ The naming convention for files in the input directory is important for the file
 XXX_YYY.ZZZ</p>
 <p>Where:</p>
 <ul>
-<li>XXX is the identifier for which channel(s) are in the image; that is, "rgb","r", "g", or "b"</li>	
+<li>XXX is the identifier for which channel(s) are in the image; that is, "rgb","r", "g", or "b"</li>
 <li>YYY is the three-digit file number. These numbers must be sequential (e.g. 105, 	106, 107...).</li>
 <li>ZZZ is the file extension (BMP, PNG, etc.)</li>
 <li>The file number must be sequential, though it can start and end with any three-digit number.</li>
@@ -177,7 +177,7 @@ range: the range over which to fit the gaussian</li>
 <strong>Batch Output</strong>
 <p>Completed Batch processing are viewable in the Batch Output Page accessed through the navigation bar</p>
 <p>Clicking on the batch file allows the user to see the parameters they inputted.</p>
-<p>Click the Download Button to download the results of the batch.</p> 
+<p>Click the Download Button to download the results of the batch.</p>
 <p>Delete removes the batch from the server. A modal dialog will appear asking you to confirm the deletion.</p>
 <p>Note although it will autmatically refresh and update the page, sometimes the user may need to refresh the page manually to update the Batch Result Page.</p>
 

@@ -8,7 +8,7 @@
 {{ block.super }}
 {% endblock %}
 {% block content-main %}
-<h5>Image Correlation Spectroscopy Batch Mode</h5>
+<h5 id="batchModePage">Image Correlation Spectroscopy Batch Mode</h5>
 {% if form.errors %}
 <div class="alert alert-error">
 {{ form.imageSize.errors }}
@@ -27,7 +27,7 @@
 {{ form.resolution.errors }}
 {{ form.zip_file.errors }}
 </div>
-{% endif %} 
+{% endif %}
 <form name="batchform" id="settings-form" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} method="post">{% csrf_token %}
   <div class="row-fluid">
     <div class="span4">
