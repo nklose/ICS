@@ -64,7 +64,7 @@ class GraphZoom(QtGui.QMainWindow):
 
     # Notify parent window that this interface is closing
     def closeEvent(self, e):
-        self.destroy()
+        self.deleteLater()
 
 def start():
     app = QtGui.QApplication(sys.argv)

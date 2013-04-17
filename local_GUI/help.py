@@ -103,7 +103,7 @@ class Help(QtGui.QMainWindow):
     # Notify parent window that this interface is closing
     def closeEvent(self, e):
         self.parent.helpOpen = False
-        self.destroy()
+        self.deleteLater()
         
 
 def start():
