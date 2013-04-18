@@ -6,6 +6,9 @@ from matplotlib import cm
 import numpy as np
 import StringIO
 import math
+import logging
+
+LOGGER = logging.getLogger("me.graph")
 
 TRIPLE_COLOR_MAP = cm.get_cmap("jet")
 TRIPLE_LINE_WIDTH = 1.0
@@ -30,6 +33,8 @@ def plot(gnew, gfit, color, ginf):
     Return values:
         graphString: a StringIO object representing the graph.
     """
+    LOGGER.debug("===Graphing Start===")
+    LOGGER.debug("Graphing %s %s %s %s" % (gnew, gfit, color, ginf))
     graphString = StringIO.StringIO()
     rangeVal = np.shape(gnew)[0]
 
@@ -43,6 +48,7 @@ def plot(gnew, gfit, color, ginf):
     pp.axis([0, rangeVal, lowerBound, upperBound])
     pp.savefig(graphString)
     graphString.seek(0)
+    LOGGER.debug("===Graphing complete===")
     return graphString
 
 
@@ -65,6 +71,8 @@ def plot_1d(gnew, gfit, color, ginf):
     Return values:
         graphString: a StringIO object representing the graph.
     """
+    LOGGER.debug("===Graphing 1d Start===")
+    LOGGER.debug("Graphing %s %s %s %s" % (gnew, gfit, color, ginf))
     graphString = StringIO.StringIO()
     rangeVal = np.shape(gnew)[0]
 
@@ -78,6 +86,7 @@ def plot_1d(gnew, gfit, color, ginf):
     pp.axis([0, rangeVal, lowerBound, upperBound])
     pp.savefig(graphString)
     graphString.seek(0)
+    LOGGER.debug("===Graphing complete===")
     return graphString
 
 
@@ -171,6 +180,8 @@ def surfacePlot(xData, yData, zData, color):
     Return values:
         graphString: a StringIO object representing the graph.
     """
+    LOGGER.debug("===surfacePlot Start===")
+    LOGGER.debug("Graphing %s %s %s %s" % (xData, yData, zData, color))
     graphString = StringIO.StringIO()
     title = __gen_title(color, 'Y')
     pp.clf()
@@ -182,4 +193,5 @@ def surfacePlot(xData, yData, zData, color):
                     linewidth=TRIPLE_LINE_WIDTH)
     fig.savefig(graphString)
     graphString.seek(0)
+    LOGGER.debug("===surfacePlot done===")
     return graphString

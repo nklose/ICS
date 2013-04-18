@@ -114,6 +114,11 @@ class DualResult(BaseResult):
         self.color = color
         self.rangeVal = rangeVal
         super(DualResult, self).__init__()
+        
+    def __str__(self):
+        return "".join([self.__class__.__name__, " <g0: ", str(self.g0), "; w: ", str(self.w),
+                        "; ginf: ", str(self.ginf), "; resNorm: ", str(self.resNorm),
+                        "; Colors: ", str(self.color)])
 
     def plotToStringIO(self):
         """ Plots the graph to a StringIO object and returns it.

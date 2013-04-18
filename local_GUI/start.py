@@ -1550,7 +1550,17 @@ class StartQT4(QtGui.QMainWindow):
         limit = self.get_sample_resolution()
 
         # call the midend to get the result object
-        result = midend.adaptor.run_triple_part2(self.tripleResult1, limit)
+        try:
+            result = midend.adaptor.run_triple_part2(self.tripleResult1, limit)
+        except MemoryError:
+            memMsg = ("There is not enough memory available to continue this "
+                      "operation. Please ensure there is at least:\n"
+                      "64x64 limit: 256 MB of memory free\n"
+                      "32x32 limit: 16 MB of memory free\n"
+                      "16x16 limit: 1 MB of memory free\n"
+                      "or use a smaller size.")
+            QtGui.QMessageBox.warning(self, "Out of Memory", memMsg)
+            return
 
         # save result for next part
         self.tripleResult2 = result

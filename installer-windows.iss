@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Image Correlation Spectroscopy"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.1"
 #define MyAppPublisher "CMPUT 401 Biomembrane Team"
 #define MyAppURL "https://github.com/UniversityOfAlberta/BioMembrane/"
 #define MyAppExeName "ICS.exe"

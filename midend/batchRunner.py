@@ -6,6 +6,10 @@ import copy
 
 import sys
 import os.path
+import logging
+
+LOGGER = logging.getLogger("me.batch")
+
 root_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 if root_dir not in sys.path:
     sys.path.append(root_dir)
@@ -26,6 +30,7 @@ def _default_interrupt_function(numberOfFilesFinished, numberOfFilesTotal):
         Return Value:
             Interrupt functions return values are unused.
     """
+    LOGGER.debug("%s / %s" % (numberOfFilesFinished, numberOfFilesTotal))
     return numberOfFilesFinished, numberOfFilesTotal
 
 
@@ -66,12 +71,14 @@ class BatchRunner(object):
             return 0
         if not self.hasSetUp:
             self._setup()
+        LOGGER.debug("Batch run (single) started")
 
         self._single_run()
         filesFinished = self.info.cur_files
         filesTotal = self.info.num_files
         if filesTotal <= filesFinished:
             self.isDoneRunning = True
+        LOGGER.debug("Batch run (single) done")
         return filesTotal - filesFinished
 
     def _setup(self):
@@ -106,9 +113,12 @@ class BatchRunner(object):
         filesFinished = self.info.cur_files
         filesTotal = self.info.num_files
         while filesTotal > filesFinished:
+            LOGGER.debug("Batch run (all) started")
             self._single_run()
             filesFinished = self.info.cur_files
             interruptFunction(filesFinished, filesTotal)
+            LOGGER.debug("Batch run (all) looping")
+        LOGGER.debug("Batch run (all) done")
         self.isDoneRunning = True
 
     def getResults(self):
